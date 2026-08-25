@@ -19,7 +19,7 @@ export default function ErrorPage({ code = '404' }: ErrorPageProps) {
   return (
     <div className="auth-card text-center" style={{ maxWidth: 480 }}>
       <div className="display-3 fw-bold text-accent">{code}</div>
-      <h5 className="fw-bold mb-2" style={{ color: 'var(--lucid-text-strong)' }}>
+      <h5 className="fw-bold mb-2" style={{ color: 'var(--aegis-text-strong)' }}>
         {c.title}
       </h5>
       <p className="text-muted small mb-4">{c.text}</p>

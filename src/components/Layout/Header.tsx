@@ -21,7 +21,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
       />
       <Link to="/" className="brand text-decoration-none">
         <i className="bi bi-triangle-fill brand-mark" />
-        LUCID
+        Aegis
       </Link>
       <Button
         icon="pi pi-bars"

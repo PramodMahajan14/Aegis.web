@@ -37,10 +37,10 @@ export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
     >
       <div className="sidebar-user">
         <div className="d-flex align-items-center gap-2">
-          <Avatar label="AT" shape="circle" style={{ background: 'var(--lucid-accent)', color: '#fff' }} />
+          <Avatar label="AT" shape="circle" style={{ background: 'var(--aegis-accent)', color: '#fff' }} />
           <div>
             <div className="small text-muted">Welcome,</div>
-            <div className="fw-semibold" style={{ color: 'var(--lucid-text-strong)' }}>
+            <div className="fw-semibold" style={{ color: 'var(--aegis-text-strong)' }}>
               Alizee Thomas
             </div>
           </div>

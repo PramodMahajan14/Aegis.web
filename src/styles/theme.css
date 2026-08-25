@@ -1,5 +1,5 @@
 /* =========================================================================
-   LUCID-style design system
+   Aegis-style design system
    Measured against the public wrraptheme.com/lucid demo (theme-cyan variant):
    accent #49c5b6, sidebar 250px, topbar 62px, base font 14px/Ubuntu,
    card radius .55rem, form-control radius 4px w/ 20px left padding.
@@ -10,28 +10,28 @@
    ========================================================================= */
 
 :root {
-  --lucid-accent: #49c5b6;
-  --lucid-accent-dark: #38a698;
-  --lucid-accent-light: #eaf8f6;
-  --lucid-bg: #f4f7f6;
-  --lucid-sidebar-bg: #ffffff;
-  --lucid-text: #5a5a5a;
-  --lucid-text-strong: #444444;
-  --lucid-text-muted: #9aa5a3;
-  --lucid-border: #eef1f0;
-  --lucid-input-border: #ced4da;
-  --lucid-radius-sm: 4px;
-  --lucid-radius: 0.55rem;
-  --lucid-radius-lg: 14px;
-  --lucid-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --lucid-topbar-height: 62px;
-  --lucid-sidebar-width: 250px;
+  --aegis-accent: #49c5b6;
+  --aegis-accent-dark: #38a698;
+  --aegis-accent-light: #eaf8f6;
+  --aegis-bg: #f4f7f6;
+  --aegis-sidebar-bg: #ffffff;
+  --aegis-text: #5a5a5a;
+  --aegis-text-strong: #444444;
+  --aegis-text-muted: #9aa5a3;
+  --aegis-border: #eef1f0;
+  --aegis-input-border: #ced4da;
+  --aegis-radius-sm: 4px;
+  --aegis-radius: 0.55rem;
+  --aegis-radius-lg: 14px;
+  --aegis-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --aegis-topbar-height: 62px;
+  --aegis-sidebar-width: 250px;
 }
 
 /* ---------- Base / typography ---------- */
 body {
-  background-color: var(--lucid-bg);
-  color: var(--lucid-text);
+  background-color: var(--aegis-bg);
+  color: var(--aegis-text);
   font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 14px;
   line-height: 1.5;
@@ -50,7 +50,7 @@ h6,
 .h5,
 .h6 {
   font-weight: 500;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
   margin-bottom: 0.5rem;
 }
 
@@ -100,29 +100,29 @@ small,
 }
 
 a {
-  color: var(--lucid-accent-dark);
+  color: var(--aegis-accent-dark);
 }
 
 a:hover {
-  color: var(--lucid-accent);
+  color: var(--aegis-accent);
 }
 
 .text-accent {
-  color: var(--lucid-accent-dark) !important;
+  color: var(--aegis-accent-dark) !important;
 }
 
 .bg-accent {
-  background-color: var(--lucid-accent) !important;
+  background-color: var(--aegis-accent) !important;
 }
 
 .border-accent {
-  border-color: var(--lucid-accent) !important;
+  border-color: var(--aegis-accent) !important;
 }
 
 /* ---------- Buttons ---------- */
 .btn {
   font-size: 0.875rem;
-  border-radius: var(--lucid-radius-sm);
+  border-radius: var(--aegis-radius-sm);
   padding: 0.45rem 1rem;
 }
 
@@ -137,58 +137,58 @@ a:hover {
 }
 
 .btn-accent {
-  background-color: var(--lucid-accent);
-  border-color: var(--lucid-accent);
+  background-color: var(--aegis-accent);
+  border-color: var(--aegis-accent);
   color: #fff;
 }
 
 .btn-accent:hover,
 .btn-accent:focus {
-  background-color: var(--lucid-accent-dark);
-  border-color: var(--lucid-accent-dark);
+  background-color: var(--aegis-accent-dark);
+  border-color: var(--aegis-accent-dark);
   color: #fff;
 }
 
 .btn-outline-accent {
-  color: var(--lucid-accent-dark);
-  border-color: var(--lucid-accent);
+  color: var(--aegis-accent-dark);
+  border-color: var(--aegis-accent);
   background: transparent;
 }
 
 .btn-outline-accent:hover {
-  background: var(--lucid-accent);
-  border-color: var(--lucid-accent);
+  background: var(--aegis-accent);
+  border-color: var(--aegis-accent);
   color: #fff;
 }
 
 .btn-check:checked+.btn-outline-accent,
 .btn-check:active+.btn-outline-accent {
-  background: var(--lucid-accent);
-  border-color: var(--lucid-accent);
+  background: var(--aegis-accent);
+  border-color: var(--aegis-accent);
   color: #fff;
 }
 
 /* ---------- Forms ---------- */
 .form-label {
   font-size: 0.875rem;
-  color: var(--lucid-text);
+  color: var(--aegis-text);
   margin-bottom: 0.4rem;
 }
 
 .form-control,
 .form-select {
   font-size: 0.875rem;
-  color: var(--lucid-text);
+  color: var(--aegis-text);
   background-color: #fff;
-  border: 1px solid var(--lucid-input-border);
-  border-radius: var(--lucid-radius-sm);
+  border: 1px solid var(--aegis-input-border);
+  border-radius: var(--aegis-radius-sm);
   padding: 0.5rem 0.75rem 0.5rem 1.1rem;
   min-height: 40px;
 }
 
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--lucid-accent);
+  border-color: var(--aegis-accent);
   box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
 }
 
@@ -198,7 +198,7 @@ a:hover {
 
 .form-control:disabled,
 .form-control[readonly] {
-  background-color: var(--lucid-bg);
+  background-color: var(--aegis-bg);
 }
 
 textarea.form-control {
@@ -208,16 +208,16 @@ textarea.form-control {
 .form-check-input {
   width: 1.05rem;
   height: 1.05rem;
-  border: 1px solid var(--lucid-input-border);
+  border: 1px solid var(--aegis-input-border);
 }
 
 .form-check-input:checked {
-  background-color: var(--lucid-accent);
-  border-color: var(--lucid-accent);
+  background-color: var(--aegis-accent);
+  border-color: var(--aegis-accent);
 }
 
 .form-check-input:focus {
-  border-color: var(--lucid-accent);
+  border-color: var(--aegis-accent);
   box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
 }
 
@@ -231,9 +231,9 @@ textarea.form-control {
 }
 
 .input-group-text {
-  background: var(--lucid-bg);
-  border: 1px solid var(--lucid-input-border);
-  color: var(--lucid-text-muted);
+  background: var(--aegis-bg);
+  border: 1px solid var(--aegis-input-border);
+  color: var(--aegis-text-muted);
   font-size: 0.875rem;
 }
 
@@ -260,56 +260,56 @@ textarea.form-control {
 fieldset legend {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
 }
 
 /* ---------- Cards ---------- */
 .card {
   border: none;
-  border-radius: var(--lucid-radius);
-  box-shadow: var(--lucid-card-shadow);
+  border-radius: var(--aegis-radius);
+  box-shadow: var(--aegis-card-shadow);
 }
 
 .card-header {
   background: transparent;
-  border-bottom: 1px solid var(--lucid-border);
+  border-bottom: 1px solid var(--aegis-border);
   font-weight: 500;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
 }
 
 .card-footer {
   background: transparent;
-  border-top: 1px solid var(--lucid-border);
+  border-top: 1px solid var(--aegis-border);
 }
 
-.lucid-card {
+.aegis-card {
   background: #fff;
   border: none;
-  border-radius: var(--lucid-radius);
-  box-shadow: var(--lucid-card-shadow);
+  border-radius: var(--aegis-radius);
+  box-shadow: var(--aegis-card-shadow);
 }
 
-.lucid-card .lucid-card-header {
+.aegis-card .aegis-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem 0.25rem;
 }
 
-.lucid-card .lucid-card-header h6 {
+.aegis-card .aegis-card-header h6 {
   font-weight: 500;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
   margin: 0;
 }
 
-.lucid-card .lucid-card-body {
+.aegis-card .aegis-card-body {
   padding: 1.25rem;
 }
 
 .stat-card .stat-label {
   font-size: 0.75rem;
   letter-spacing: 0.05em;
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
   text-transform: uppercase;
   font-weight: 600;
 }
@@ -317,28 +317,28 @@ fieldset legend {
 .stat-card .stat-value {
   font-size: 1.6rem;
   font-weight: 600;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
 }
 
 .stat-card .stat-delta {
   font-size: 0.78rem;
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
 }
 
 /* ---------- Tables ---------- */
 .table {
-  color: var(--lucid-text);
+  color: var(--aegis-text);
   font-size: 0.875rem;
-  --bs-table-hover-bg: var(--lucid-bg);
+  --bs-table-hover-bg: var(--aegis-bg);
 }
 
 .table> :not(caption)>*>* {
-  border-bottom-color: var(--lucid-border);
+  border-bottom-color: var(--aegis-border);
   padding: 0.75rem;
 }
 
 .table thead th {
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
   text-transform: uppercase;
   font-size: 0.72rem;
   letter-spacing: 0.04em;
@@ -349,7 +349,7 @@ fieldset legend {
 .table-bordered,
 .table-bordered th,
 .table-bordered td {
-  border-color: var(--lucid-border);
+  border-color: var(--aegis-border);
 }
 
 .table-striped>tbody>tr:nth-of-type(odd)>* {
@@ -368,42 +368,42 @@ fieldset legend {
 }
 
 .bg-accent-subtle {
-  background-color: var(--lucid-accent-light) !important;
+  background-color: var(--aegis-accent-light) !important;
 }
 
 .text-accent-emphasis {
-  color: var(--lucid-accent-dark) !important;
+  color: var(--aegis-accent-dark) !important;
 }
 
 /* ---------- Alerts ---------- */
 .alert {
   border: none;
-  border-radius: var(--lucid-radius-sm);
+  border-radius: var(--aegis-radius-sm);
   font-size: 0.875rem;
 }
 
 .alert-accent {
-  background-color: var(--lucid-accent-light);
-  color: var(--lucid-accent-dark);
+  background-color: var(--aegis-accent-light);
+  color: var(--aegis-accent-dark);
 }
 
 /* ---------- Progress ---------- */
 .progress {
-  background-color: var(--lucid-bg);
+  background-color: var(--aegis-bg);
   border-radius: 10rem;
 }
 
 .progress-bar {
-  background-color: var(--lucid-accent);
+  background-color: var(--aegis-accent);
 }
 
 /* ---------- Nav tabs / pills ---------- */
 .nav-tabs {
-  border-bottom-color: var(--lucid-border);
+  border-bottom-color: var(--aegis-border);
 }
 
 .nav-tabs .nav-link {
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
   border: none;
   border-bottom: 2px solid transparent;
   font-size: 0.875rem;
@@ -412,19 +412,19 @@ fieldset legend {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-link:hover {
-  color: var(--lucid-accent-dark);
+  color: var(--aegis-accent-dark);
   background: transparent;
-  border-color: transparent transparent var(--lucid-accent);
+  border-color: transparent transparent var(--aegis-accent);
 }
 
 .nav-pills .nav-link {
-  color: var(--lucid-text);
+  color: var(--aegis-text);
   font-size: 0.875rem;
-  border-radius: var(--lucid-radius-sm);
+  border-radius: var(--aegis-radius-sm);
 }
 
 .nav-pills .nav-link.active {
-  background-color: var(--lucid-accent);
+  background-color: var(--aegis-accent);
   color: #fff;
 }
 
@@ -434,99 +434,99 @@ fieldset legend {
 }
 
 .breadcrumb-item+.breadcrumb-item::before {
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
 }
 
 .breadcrumb-item.active {
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
 }
 
 .breadcrumb-item a {
-  color: var(--lucid-text);
+  color: var(--aegis-text);
   text-decoration: none;
 }
 
 .breadcrumb-item a:hover {
-  color: var(--lucid-accent-dark);
+  color: var(--aegis-accent-dark);
 }
 
 /* ---------- Pagination ---------- */
 .page-link {
-  color: var(--lucid-text);
-  border-color: var(--lucid-border);
+  color: var(--aegis-text);
+  border-color: var(--aegis-border);
   font-size: 0.875rem;
 }
 
 .page-item.active .page-link {
-  background-color: var(--lucid-accent);
-  border-color: var(--lucid-accent);
+  background-color: var(--aegis-accent);
+  border-color: var(--aegis-accent);
 }
 
 .page-link:hover {
-  color: var(--lucid-accent-dark);
-  background-color: var(--lucid-bg);
+  color: var(--aegis-accent-dark);
+  background-color: var(--aegis-bg);
 }
 
 /* ---------- List group ---------- */
 .list-group-item {
-  border-color: var(--lucid-border);
+  border-color: var(--aegis-border);
   font-size: 0.875rem;
 }
 
 .list-group-item.active {
-  background-color: var(--lucid-accent);
-  border-color: var(--lucid-accent);
+  background-color: var(--aegis-accent);
+  border-color: var(--aegis-accent);
 }
 
 .list-group-item-action:hover {
-  background-color: var(--lucid-bg);
+  background-color: var(--aegis-bg);
 }
 
 /* ---------- Modals ---------- */
 .modal-content {
   border: none;
-  border-radius: var(--lucid-radius);
+  border-radius: var(--aegis-radius);
 }
 
 .modal-header {
-  border-bottom: 1px solid var(--lucid-border);
+  border-bottom: 1px solid var(--aegis-border);
 }
 
 .modal-footer {
-  border-top: 1px solid var(--lucid-border);
+  border-top: 1px solid var(--aegis-border);
 }
 
 /* ---------- Dropdowns ---------- */
 .dropdown-menu {
-  border: 1px solid var(--lucid-border);
-  border-radius: var(--lucid-radius-sm);
+  border: 1px solid var(--aegis-border);
+  border-radius: var(--aegis-radius-sm);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   font-size: 0.875rem;
 }
 
 .dropdown-item:active,
 .dropdown-item.active {
-  background-color: var(--lucid-accent);
+  background-color: var(--aegis-accent);
 }
 
 .dropdown-item:hover {
-  background-color: var(--lucid-bg);
+  background-color: var(--aegis-bg);
 }
 
 /* ---------- Accordion ---------- */
 .accordion-item {
-  border-color: var(--lucid-border);
+  border-color: var(--aegis-border);
 }
 
 .accordion-button {
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
 }
 
 .accordion-button:not(.collapsed) {
-  background-color: var(--lucid-accent-light);
-  color: var(--lucid-accent-dark);
+  background-color: var(--aegis-accent-light);
+  color: var(--aegis-accent-dark);
   box-shadow: none;
 }
 
@@ -536,7 +536,7 @@ fieldset legend {
 
 /* ---------- Range sliders ---------- */
 .form-range {
-  accent-color: var(--lucid-accent);
+  accent-color: var(--aegis-accent);
 }
 
 .dual-range-wrap {
@@ -571,7 +571,7 @@ fieldset legend {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--lucid-accent);
+  background: var(--aegis-accent);
   color: #fff;
   font-weight: 600;
 }
@@ -581,15 +581,15 @@ fieldset legend {
    ========================================================================= */
 
 .app-shell {
-  border-top: 4px solid var(--lucid-accent);
+  border-top: 4px solid var(--aegis-accent);
   min-height: 100vh;
 }
 
 /* ---------- Topbar ---------- */
 .topbar {
-  height: var(--lucid-topbar-height);
+  height: var(--aegis-topbar-height);
   background: #fff;
-  border-bottom: 1px solid var(--lucid-border);
+  border-bottom: 1px solid var(--aegis-border);
   display: flex;
   align-items: center;
   padding: 0 1.25rem;
@@ -605,13 +605,13 @@ fieldset legend {
   gap: 0.5rem;
   font-weight: 700;
   font-size: 1.15rem;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
 .topbar .brand .brand-mark {
-  color: var(--lucid-accent);
+  color: var(--aegis-accent);
   font-size: 1.3rem;
 }
 
@@ -621,8 +621,8 @@ fieldset legend {
 }
 
 .topbar .search-box input {
-  background: var(--lucid-bg);
-  border: 1px solid var(--lucid-border);
+  background: var(--aegis-bg);
+  border: 1px solid var(--aegis-border);
   border-radius: 6px;
   min-height: 36px;
 }
@@ -634,15 +634,15 @@ fieldset legend {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  color: var(--lucid-text);
+  color: var(--aegis-text);
   position: relative;
   background: transparent;
   border: none;
 }
 
 .topbar .icon-btn:hover {
-  background: var(--lucid-bg);
-  color: var(--lucid-accent-dark);
+  background: var(--aegis-bg);
+  color: var(--aegis-accent-dark);
 }
 
 .topbar .icon-btn .dot {
@@ -663,23 +663,23 @@ fieldset legend {
 }
 
 .sidebar {
-  width: var(--lucid-sidebar-width);
-  min-width: var(--lucid-sidebar-width);
-  background: var(--lucid-sidebar-bg);
-  border-right: 1px solid var(--lucid-border);
-  min-height: calc(100vh - var(--lucid-topbar-height));
+  width: var(--aegis-sidebar-width);
+  min-width: var(--aegis-sidebar-width);
+  background: var(--aegis-sidebar-bg);
+  border-right: 1px solid var(--aegis-border);
+  min-height: calc(100vh - var(--aegis-topbar-height));
   overflow-y: auto;
   transition: margin-left 0.2s ease;
   /* height: 100vh; */
 }
 
 .sidebar.collapsed {
-  margin-left: calc(-1 * var(--lucid-sidebar-width));
+  margin-left: calc(-1 * var(--aegis-sidebar-width));
 }
 
 .sidebar-user {
   padding: 1.25rem;
-  border-bottom: 1px solid var(--lucid-border);
+  border-bottom: 1px solid var(--aegis-border);
 }
 
 .sidebar-user .avatar {
@@ -692,17 +692,17 @@ fieldset legend {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid var(--lucid-border);
+  border-bottom: 1px solid var(--aegis-border);
   font-size: 0.78rem;
 }
 
 .sidebar-user-stats .stat-label {
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
   display: block;
 }
 
 .sidebar-user-stats .stat-value {
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
   font-weight: 600;
 }
 
@@ -726,7 +726,7 @@ fieldset legend {
   justify-content: space-between;
   padding: 0.55rem 0.75rem;
   border-radius: 8px;
-  color: var(--lucid-text);
+  color: var(--aegis-text);
   text-decoration: none;
   font-size: 0.9rem;
   cursor: pointer;
@@ -734,11 +734,11 @@ fieldset legend {
 }
 
 .sidebar-group>.sidebar-link:hover {
-  background: var(--lucid-bg);
+  background: var(--aegis-bg);
 }
 
 .sidebar-group.open>.sidebar-link {
-  color: var(--lucid-accent-dark);
+  color: var(--aegis-accent-dark);
 }
 
 .sidebar-link .chevron {
@@ -772,12 +772,12 @@ fieldset legend {
 }
 
 .sidebar-submenu a:hover {
-  color: var(--lucid-accent-dark);
+  color: var(--aegis-accent-dark);
 }
 
 .sidebar-submenu a.active {
-  background: var(--lucid-bg);
-  color: var(--lucid-accent-dark);
+  background: var(--aegis-bg);
+  color: var(--aegis-accent-dark);
   font-weight: 600;
 }
 
@@ -800,14 +800,14 @@ fieldset legend {
 /* ---------- Footer ---------- */
 .app-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid var(--lucid-border);
+  border-top: 1px solid var(--aegis-border);
   text-align: center;
 }
 
 .page-header h1 {
   font-size: 1.4rem;
   font-weight: 600;
-  color: var(--lucid-text-strong);
+  color: var(--aegis-text-strong);
   margin: 0;
 }
 
@@ -831,7 +831,7 @@ fieldset legend {
   width: 100%;
   max-width: 420px;
   background: #fff;
-  border-radius: var(--lucid-radius-lg);
+  border-radius: var(--aegis-radius-lg);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   padding: 2.25rem;
 }
@@ -840,8 +840,8 @@ fieldset legend {
   width: 64px;
   height: 64px;
   border-radius: 14px;
-  background: var(--lucid-accent-light);
-  color: var(--lucid-accent-dark);
+  background: var(--aegis-accent-light);
+  color: var(--aegis-accent-dark);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -852,9 +852,9 @@ fieldset legend {
   .sidebar {
     position: fixed;
     left: 0;
-    top: var(--lucid-topbar-height);
+    top: var(--aegis-topbar-height);
     z-index: 1040;
-    margin-left: calc(-1 * var(--lucid-sidebar-width));
+    margin-left: calc(-1 * var(--aegis-sidebar-width));
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   }
 
@@ -865,15 +865,15 @@ fieldset legend {
 
 /* =========================================================================
    PrimeReact bridge
-   Retunes the lara-light-teal theme's CSS custom properties to the LUCID
+   Retunes the lara-light-teal theme's CSS custom properties to the Aegis
    accent so PrimeReact components (Button, InputText, DataTable, Calendar,
    etc.) sit visually next to the existing Bootstrap-based UI.
    ========================================================================= */
 :root {
-  --primary-color: var(--lucid-accent);
+  --primary-color: var(--aegis-accent);
   --primary-color-text: #ffffff;
-  --surface-ground: var(--lucid-bg);
-  --surface-border: var(--lucid-border);
+  --surface-ground: var(--aegis-bg);
+  --surface-border: var(--aegis-border);
   --font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -882,8 +882,8 @@ fieldset legend {
 }
 
 .p-card {
-  border-radius: var(--lucid-radius);
-  box-shadow: var(--lucid-card-shadow);
+  border-radius: var(--aegis-radius);
+  box-shadow: var(--aegis-card-shadow);
 }
 
 .p-card .p-card-body {
@@ -901,16 +901,16 @@ fieldset legend {
 .p-inputmask,
 .p-inputnumber-input,
 .p-chips .p-chips-multiple-container {
-  border-radius: var(--lucid-radius-sm);
+  border-radius: var(--aegis-radius-sm);
 }
 
 .p-button {
-  border-radius: var(--lucid-radius-sm);
+  border-radius: var(--aegis-radius-sm);
 }
 
 .p-datatable .p-datatable-thead>tr>th {
   background: transparent;
-  color: var(--lucid-text-muted);
+  color: var(--aegis-text-muted);
   text-transform: uppercase;
   font-size: 0.72rem;
   letter-spacing: 0.04em;
@@ -918,11 +918,11 @@ fieldset legend {
 
 .p-datatable .p-datatable-tbody>tr {
   font-size: 0.875rem;
-  color: var(--lucid-text);
+  color: var(--aegis-text);
 }
 
 .p-tabview .p-tabview-nav {
-  border-color: var(--lucid-border);
+  border-color: var(--aegis-border);
 }
 
 .page-header .p-breadcrumb {
@@ -932,19 +932,19 @@ fieldset legend {
   font-size: 0.8rem;
 }
 
-.lucid-inline-calendar.p-calendar,
-.lucid-inline-calendar .p-datepicker {
+.aegis-inline-calendar.p-calendar,
+.aegis-inline-calendar .p-datepicker {
   width: 100%;
   border: none;
   box-shadow: none;
 }
 
-.lucid-inline-calendar .p-datepicker-calendar td {
+.aegis-inline-calendar .p-datepicker-calendar td {
   padding: 2px;
   vertical-align: top;
 }
 
-.lucid-inline-calendar .p-datepicker-calendar td>span {
+.aegis-inline-calendar .p-datepicker-calendar td>span {
   width: 100%;
   height: auto;
   display: block;
