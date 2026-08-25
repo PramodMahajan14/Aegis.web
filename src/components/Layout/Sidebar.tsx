@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Avatar } from 'primereact/avatar';
-import navigation from '../data/navigation';
-import type { NavSection } from '../types/navigation';
+import navigation from '../../data/navigation';
+import type { NavSection } from '../../types/navigation';
 
 function sectionContainsPath(section: NavSection, pathname: string): boolean {
   return section.items.some((item) => item.path === pathname);
@@ -46,21 +46,6 @@ export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
           </div>
         </div>
       </div>
-      <div className="sidebar-user-stats">
-        <div>
-          <span className="stat-label">Sales</span>
-          <span className="stat-value">456</span>
-        </div>
-        <div>
-          <span className="stat-label">Order</span>
-          <span className="stat-value">1350</span>
-        </div>
-        <div>
-          <span className="stat-label">Revenue</span>
-          <span className="stat-value">$2.13B</span>
-        </div>
-      </div>
-
       <ul className="sidebar-nav">
         {navigation.map((section) => {
           const isOpen = openKeys.has(section.key);

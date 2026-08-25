@@ -4,11 +4,11 @@ import { Button } from 'primereact/button';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 
-interface TopbarProps {
+interface HeaderProps {
   onToggleSidebar: () => void;
 }
 
-export default function Topbar({ onToggleSidebar }: TopbarProps) {
+export default function Header({ onToggleSidebar }: HeaderProps) {
   return (
     <header className="topbar">
       <Button
@@ -40,27 +40,10 @@ export default function Topbar({ onToggleSidebar }: TopbarProps) {
       </div>
 
       <div className="ms-auto d-flex align-items-center gap-1">
-        <Link to="/file-manager/dashboard" className="icon-btn" title="File Manager">
-          <i className="bi bi-folder2-open" />
-        </Link>
-        <Link to="/app/calendar" className="icon-btn" title="Calendar">
-          <i className="bi bi-calendar3" />
-        </Link>
-        <Link to="/app/chat" className="icon-btn" title="Chat">
-          <i className="bi bi-chat-dots" />
-          <span className="dot" />
-        </Link>
-        <Link to="/app/inbox" className="icon-btn" title="Inbox">
-          <i className="bi bi-envelope" />
-          <span className="dot" />
-        </Link>
         <button className="icon-btn" title="Notifications">
           <i className="bi bi-bell" />
           <span className="dot" />
         </button>
-        <Link to="/pages/login" className="icon-btn" title="Logout">
-          <i className="bi bi-box-arrow-right" />
-        </Link>
       </div>
     </header>
   );

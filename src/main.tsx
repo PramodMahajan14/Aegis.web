@@ -11,7 +11,6 @@ import 'primereact/resources/themes/lara-light-teal/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import './styles/theme.css';
-import './chartSetup';
 import { queryClient } from './lib/queryClient';
 import App from './App.tsx';
 

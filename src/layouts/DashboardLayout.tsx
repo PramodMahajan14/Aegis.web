@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import Topbar from '../components/Topbar';
-import Sidebar from '../components/Sidebar';
+import Header from '../components/Layout/Header';
+import Sidebar from '../components/Layout/Sidebar';
+import Footer from '../components/Layout/Footer';
 
 export default function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -17,13 +18,14 @@ export default function DashboardLayout() {
 
   return (
     <div className="app-shell">
-      <Topbar onToggleSidebar={toggleSidebar} />
+      <Header onToggleSidebar={toggleSidebar} />
       <div className="app-body">
         <Sidebar collapsed={collapsed} mobileOpen={mobileOpen} />
         <main className="main-content">
           <Outlet />
         </main>
       </div>
+      <Footer />
     </div>
   );
 }
