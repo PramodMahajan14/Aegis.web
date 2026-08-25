@@ -1,0 +1,945 @@
+/* =========================================================================
+   LUCID-style design system
+   Measured against the public wrraptheme.com/lucid demo (theme-cyan variant):
+   accent #49c5b6, sidebar 250px, topbar 62px, base font 14px/Ubuntu,
+   card radius .55rem, form-control radius 4px w/ 20px left padding.
+   Loaded after bootstrap.min.css — everything below overrides/extends
+   standard Bootstrap 5 classes, so normal `btn`, `form-control`, `table`,
+   `badge`, `card`, `nav-tabs`, `alert`, `modal`, etc. markup matches this
+   look automatically without any extra classes.
+   ========================================================================= */
+
+:root {
+  --lucid-accent: #49c5b6;
+  --lucid-accent-dark: #38a698;
+  --lucid-accent-light: #eaf8f6;
+  --lucid-bg: #f4f7f6;
+  --lucid-sidebar-bg: #ffffff;
+  --lucid-text: #5a5a5a;
+  --lucid-text-strong: #444444;
+  --lucid-text-muted: #9aa5a3;
+  --lucid-border: #eef1f0;
+  --lucid-input-border: #ced4da;
+  --lucid-radius-sm: 4px;
+  --lucid-radius: 0.55rem;
+  --lucid-radius-lg: 14px;
+  --lucid-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --lucid-topbar-height: 62px;
+  --lucid-sidebar-width: 250px;
+}
+
+/* ---------- Base / typography ---------- */
+body {
+  background-color: var(--lucid-bg);
+  color: var(--lucid-text);
+  font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-weight: 500;
+  color: var(--lucid-text-strong);
+  margin-bottom: 0.5rem;
+}
+
+h1,
+.h1 {
+  font-size: 2.85rem;
+  line-height: 1.2;
+}
+
+h2,
+.h2 {
+  font-size: 2.3rem;
+  line-height: 1.2;
+}
+
+h3,
+.h3 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+h4,
+.h4 {
+  font-size: 1.7rem;
+  line-height: 1.2;
+}
+
+h5,
+.h5 {
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+h6,
+.h6 {
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+small,
+.small {
+  font-size: 0.8rem;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+a {
+  color: var(--lucid-accent-dark);
+}
+
+a:hover {
+  color: var(--lucid-accent);
+}
+
+.text-accent {
+  color: var(--lucid-accent-dark) !important;
+}
+
+.bg-accent {
+  background-color: var(--lucid-accent) !important;
+}
+
+.border-accent {
+  border-color: var(--lucid-accent) !important;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  font-size: 0.875rem;
+  border-radius: var(--lucid-radius-sm);
+  padding: 0.45rem 1rem;
+}
+
+.btn-sm {
+  padding: 0.28rem 0.7rem;
+  font-size: 0.78rem;
+}
+
+.btn-lg {
+  padding: 0.65rem 1.4rem;
+  font-size: 1rem;
+}
+
+.btn-accent {
+  background-color: var(--lucid-accent);
+  border-color: var(--lucid-accent);
+  color: #fff;
+}
+
+.btn-accent:hover,
+.btn-accent:focus {
+  background-color: var(--lucid-accent-dark);
+  border-color: var(--lucid-accent-dark);
+  color: #fff;
+}
+
+.btn-outline-accent {
+  color: var(--lucid-accent-dark);
+  border-color: var(--lucid-accent);
+  background: transparent;
+}
+
+.btn-outline-accent:hover {
+  background: var(--lucid-accent);
+  border-color: var(--lucid-accent);
+  color: #fff;
+}
+
+.btn-check:checked+.btn-outline-accent,
+.btn-check:active+.btn-outline-accent {
+  background: var(--lucid-accent);
+  border-color: var(--lucid-accent);
+  color: #fff;
+}
+
+/* ---------- Forms ---------- */
+.form-label {
+  font-size: 0.875rem;
+  color: var(--lucid-text);
+  margin-bottom: 0.4rem;
+}
+
+.form-control,
+.form-select {
+  font-size: 0.875rem;
+  color: var(--lucid-text);
+  background-color: #fff;
+  border: 1px solid var(--lucid-input-border);
+  border-radius: var(--lucid-radius-sm);
+  padding: 0.5rem 0.75rem 0.5rem 1.1rem;
+  min-height: 40px;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--lucid-accent);
+  box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
+}
+
+.form-control::placeholder {
+  color: #adb5bd;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: var(--lucid-bg);
+}
+
+textarea.form-control {
+  min-height: 90px;
+}
+
+.form-check-input {
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 1px solid var(--lucid-input-border);
+}
+
+.form-check-input:checked {
+  background-color: var(--lucid-accent);
+  border-color: var(--lucid-accent);
+}
+
+.form-check-input:focus {
+  border-color: var(--lucid-accent);
+  box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
+}
+
+.form-switch .form-check-input {
+  width: 2.4rem;
+  height: 1.2rem;
+}
+
+.form-check-label {
+  font-size: 0.875rem;
+}
+
+.input-group-text {
+  background: var(--lucid-bg);
+  border: 1px solid var(--lucid-input-border);
+  color: var(--lucid-text-muted);
+  font-size: 0.875rem;
+}
+
+.was-validated .form-control:valid,
+.form-control.is-valid {
+  border-color: #2ecc71;
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+  border-color: #e15b64;
+}
+
+.valid-feedback {
+  color: #2ecc71;
+  font-size: 0.8rem;
+}
+
+.invalid-feedback {
+  color: #e15b64;
+  font-size: 0.8rem;
+}
+
+fieldset legend {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--lucid-text-strong);
+}
+
+/* ---------- Cards ---------- */
+.card {
+  border: none;
+  border-radius: var(--lucid-radius);
+  box-shadow: var(--lucid-card-shadow);
+}
+
+.card-header {
+  background: transparent;
+  border-bottom: 1px solid var(--lucid-border);
+  font-weight: 500;
+  color: var(--lucid-text-strong);
+}
+
+.card-footer {
+  background: transparent;
+  border-top: 1px solid var(--lucid-border);
+}
+
+.lucid-card {
+  background: #fff;
+  border: none;
+  border-radius: var(--lucid-radius);
+  box-shadow: var(--lucid-card-shadow);
+}
+
+.lucid-card .lucid-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.25rem;
+}
+
+.lucid-card .lucid-card-header h6 {
+  font-weight: 500;
+  color: var(--lucid-text-strong);
+  margin: 0;
+}
+
+.lucid-card .lucid-card-body {
+  padding: 1.25rem;
+}
+
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--lucid-text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-card .stat-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--lucid-text-strong);
+}
+
+.stat-card .stat-delta {
+  font-size: 0.78rem;
+  color: var(--lucid-text-muted);
+}
+
+/* ---------- Tables ---------- */
+.table {
+  color: var(--lucid-text);
+  font-size: 0.875rem;
+  --bs-table-hover-bg: var(--lucid-bg);
+}
+
+.table> :not(caption)>*>* {
+  border-bottom-color: var(--lucid-border);
+  padding: 0.75rem;
+}
+
+.table thead th {
+  color: var(--lucid-text-muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  border-bottom-width: 1px;
+}
+
+.table-bordered,
+.table-bordered th,
+.table-bordered td {
+  border-color: var(--lucid-border);
+}
+
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  background-color: rgba(73, 197, 182, 0.04);
+}
+
+/* ---------- Badges ---------- */
+.badge {
+  font-weight: 500;
+  padding: 0.4em 0.65em;
+  border-radius: 4px;
+}
+
+.badge.rounded-pill {
+  border-radius: 10rem;
+}
+
+.bg-accent-subtle {
+  background-color: var(--lucid-accent-light) !important;
+}
+
+.text-accent-emphasis {
+  color: var(--lucid-accent-dark) !important;
+}
+
+/* ---------- Alerts ---------- */
+.alert {
+  border: none;
+  border-radius: var(--lucid-radius-sm);
+  font-size: 0.875rem;
+}
+
+.alert-accent {
+  background-color: var(--lucid-accent-light);
+  color: var(--lucid-accent-dark);
+}
+
+/* ---------- Progress ---------- */
+.progress {
+  background-color: var(--lucid-bg);
+  border-radius: 10rem;
+}
+
+.progress-bar {
+  background-color: var(--lucid-accent);
+}
+
+/* ---------- Nav tabs / pills ---------- */
+.nav-tabs {
+  border-bottom-color: var(--lucid-border);
+}
+
+.nav-tabs .nav-link {
+  color: var(--lucid-text-muted);
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link:hover {
+  color: var(--lucid-accent-dark);
+  background: transparent;
+  border-color: transparent transparent var(--lucid-accent);
+}
+
+.nav-pills .nav-link {
+  color: var(--lucid-text);
+  font-size: 0.875rem;
+  border-radius: var(--lucid-radius-sm);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--lucid-accent);
+  color: #fff;
+}
+
+/* ---------- Breadcrumbs ---------- */
+.breadcrumb {
+  font-size: 0.8rem;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+  color: var(--lucid-text-muted);
+}
+
+.breadcrumb-item.active {
+  color: var(--lucid-text-muted);
+}
+
+.breadcrumb-item a {
+  color: var(--lucid-text);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--lucid-accent-dark);
+}
+
+/* ---------- Pagination ---------- */
+.page-link {
+  color: var(--lucid-text);
+  border-color: var(--lucid-border);
+  font-size: 0.875rem;
+}
+
+.page-item.active .page-link {
+  background-color: var(--lucid-accent);
+  border-color: var(--lucid-accent);
+}
+
+.page-link:hover {
+  color: var(--lucid-accent-dark);
+  background-color: var(--lucid-bg);
+}
+
+/* ---------- List group ---------- */
+.list-group-item {
+  border-color: var(--lucid-border);
+  font-size: 0.875rem;
+}
+
+.list-group-item.active {
+  background-color: var(--lucid-accent);
+  border-color: var(--lucid-accent);
+}
+
+.list-group-item-action:hover {
+  background-color: var(--lucid-bg);
+}
+
+/* ---------- Modals ---------- */
+.modal-content {
+  border: none;
+  border-radius: var(--lucid-radius);
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--lucid-border);
+}
+
+.modal-footer {
+  border-top: 1px solid var(--lucid-border);
+}
+
+/* ---------- Dropdowns ---------- */
+.dropdown-menu {
+  border: 1px solid var(--lucid-border);
+  border-radius: var(--lucid-radius-sm);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-size: 0.875rem;
+}
+
+.dropdown-item:active,
+.dropdown-item.active {
+  background-color: var(--lucid-accent);
+}
+
+.dropdown-item:hover {
+  background-color: var(--lucid-bg);
+}
+
+/* ---------- Accordion ---------- */
+.accordion-item {
+  border-color: var(--lucid-border);
+}
+
+.accordion-button {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--lucid-text-strong);
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--lucid-accent-light);
+  color: var(--lucid-accent-dark);
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
+}
+
+/* ---------- Range sliders ---------- */
+.form-range {
+  accent-color: var(--lucid-accent);
+}
+
+.dual-range-wrap {
+  position: relative;
+  height: 24px;
+}
+
+.dual-range-wrap input[type='range'] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  margin: 0;
+  background: none;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.dual-range-wrap input[type='range']::-webkit-slider-thumb {
+  pointer-events: auto;
+}
+
+.dual-range-wrap input[type='range']::-moz-range-thumb {
+  pointer-events: auto;
+}
+
+/* ---------- Avatars ---------- */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--lucid-accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* =========================================================================
+   Application shell
+   ========================================================================= */
+
+.app-shell {
+  border-top: 4px solid var(--lucid-accent);
+  min-height: 100vh;
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+  height: var(--lucid-topbar-height);
+  background: #fff;
+  border-bottom: 1px solid var(--lucid-border);
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+.topbar .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--lucid-text-strong);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.topbar .brand .brand-mark {
+  color: var(--lucid-accent);
+  font-size: 1.3rem;
+}
+
+.topbar .search-box {
+  flex: 1;
+  max-width: 340px;
+}
+
+.topbar .search-box input {
+  background: var(--lucid-bg);
+  border: 1px solid var(--lucid-border);
+  border-radius: 6px;
+  min-height: 36px;
+}
+
+.topbar .icon-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--lucid-text);
+  position: relative;
+  background: transparent;
+  border: none;
+}
+
+.topbar .icon-btn:hover {
+  background: var(--lucid-bg);
+  color: var(--lucid-accent-dark);
+}
+
+.topbar .icon-btn .dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5b5b;
+  border: 1.5px solid #fff;
+}
+
+/* ---------- Sidebar ---------- */
+.app-body {
+  display: flex;
+  align-items: flex-start;
+}
+
+.sidebar {
+  width: var(--lucid-sidebar-width);
+  min-width: var(--lucid-sidebar-width);
+  background: var(--lucid-sidebar-bg);
+  border-right: 1px solid var(--lucid-border);
+  min-height: calc(100vh - var(--lucid-topbar-height));
+  overflow-y: auto;
+  transition: margin-left 0.2s ease;
+  /* height: 100vh; */
+}
+
+.sidebar.collapsed {
+  margin-left: calc(-1 * var(--lucid-sidebar-width));
+}
+
+.sidebar-user {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--lucid-border);
+}
+
+.sidebar-user .avatar {
+  width: 42px;
+  height: 42px;
+  font-size: 0.9rem;
+}
+
+.sidebar-user-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid var(--lucid-border);
+  font-size: 0.78rem;
+}
+
+.sidebar-user-stats .stat-label {
+  color: var(--lucid-text-muted);
+  display: block;
+}
+
+.sidebar-user-stats .stat-value {
+  color: var(--lucid-text-strong);
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0.75rem 2rem;
+}
+
+.sidebar-section-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #b3bcba;
+  padding: 0.9rem 0.75rem 0.35rem;
+}
+
+.sidebar-group>.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  color: var(--lucid-text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.sidebar-group>.sidebar-link:hover {
+  background: var(--lucid-bg);
+}
+
+.sidebar-group.open>.sidebar-link {
+  color: var(--lucid-accent-dark);
+}
+
+.sidebar-link .chevron {
+  transition: transform 0.15s ease;
+  font-size: 0.7rem;
+  color: #b3bcba;
+}
+
+.sidebar-group.open .chevron {
+  transform: rotate(90deg);
+}
+
+.sidebar-submenu {
+  list-style: none;
+  margin: 0.15rem 0 0.4rem;
+  padding-left: 1.6rem;
+  display: none;
+}
+
+.sidebar-group.open .sidebar-submenu {
+  display: block;
+}
+
+.sidebar-submenu a {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  color: #8b9694;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.sidebar-submenu a:hover {
+  color: var(--lucid-accent-dark);
+}
+
+.sidebar-submenu a.active {
+  background: var(--lucid-bg);
+  color: var(--lucid-accent-dark);
+  font-weight: 600;
+}
+
+/* ---------- Main content ---------- */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 1.5rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.page-header h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--lucid-text-strong);
+  margin: 0;
+}
+
+.page-header .breadcrumb {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+/* ---------- Auth shell ---------- */
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #38a698 0%, #49c5b6 55%, #8fe3d8 100%);
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: var(--lucid-radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  padding: 2.25rem;
+}
+
+.stub-page .placeholder-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  background: var(--lucid-accent-light);
+  color: var(--lucid-accent-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+}
+
+@media (max-width: 991px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--lucid-topbar-height);
+    z-index: 1040;
+    margin-left: calc(-1 * var(--lucid-sidebar-width));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar.mobile-open {
+    margin-left: 0;
+  }
+}
+
+/* =========================================================================
+   PrimeReact bridge
+   Retunes the lara-light-teal theme's CSS custom properties to the LUCID
+   accent so PrimeReact components (Button, InputText, DataTable, Calendar,
+   etc.) sit visually next to the existing Bootstrap-based UI.
+   ========================================================================= */
+:root {
+  --primary-color: var(--lucid-accent);
+  --primary-color-text: #ffffff;
+  --surface-ground: var(--lucid-bg);
+  --surface-border: var(--lucid-border);
+  --font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.p-component {
+  font-size: 0.875rem;
+}
+
+.p-card {
+  border-radius: var(--lucid-radius);
+  box-shadow: var(--lucid-card-shadow);
+}
+
+.p-card .p-card-body {
+  padding: 0;
+}
+
+.p-card .p-card-content {
+  padding: 0;
+}
+
+.p-inputtext,
+.p-dropdown,
+.p-multiselect,
+.p-calendar .p-inputtext,
+.p-inputmask,
+.p-inputnumber-input,
+.p-chips .p-chips-multiple-container {
+  border-radius: var(--lucid-radius-sm);
+}
+
+.p-button {
+  border-radius: var(--lucid-radius-sm);
+}
+
+.p-datatable .p-datatable-thead>tr>th {
+  background: transparent;
+  color: var(--lucid-text-muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.p-datatable .p-datatable-tbody>tr {
+  font-size: 0.875rem;
+  color: var(--lucid-text);
+}
+
+.p-tabview .p-tabview-nav {
+  border-color: var(--lucid-border);
+}
+
+.page-header .p-breadcrumb {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 0.8rem;
+}
+
+.lucid-inline-calendar.p-calendar,
+.lucid-inline-calendar .p-datepicker {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+}
+
+.lucid-inline-calendar .p-datepicker-calendar td {
+  padding: 2px;
+  vertical-align: top;
+}
+
+.lucid-inline-calendar .p-datepicker-calendar td>span {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.5rem;
+}
