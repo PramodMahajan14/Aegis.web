@@ -1,20 +1,19 @@
 import { Link } from 'react-router-dom';
-import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
-import { IconField } from 'primereact/iconfield';
-import { InputIcon } from 'primereact/inputicon';
+import { Button, InputGroup } from '@blueprintjs/core';
+import { useTheme } from '../../theme/ThemeContext';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
 }
 
 export default function Header({ onToggleSidebar }: HeaderProps) {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header className="topbar">
       <Button
-        icon="pi pi-bars"
-        text
-        rounded
+        icon="menu"
+        variant="minimal"
         className="icon-btn d-lg-none"
         onClick={onToggleSidebar}
         aria-label="Toggle menu"
@@ -24,22 +23,25 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
         Aegis
       </Link>
       <Button
-        icon="pi pi-bars"
-        text
-        rounded
+        icon="menu"
+        variant="minimal"
         className="icon-btn d-none d-lg-inline-flex"
         onClick={onToggleSidebar}
         aria-label="Collapse menu"
       />
 
-      <div className="search-box d-none d-md-block">
-        <IconField iconPosition="left" className="w-100">
-          <InputIcon className="pi pi-search" />
-          <InputText placeholder="Search here..." className="w-100" />
-        </IconField>
+      <div className="search-box d-none d-md-block border-0 aling-itmes-center">
+        <InputGroup leftIcon="search" placeholder="Search here..." className="w-100 border-0" />
       </div>
 
       <div className="ms-auto d-flex align-items-center gap-1">
+        <button
+          className="icon-btn"
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          onClick={toggleTheme}
+        >
+          <i className={theme === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars'} />
+        </button>
         <button className="icon-btn" title="Notifications">
           <i className="bi bi-bell" />
           <span className="dot" />

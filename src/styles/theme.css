@@ -1,40 +1,153 @@
 /* =========================================================================
-   Aegis-style design system
-   Measured against the public wrraptheme.com/lucid demo (theme-cyan variant):
-   accent #49c5b6, sidebar 250px, topbar 62px, base font 14px/Ubuntu,
-   card radius .55rem, form-control radius 4px w/ 20px left padding.
-   Loaded after bootstrap.min.css — everything below overrides/extends
-   standard Bootstrap 5 classes, so normal `btn`, `form-control`, `table`,
-   `badge`, `card`, `nav-tabs`, `alert`, `modal`, etc. markup matches this
-   look automatically without any extra classes.
+   Aegis design system
+   A cohesive, professional UI kit for the app shell: color/spacing/shadow
+   tokens, typography, buttons, and form controls. Loaded after
+   bootstrap.min.css and blueprint.css — everything below overrides/extends
+   standard Bootstrap 5 markup (`btn`, `form-control`, `table`, `badge`,
+   `card`, `nav-tabs`, `alert`, `modal`, etc.) and retunes Blueprint's
+   components to match, so both libraries read as one system.
    ========================================================================= */
 
+
+
+
 :root {
+  /* Brand accent (kept as the app's primary color) */
   --aegis-accent: #49c5b6;
-  --aegis-accent-dark: #38a698;
+  --aegis-accent-dark: #349a8d;
+  --aegis-accent-darker: #277c72;
   --aegis-accent-light: #eaf8f6;
-  --aegis-bg: #f4f7f6;
+  --aegis-accent-rgb: 73, 197, 182;
+  --aegis-accent-foreground: #ffffff;
+
+  /* Neutral scale — shadcn/ui "zinc" palette */
+  --aegis-gray-50: #fafafa;
+  --aegis-gray-100: #f4f4f5;
+  --aegis-gray-200: #e4e4e7;
+  --aegis-gray-300: #d4d4d8;
+  --aegis-gray-400: #a1a1aa;
+  --aegis-gray-500: #71717a;
+  --aegis-gray-600: #52525b;
+  --aegis-gray-700: #3f3f46;
+  --aegis-gray-800: #27272a;
+  --aegis-gray-900: #18181b;
+  --aegis-gray-950: #09090b;
+
+  /* Semantic colors */
+  --aegis-success: #16a34a;
+  --aegis-success-dark: #15803d;
+  --aegis-danger: #e7484f;
+  --aegis-danger-dark: #c62f36;
+  --aegis-warning: #ea9d1f;
+  --aegis-warning-dark: #ca7f0c;
+  --aegis-info: #3b82f6;
+
+  /* Surfaces / text */
+  --aegis-bg: var(--aegis-gray-50);
+  --aegis-surface: #ffffff;
   --aegis-sidebar-bg: #ffffff;
-  --aegis-text: #5a5a5a;
-  --aegis-text-strong: #444444;
-  --aegis-text-muted: #9aa5a3;
-  --aegis-border: #eef1f0;
-  --aegis-input-border: #ced4da;
-  --aegis-radius-sm: 4px;
-  --aegis-radius: 0.55rem;
-  --aegis-radius-lg: 14px;
-  --aegis-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --aegis-text: var(--aegis-gray-600);
+  --aegis-text-strong: var(--aegis-gray-900);
+  --aegis-text-muted: var(--aegis-gray-500);
+  --aegis-border: var(--aegis-gray-200);
+  --aegis-input-border: var(--aegis-gray-200);
+
+  /* Radius — shadcn/ui defaults (base 0.625rem, variants derived from it) */
+  --aegis-radius-xs: 4px;
+  --aegis-radius-sm: 6px;
+  --aegis-radius: 8px;
+  --aegis-radius-lg: 10px;
+  --aegis-radius-xl: 14px;
+
+  /* Elevation — subtle, border-led like shadcn (shadows are a hint, not the structure) */
+  --aegis-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --aegis-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.03);
+  --aegis-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --aegis-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1);
+  --aegis-card-shadow: var(--aegis-shadow-xs);
+  --aegis-focus-ring: 0 0 0 3px rgba(var(--aegis-accent-rgb), 0.35);
+  --aegis-danger-ring: 0 0 0 3px rgba(231, 72, 79, 0.2);
+
+  /* Motion */
+  --aegis-transition-fast: 120ms ease;
+  --aegis-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Type */
+  --aegis-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+
+  /* Layout */
   --aegis-topbar-height: 62px;
   --aegis-sidebar-width: 250px;
+
+  color-scheme: light;
+
+  /* Bridge Bootstrap's own CSS variables to these tokens so every
+     component we haven't hand-styled (list-group, accordion, pagination,
+     breadcrumb, progress, links, …) stays visually consistent and
+     dark-mode-aware without per-component overrides. */
+  --bs-body-bg: var(--aegis-bg);
+  --bs-body-color: var(--aegis-text);
+  --bs-emphasis-color: var(--aegis-text-strong);
+  --bs-secondary-color: var(--aegis-text-muted);
+  --bs-heading-color: var(--aegis-text-strong);
+  --bs-border-color: var(--aegis-border);
+  --bs-border-color-translucent: var(--aegis-border);
+  --bs-secondary-bg: var(--aegis-gray-100);
+  --bs-tertiary-bg: var(--aegis-gray-50);
+  --bs-primary: var(--aegis-accent);
+  --bs-primary-rgb: var(--aegis-accent-rgb);
+  --bs-link-color: var(--aegis-accent-dark);
+  --bs-link-color-rgb: var(--aegis-accent-rgb);
+  --bs-link-hover-color: var(--aegis-accent-darker);
+}
+
+/* ---------- Dark mode ---------- */
+:root[data-theme='dark'] {
+  --aegis-accent-light: rgba(73, 197, 182, 0.14);
+
+  --aegis-bg: var(--aegis-gray-950);
+  --aegis-surface: var(--aegis-gray-900);
+  --aegis-sidebar-bg: var(--aegis-gray-900);
+  --aegis-text: var(--aegis-gray-400);
+  --aegis-text-strong: var(--aegis-gray-50);
+  --aegis-text-muted: var(--aegis-gray-500);
+  --aegis-border: var(--aegis-gray-800);
+  --aegis-input-border: var(--aegis-gray-700);
+
+  --aegis-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --aegis-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --aegis-shadow-md: 0 6px 16px rgba(0, 0, 0, 0.45);
+  --aegis-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+
+  color-scheme: dark;
+
+  --bs-body-bg: var(--aegis-bg);
+  --bs-body-color: var(--aegis-text);
+  --bs-emphasis-color: var(--aegis-text-strong);
+  --bs-secondary-color: var(--aegis-text-muted);
+  --bs-heading-color: var(--aegis-text-strong);
+  --bs-border-color: var(--aegis-border);
+  --bs-border-color-translucent: var(--aegis-border);
+  --bs-secondary-bg: var(--aegis-gray-800);
+  --bs-tertiary-bg: var(--aegis-gray-900);
 }
 
 /* ---------- Base / typography ---------- */
+
+*:focus-visible {
+  outline: none;
+}
+
 body {
   background-color: var(--aegis-bg);
   color: var(--aegis-text);
-  font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--aegis-font-sans);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
 }
 
 h1,
@@ -49,45 +162,54 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-weight: 500;
+  font-family: var(--aegis-font-sans);
+  font-weight: 600;
   color: var(--aegis-text-strong);
+  letter-spacing: -0.01em;
   margin-bottom: 0.5rem;
 }
 
 h1,
 .h1 {
-  font-size: 2.85rem;
-  line-height: 1.2;
+  font-size: 1.75rem;
+  line-height: 1.25;
 }
 
 h2,
 .h2 {
-  font-size: 2.3rem;
-  line-height: 1.2;
+  font-size: 1.5rem;
+  line-height: 1.25;
 }
 
 h3,
 .h3 {
-  font-size: 2rem;
-  line-height: 1.2;
+  font-size: 1.25rem;
+  line-height: 1.3;
 }
 
 h4,
 .h4 {
-  font-size: 1.7rem;
-  line-height: 1.2;
+  font-size: 1.125rem;
+  line-height: 1.35;
 }
 
 h5,
 .h5 {
-  font-size: 1.4rem;
-  line-height: 1.2;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 h6,
 .h6 {
-  font-size: 1.15rem;
-  line-height: 1.2;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+p {
+  margin-bottom: 0.75rem;
 }
 
 small,
@@ -96,15 +218,16 @@ small,
 }
 
 .text-muted {
-  color: #6c757d !important;
+  color: var(--aegis-text-muted) !important;
 }
 
 a {
   color: var(--aegis-accent-dark);
+  transition: color var(--aegis-transition-fast);
 }
 
 a:hover {
-  color: var(--aegis-accent);
+  color: var(--aegis-accent-darker);
 }
 
 .text-accent {
@@ -121,94 +244,201 @@ a:hover {
 
 /* ---------- Buttons ---------- */
 .btn {
+  font-family: var(--aegis-font-sans);
   font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
   border-radius: var(--aegis-radius-sm);
-  padding: 0.45rem 1rem;
+  padding: 0.5rem 1.05rem;
+  border: 1px solid transparent;
+  transition: background-color var(--aegis-transition-fast), border-color var(--aegis-transition-fast),
+    color var(--aegis-transition-fast), box-shadow var(--aegis-transition-fast),
+    transform var(--aegis-transition-fast);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--aegis-focus-ring);
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .btn-sm {
-  padding: 0.28rem 0.7rem;
+  padding: 0.32rem 0.75rem;
   font-size: 0.78rem;
+  border-radius: calc(var(--aegis-radius-sm) - 1px);
 }
 
 .btn-lg {
-  padding: 0.65rem 1.4rem;
+  padding: 0.7rem 1.5rem;
   font-size: 1rem;
 }
 
-.btn-accent {
+/* Primary */
+.btn-accent,
+.btn-primary {
   background-color: var(--aegis-accent);
   border-color: var(--aegis-accent);
   color: #fff;
+  box-shadow: var(--aegis-shadow-xs);
 }
 
 .btn-accent:hover,
-.btn-accent:focus {
+.btn-accent:focus,
+.btn-primary:hover,
+.btn-primary:focus {
   background-color: var(--aegis-accent-dark);
   border-color: var(--aegis-accent-dark);
   color: #fff;
+  box-shadow: var(--aegis-shadow-sm);
 }
 
-.btn-outline-accent {
+.btn-accent:active,
+.btn-primary:active {
+  background-color: var(--aegis-accent-darker);
+  border-color: var(--aegis-accent-darker);
+}
+
+/* Secondary (neutral, filled) */
+.btn-secondary {
+  background-color: var(--aegis-gray-100);
+  border-color: var(--aegis-gray-100);
+  color: var(--aegis-text-strong);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: var(--aegis-gray-200);
+  border-color: var(--aegis-gray-200);
+  color: var(--aegis-text-strong);
+}
+
+/* Outline */
+.btn-outline-accent,
+.btn-outline-primary {
   color: var(--aegis-accent-dark);
-  border-color: var(--aegis-accent);
-  background: transparent;
+  border-color: var(--aegis-input-border);
+  background: var(--aegis-surface);
 }
 
-.btn-outline-accent:hover {
+.btn-outline-accent:hover,
+.btn-outline-primary:hover {
+  background: var(--aegis-accent-light);
+  /* border-color: var(--aegis-accent); */
+  color: var(--aegis-accent-darker);
+}
+
+.btn-check:checked+.btn-outline-accent,
+.btn-check:active+.btn-outline-accent,
+.btn-check:checked+.btn-outline-primary {
   background: var(--aegis-accent);
   border-color: var(--aegis-accent);
   color: #fff;
 }
 
-.btn-check:checked+.btn-outline-accent,
-.btn-check:active+.btn-outline-accent {
-  background: var(--aegis-accent);
-  border-color: var(--aegis-accent);
+/* Ghost / text button */
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--aegis-text);
+}
+
+.btn-ghost:hover {
+  background: var(--aegis-bg);
+  color: var(--aegis-text-strong);
+}
+
+/* Danger */
+.btn-danger {
+  background-color: var(--aegis-danger);
+  border-color: var(--aegis-danger);
+  color: #fff;
+}
+
+.btn-danger:hover,
+.btn-danger:focus {
+  background-color: var(--aegis-danger-dark);
+  border-color: var(--aegis-danger-dark);
+}
+
+.btn-outline-danger {
+  color: var(--aegis-danger-dark);
+  border-color: var(--aegis-danger);
+  background: transparent;
+}
+
+.btn-outline-danger:hover {
+  background: var(--aegis-danger);
+  border-color: var(--aegis-danger);
   color: #fff;
 }
 
 /* ---------- Forms ---------- */
 .form-label {
-  font-size: 0.875rem;
-  color: var(--aegis-text);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--aegis-text-strong);
   margin-bottom: 0.4rem;
 }
 
 .form-control,
 .form-select {
+  font-family: var(--aegis-font-sans);
   font-size: 0.875rem;
-  color: var(--aegis-text);
-  background-color: #fff;
+  color: var(--aegis-text-strong);
+  background-color: var(--aegis-surface);
   border: 1px solid var(--aegis-input-border);
   border-radius: var(--aegis-radius-sm);
-  padding: 0.5rem 0.75rem 0.5rem 1.1rem;
+  padding: 0.5rem 0.85rem;
   min-height: 40px;
+  transition: border-color var(--aegis-transition-fast), box-shadow var(--aegis-transition-fast);
+}
+
+.form-control:hover,
+.form-select:hover {
+  border-color: var(--aegis-gray-400);
 }
 
 .form-control:focus,
 .form-select:focus {
+  outline: none;
   border-color: var(--aegis-accent);
-  box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
+  box-shadow: var(--aegis-focus-ring);
 }
 
 .form-control::placeholder {
-  color: #adb5bd;
+  color: var(--aegis-gray-400);
 }
 
 .form-control:disabled,
-.form-control[readonly] {
+.form-control[readonly],
+.form-select:disabled {
   background-color: var(--aegis-bg);
+  color: var(--aegis-text-muted);
+  cursor: not-allowed;
 }
 
 textarea.form-control {
   min-height: 90px;
+  line-height: 1.5;
 }
 
 .form-check-input {
   width: 1.05rem;
   height: 1.05rem;
   border: 1px solid var(--aegis-input-border);
+  transition: background-color var(--aegis-transition-fast), border-color var(--aegis-transition-fast),
+    box-shadow var(--aegis-transition-fast);
 }
 
 .form-check-input:checked {
@@ -217,8 +447,8 @@ textarea.form-control {
 }
 
 .form-check-input:focus {
-  border-color: var(--aegis-accent);
-  box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
+  outline: none;
+  box-shadow: var(--aegis-focus-ring);
 }
 
 .form-switch .form-check-input {
@@ -228,6 +458,7 @@ textarea.form-control {
 
 .form-check-label {
   font-size: 0.875rem;
+  color: var(--aegis-text);
 }
 
 .input-group-text {
@@ -239,34 +470,45 @@ textarea.form-control {
 
 .was-validated .form-control:valid,
 .form-control.is-valid {
-  border-color: #2ecc71;
+  border-color: var(--aegis-success);
+}
+
+.was-validated .form-control:valid:focus,
+.form-control.is-valid:focus {
+  box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.18);
 }
 
 .was-validated .form-control:invalid,
 .form-control.is-invalid {
-  border-color: #e15b64;
+  border-color: var(--aegis-danger);
+}
+
+.was-validated .form-control:invalid:focus,
+.form-control.is-invalid:focus {
+  box-shadow: var(--aegis-danger-ring);
 }
 
 .valid-feedback {
-  color: #2ecc71;
+  color: var(--aegis-success-dark);
   font-size: 0.8rem;
 }
 
 .invalid-feedback {
-  color: #e15b64;
+  color: var(--aegis-danger-dark);
   font-size: 0.8rem;
 }
 
 fieldset legend {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--aegis-text-strong);
 }
 
 /* ---------- Cards ---------- */
 .card {
-  border: none;
-  border-radius: var(--aegis-radius);
+  background-color: var(--aegis-surface);
+  border: 1px solid var(--aegis-border);
+  border-radius: var(--aegis-radius-lg);
   box-shadow: var(--aegis-card-shadow);
 }
 
@@ -283,9 +525,9 @@ fieldset legend {
 }
 
 .aegis-card {
-  background: #fff;
-  border: none;
-  border-radius: var(--aegis-radius);
+  background: var(--aegis-surface);
+  border: 1px solid var(--aegis-border);
+  border-radius: var(--aegis-radius-lg);
   box-shadow: var(--aegis-card-shadow);
 }
 
@@ -339,10 +581,8 @@ fieldset legend {
 
 .table thead th {
   color: var(--aegis-text-muted);
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-  font-weight: 600;
+  font-size: 0.8125rem;
+  font-weight: 500;
   border-bottom-width: 1px;
 }
 
@@ -353,14 +593,15 @@ fieldset legend {
 }
 
 .table-striped>tbody>tr:nth-of-type(odd)>* {
-  background-color: rgba(73, 197, 182, 0.04);
+  background-color: rgba(var(--aegis-accent-rgb), 0.04);
 }
 
 /* ---------- Badges ---------- */
 .badge {
   font-weight: 500;
-  padding: 0.4em 0.65em;
-  border-radius: 4px;
+  padding: 0.28em 0.65em;
+  border-radius: var(--aegis-radius-sm);
+  border: 1px solid transparent;
 }
 
 .badge.rounded-pill {
@@ -414,7 +655,7 @@ fieldset legend {
 .nav-tabs .nav-link:hover {
   color: var(--aegis-accent-dark);
   background: transparent;
-  border-color: transparent transparent var(--aegis-accent);
+  /* border-color: transparent transparent var(--aegis-accent); */
 }
 
 .nav-pills .nav-link {
@@ -484,8 +725,11 @@ fieldset legend {
 
 /* ---------- Modals ---------- */
 .modal-content {
-  border: none;
-  border-radius: var(--aegis-radius);
+  background-color: var(--aegis-surface);
+  color: var(--aegis-text);
+  border: 1px solid var(--aegis-border);
+  border-radius: var(--aegis-radius-lg);
+  box-shadow: var(--aegis-shadow-lg);
 }
 
 .modal-header {
@@ -498,19 +742,28 @@ fieldset legend {
 
 /* ---------- Dropdowns ---------- */
 .dropdown-menu {
+  background-color: var(--aegis-surface);
+  color: var(--aegis-text);
   border: 1px solid var(--aegis-border);
   border-radius: var(--aegis-radius-sm);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--aegis-shadow-md);
   font-size: 0.875rem;
+}
+
+.dropdown-item {
+  color: var(--aegis-text);
 }
 
 .dropdown-item:active,
 .dropdown-item.active {
   background-color: var(--aegis-accent);
+  color: #fff;
 }
 
-.dropdown-item:hover {
+.dropdown-item:hover,
+.dropdown-item:focus {
   background-color: var(--aegis-bg);
+  color: var(--aegis-text-strong);
 }
 
 /* ---------- Accordion ---------- */
@@ -530,9 +783,9 @@ fieldset legend {
   box-shadow: none;
 }
 
-.accordion-button:focus {
+/* .accordion-button:focus {
   box-shadow: 0 0 0 0.2rem rgba(73, 197, 182, 0.18);
-}
+} */
 
 /* ---------- Range sliders ---------- */
 .form-range {
@@ -576,19 +829,42 @@ fieldset legend {
   font-weight: 600;
 }
 
+/* ---------- Spinner ---------- */
+.pi-spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--aegis-border);
+  border-top-color: var(--aegis-accent);
+  border-radius: 50%;
+}
+
+.pi-spin {
+  animation: aegis-spin 0.7s linear infinite;
+}
+
+@keyframes aegis-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* =========================================================================
    Application shell
    ========================================================================= */
 
-.app-shell {
-  border-top: 4px solid var(--aegis-accent);
-  min-height: 100vh;
+.aegis-main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
+
 
 /* ---------- Topbar ---------- */
 .topbar {
   height: var(--aegis-topbar-height);
-  background: #fff;
+  background: var(--aegis-surface);
   border-bottom: 1px solid var(--aegis-border);
   display: flex;
   align-items: center;
@@ -606,8 +882,13 @@ fieldset legend {
   font-weight: 700;
   font-size: 1.15rem;
   color: var(--aegis-text-strong);
-  letter-spacing: 0.5px;
+  letter-spacing: -0.01em;
   white-space: nowrap;
+  transition: color var(--aegis-transition-fast);
+}
+
+.topbar .brand:hover {
+  color: var(--aegis-text-strong);
 }
 
 .topbar .brand .brand-mark {
@@ -638,6 +919,7 @@ fieldset legend {
   position: relative;
   background: transparent;
   border: none;
+  transition: background-color var(--aegis-transition-fast), color var(--aegis-transition-fast);
 }
 
 .topbar .icon-btn:hover {
@@ -653,13 +935,17 @@ fieldset legend {
   height: 8px;
   border-radius: 50%;
   background: #ff5b5b;
-  border: 1.5px solid #fff;
+  border: 1.5px solid var(--aegis-surface);
 }
 
 /* ---------- Sidebar ---------- */
-.app-body {
+.aegis-body {
+  flex: 1;
+  min-height: 0;
+
   display: flex;
-  align-items: flex-start;
+
+  overflow: hidden;
 }
 
 .sidebar {
@@ -716,7 +1002,7 @@ fieldset legend {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #b3bcba;
+  color: var(--aegis-text-muted);
   padding: 0.9rem 0.75rem 0.35rem;
 }
 
@@ -737,6 +1023,11 @@ fieldset legend {
   background: var(--aegis-bg);
 }
 
+.sidebar-group>.sidebar-link:focus-visible {
+  outline: none;
+  box-shadow: var(--aegis-focus-ring);
+}
+
 .sidebar-group.open>.sidebar-link {
   color: var(--aegis-accent-dark);
 }
@@ -744,7 +1035,7 @@ fieldset legend {
 .sidebar-link .chevron {
   transition: transform 0.15s ease;
   font-size: 0.7rem;
-  color: #b3bcba;
+  color: var(--aegis-text-muted);
 }
 
 .sidebar-group.open .chevron {
@@ -766,7 +1057,7 @@ fieldset legend {
   display: block;
   padding: 0.4rem 0.6rem;
   font-size: 0.85rem;
-  color: #8b9694;
+  color: var(--aegis-text-muted);
   text-decoration: none;
   border-radius: 6px;
 }
@@ -781,11 +1072,24 @@ fieldset legend {
   font-weight: 600;
 }
 
+.sidebar-submenu a:focus,
+.sidebar-submenu a:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* ---------- Main content ---------- */
 .main-content {
+  text-align: left;
   flex: 1;
   min-width: 0;
-  padding: 1.5rem;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: var(--aegis-bg);
+
+  padding: 1.25rem;
 }
 
 .page-header {
@@ -804,9 +1108,11 @@ fieldset legend {
   text-align: center;
 }
 
-.page-header h1 {
+.page-header h1,
+.page-header h6 {
   font-size: 1.4rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--aegis-text-strong);
   margin: 0;
 }
@@ -830,7 +1136,8 @@ fieldset legend {
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: #fff;
+  background: var(--aegis-surface);
+  border: 1px solid var(--aegis-border);
   border-radius: var(--aegis-radius-lg);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   padding: 2.25rem;
@@ -864,89 +1171,43 @@ fieldset legend {
 }
 
 /* =========================================================================
-   PrimeReact bridge
-   Retunes the lara-light-teal theme's CSS custom properties to the Aegis
-   accent so PrimeReact components (Button, InputText, DataTable, Calendar,
-   etc.) sit visually next to the existing Bootstrap-based UI.
+   Blueprint bridge
+   Retunes Blueprint's intent/surface CSS custom properties to the Aegis
+   accent so Blueprint components (Button, InputGroup, Breadcrumbs, etc.)
+   sit visually next to the existing Bootstrap-based UI.
    ========================================================================= */
 :root {
-  --primary-color: var(--aegis-accent);
-  --primary-color-text: #ffffff;
-  --surface-ground: var(--aegis-bg);
-  --surface-border: var(--aegis-border);
-  --font-family: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bp-intent-primary-rest: var(--aegis-accent);
+  --bp-intent-primary-hover: var(--aegis-accent-dark);
+  --bp-intent-primary-active: var(--aegis-accent-darker);
+  --bp-intent-primary-foreground: #ffffff;
+  --bp-intent-danger-rest: var(--aegis-danger);
+  --bp-intent-danger-hover: var(--aegis-danger-dark);
+  --bp-intent-danger-active: var(--aegis-danger-dark);
+  --bp-surface-border-radius: var(--aegis-radius-sm);
+  --bp-font-family: var(--aegis-font-sans);
+  --bp-emphasis-focus-color: var(--aegis-accent);
 }
 
-.p-component {
-  font-size: 0.875rem;
-}
-
-.p-card {
-  border-radius: var(--aegis-radius);
-  box-shadow: var(--aegis-card-shadow);
-}
-
-.p-card .p-card-body {
-  padding: 0;
-}
-
-.p-card .p-card-content {
-  padding: 0;
-}
-
-.p-inputtext,
-.p-dropdown,
-.p-multiselect,
-.p-calendar .p-inputtext,
-.p-inputmask,
-.p-inputnumber-input,
-.p-chips .p-chips-multiple-container {
+.bp6-button {
   border-radius: var(--aegis-radius-sm);
+  font-weight: 500;
+  transition: background-color var(--aegis-transition-fast), box-shadow var(--aegis-transition-fast);
 }
 
-.p-button {
+.bp6-input,
+.bp6-input-group .bp6-input {
   border-radius: var(--aegis-radius-sm);
+  font-family: var(--aegis-font-sans);
 }
 
-.p-datatable .p-datatable-thead>tr>th {
-  background: transparent;
-  color: var(--aegis-text-muted);
-  text-transform: uppercase;
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
-}
-
-.p-datatable .p-datatable-tbody>tr {
-  font-size: 0.875rem;
-  color: var(--aegis-text);
-}
-
-.p-tabview .p-tabview-nav {
-  border-color: var(--aegis-border);
-}
-
-.page-header .p-breadcrumb {
-  background: transparent;
-  border: none;
-  padding: 0;
-  font-size: 0.8rem;
-}
-
-.aegis-inline-calendar.p-calendar,
-.aegis-inline-calendar .p-datepicker {
-  width: 100%;
-  border: none;
+.bp6-input:focus,
+.bp6-input.bp6-active {
   box-shadow: none;
+  outline: none;
 }
 
-.aegis-inline-calendar .p-datepicker-calendar td {
-  padding: 2px;
-  vertical-align: top;
-}
-
-.aegis-inline-calendar .p-datepicker-calendar td>span {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 0.5rem;
+.page-header .bp6-breadcrumbs {
+  background: transparent;
+  font-size: 0.8rem;
 }

@@ -1,11 +1,7 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-}
-
+/* Prevent browser/page scrolling */
+html,
+body,
 #root {
-  min-height: 100svh;
+  height: 100%;
+  margin: 0;
 }

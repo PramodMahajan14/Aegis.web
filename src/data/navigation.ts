@@ -6,7 +6,7 @@ const navigation: NavSection[] = [
     label: 'Dashboard',
     icon: 'bi-speedometer2',
     key: 'dashboard',
-    items: [{ label: 'Home', path: '/' }],
+    items: [{ label: 'Home', path: '/' }, { label: 'Employees', path: '/employees' }],
   },
 ];
 

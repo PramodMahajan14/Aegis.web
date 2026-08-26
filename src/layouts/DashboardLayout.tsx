@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../components/Layout/Header';
 import Sidebar from '../components/Layout/Sidebar';
 import Footer from '../components/Layout/Footer';
 
-export default function DashboardLayout() {
+interface DashboardLayoutProps {
+  children?: ReactNode;
+}
+
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -17,15 +21,15 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="app-shell">
+    <div className="aegis-main">
       <Header onToggleSidebar={toggleSidebar} />
-      <div className="app-body">
+      <div className="aegis-body">
         <Sidebar collapsed={collapsed} mobileOpen={mobileOpen} />
         <main className="main-content">
-          <Outlet />
+          {children ?? <Outlet />}
         </main>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Avatar } from 'primereact/avatar';
 import navigation from '../../data/navigation';
 import type { NavSection } from '../../types/navigation';
 
@@ -37,7 +36,12 @@ export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
     >
       <div className="sidebar-user">
         <div className="d-flex align-items-center gap-2">
-          <Avatar label="AT" shape="circle" style={{ background: 'var(--aegis-accent)', color: '#fff' }} />
+          <div
+            className="rounded-circle d-flex align-items-center justify-content-center fw-semibold"
+            style={{ width: 32, height: 32, background: 'var(--aegis-accent)', color: '#fff' }}
+          >
+            AT
+          </div>
           <div>
             <div className="small text-muted">Welcome,</div>
             <div className="fw-semibold" style={{ color: 'var(--aegis-text-strong)' }}>
@@ -61,7 +65,7 @@ export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
               <ul className="sidebar-submenu">
                 {section.items.map((item) => (
                   <li key={item.path}>
-                    <NavLink to={item.path} end={item.path === '/'}>
+                    <NavLink to={item.path} end={item.path === '/'} className="border-none text-decoration-none">
                       {item.label}
                     </NavLink>
                   </li>
