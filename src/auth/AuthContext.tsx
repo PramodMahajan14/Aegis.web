@@ -1,15 +1,15 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { bootstrapSession, login as doLogin, logout as doLogout } from '../api/auth';
-import type { User } from '../api/types';
+import { setAccessToken, setTenantSlug } from '../api/session';
 
-interface AuthState {
-  user: User | null;
-  permissions: string[];
-  loading: boolean;
-  login: (tenant: string, email: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
-  can: (perm: string) => boolean;
-}
+import {
+  useBootstrapSessionQuery,
+  useChangePasswordMutation,
+  useLoginMutation,
+  useLogoutMutation,
+} from '../hooks/authApi/useAuthApi';
+import type { AuthState, LoginPayload, User } from '../hooks/authApi/authTypes';
+
+
 
 const AuthContext = createContext<AuthState | null>(null);
 
@@ -22,39 +22,106 @@ export function useAuth(): AuthState {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [permissions, setPermissions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  // const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [requiresTenantSelection, setRequiresTenantSelection] =
+    useState(false);
+
+  const [pendingAccessToken, setPendingAccessToken] =
+    useState<string | null>(null);
+
+  const sessionQuery = useBootstrapSessionQuery();
+
+  const loginMutation = useLoginMutation();
+  // const tenantMutation = useSelectTenantMutation();
+  const logoutMutation = useLogoutMutation();
+  const changePasswordMutation = useChangePasswordMutation();
 
   useEffect(() => {
-    bootstrapSession()
-      .then((s) => {
-        if (s) {
-          setUser(s.user);
-          setPermissions(s.permissions);
-        }
-      })
-      .finally(() => setLoading(false));
-  }, []);
+    if (!sessionQuery.data) return;
 
-  const value = useMemo<AuthState>(
+    setAccessToken(sessionQuery.data.accessToken);
+    setUser(sessionQuery.data.user);
+    setPermissions(sessionQuery.data.permissions);
+  }, [sessionQuery.data]);
+
+  const login = async (data: LoginPayload) => {
+    const result = await loginMutation.mutateAsync(data);
+
+    // Temporary token
+    setAccessToken(result.accessToken);
+    setPendingAccessToken(result.accessToken);
+
+    // const tenantList = await getTenantList();
+
+    // if (tenantList.length === 1) {
+    //   await selectTenant(tenantList[0].id);
+    //   return;
+    // }
+
+    // setTenants(tenantList);
+    setRequiresTenantSelection(true);
+  };
+
+  // const selectTenant = async (tenantId: string) => {
+  //   const result = await tenantMutation.mutateAsync({
+  //     tenantId,
+  //   });
+
+  //   // Final token
+  //   setAccessToken(result.accessToken);
+
+  //   setUser(result.user);
+  //   setPermissions(result.permissions);
+
+  //   setTenants([]);
+  //   setPendingAccessToken(null);
+  //   setRequiresTenantSelection(false);
+  // };
+
+  const logout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+    } finally {
+      setAccessToken(null);
+      setPendingAccessToken(null);
+    }
+
+    setUser(null);
+    setPermissions([]);
+    // setTenants([]);
+    setRequiresTenantSelection(false);
+  };
+
+  const value = useMemo(
     () => ({
       user,
       permissions,
-      loading,
-      can: (perm) => permissions.includes(perm),
-      login: async (tenant, email, password) => {
-        const r = await doLogin(tenant, email, password);
-        setUser(r.user);
-        setPermissions(r.permissions);
-        return !!r.mustResetPassword;
-      },
-      logout: async () => {
-        await doLogout();
-        setUser(null);
-        setPermissions([]);
-      },
+      // tenants,
+      requiresTenantSelection,
+      loading: sessionQuery.isPending,
+
+      can: (perm: string) => permissions.includes(perm),
+
+      login,
+      // selectTenant,
+      logout,
+
+      changePassword: (newPassword: string) =>
+        changePasswordMutation.mutateAsync({ newPassword }),
     }),
-    [user, permissions, loading],
+    [
+      user,
+      permissions,
+      // tenants,
+      requiresTenantSelection,
+      sessionQuery.isPending,
+      changePasswordMutation,
+    ],
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

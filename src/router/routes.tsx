@@ -4,7 +4,7 @@ import WorkspaceLayout from '../layouts/WorkspaceLayout';
 import AuthLayout from '../layouts/AuthLayout';
 import Blank from '../layouts/Blank';
 import Home from '../pages/Home';
-import Login from '../pages/Login';
+import Login from '../pages/AuthPages/Login';
 import ErrorPage from '../pages/errors/ErrorPage';
 
 const routes: RouteObject[] = [

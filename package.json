@@ -13,13 +13,16 @@
   "dependencies": {
     "@blueprintjs/core": "^6.18.0",
     "@blueprintjs/icons": "^6.13.0",
+    "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-query": "^5.62.7",
     "axios": "^1.19.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.2"
+    "react-hook-form": "^7.86.0",
+    "react-router-dom": "^7.18.2",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.62.7",

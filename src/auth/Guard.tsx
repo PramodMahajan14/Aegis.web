@@ -15,10 +15,10 @@ export default function Guard() {
   }
 
   // NOT LOGGED IN
-  // if (!user) {
-  //   if (isPublicRoute) return <Outlet />;
-  //   return <Navigate to="/login" replace state={{ from: location }} />;
-  // }
+  if (!user) {
+    if (isPublicRoute) return <Outlet />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
 
   // LOGGED IN — block auth pages from being revisited
   if (isPublicRoute) {
