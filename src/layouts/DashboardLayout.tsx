@@ -2,7 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from '../components/Layout/Header';
 import Sidebar from '../components/Layout/Sidebar';
-import Footer from '../components/Layout/Footer';
+
 
 interface DashboardLayoutProps {
   children?: ReactNode;

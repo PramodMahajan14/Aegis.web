@@ -8,7 +8,14 @@ import { AXIOS } from './client';
  * (token/tenant state), and crypto.ts (request/response encryption hook).
  */
 export { AXIOS };
-export { getAccessToken, setAccessToken, getTenantSlug, setTenantSlug } from './session';
+export {
+  getAccessToken,
+  setAccessToken,
+  clearAccessToken,
+  clearAllTokens,
+  getTenantSlug,
+  setTenantSlug,
+} from './session';
 
 export const customInstance = <T,>(config: AxiosRequestConfig): Promise<T> => {
   return AXIOS.request<T>(config).then(({ data }) => data);

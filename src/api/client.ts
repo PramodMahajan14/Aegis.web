@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { attachInterceptors, type InterceptorOptions } from './interceptors';
+import { REFRESH_MODE } from './session';
 
 /**
  * Central point for wiring up a new backend: call createClient(baseURL) and
@@ -10,7 +11,11 @@ import { attachInterceptors, type InterceptorOptions } from './interceptors';
 export function createClient(baseURL: string, options?: InterceptorOptions) {
   const client = axios.create({
     baseURL,
-    withCredentials: true, // send/receive the refresh cookie
+    // Only send credentials (cookies) in cookie mode. In localStorage mode the
+    // refresh token is sent explicitly in the request body, so withCredentials
+    // is not needed and avoids CORS issues on backends that don't set
+    // Access-Control-Allow-Credentials.
+    withCredentials: REFRESH_MODE === 'cookie',
   });
 
   attachInterceptors(client, options);
