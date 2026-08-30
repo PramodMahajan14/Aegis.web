@@ -136,7 +136,7 @@
 /* ---------- Base / typography ---------- */
 
 *:focus-visible {
-  outline: none;
+  /* outline: none; */
 }
 
 body {

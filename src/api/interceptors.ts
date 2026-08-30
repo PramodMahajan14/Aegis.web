@@ -52,7 +52,7 @@ export async function bootstrapCsrf(client: AxiosInstance): Promise<void> {
 // Using module-level callbacks instead of direct imports to break the circular
 // dependency chain: AuthContext → interceptors → AuthContext.
 
-let _onAuthFailure: () => void = () => {};
+let _onAuthFailure: () => void = () => { };
 let _refreshFn: (() => Promise<string>) | null = null;
 
 /** Called by AuthContext to register the logout handler. */
@@ -140,6 +140,7 @@ export function attachInterceptors(client: AxiosInstance, options: InterceptorOp
           });
         }
         const newToken = await refreshPromise;
+
 
         // Update the header and retry the original request exactly once
         if (original.headers) {

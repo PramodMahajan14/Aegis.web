@@ -1,5 +1,5 @@
 import PageHeader from '../components/Layout/PageHeader';
 
 export default function Home() {
-  return <PageHeader title="Home" crumbs={['Dashboard', 'Home', 'detausk', 'home', 'kjl']} />;
+  return <PageHeader crumbs={['Dashboard', 'Home']} />;
 }

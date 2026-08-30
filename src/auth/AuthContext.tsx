@@ -19,6 +19,7 @@ import {
   setAccessToken,
   setRefreshToken,
 } from '../api/session';
+
 import {
   useChangePasswordMutation,
   useLoginMutation,
@@ -109,7 +110,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         organizationId?: string;
       },
     ) => {
+      // Always overwrite the access token in memory
       setAccessToken(accessToken);
+
+      // Only update the refresh token when a new one is provided by the backend.
+      // localStorage.setItem() is an overwrite — so when a new token exists it
+      // always replaces the old one.
+      // If the backend doesn't issue a new refresh token (e.g. selectWorkspace
+      // only rotates the access token), the existing refresh token must stay —
+      // clearing it would leave us unable to refresh after a page reload.
       if (opts?.refreshToken) setRefreshToken(opts.refreshToken);
 
       // Decode user info from JWT for display only
@@ -133,7 +142,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (data: LoginPayload): Promise<void> => {
       // result is ApiResponse<TokenData>: { success, message, data: { accessToken, refreshToken } }
       const result = await loginMutation.mutateAsync(data);
-
       applyTokens(result.data.accessToken, AuthStage.AUTHENTICATED_NO_WORKSPACE, {
         refreshToken: result.data.refreshToken,
       });
@@ -145,12 +153,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const selectWorkspace = useCallback(
     async (workspaceId: string): Promise<void> => {
-      // result is ApiResponse<TokenData>
+      // result is ApiResponse<TokenData>:
+      // { success, message, data: { accessToken (org-scoped), refreshToken? } }
       const result = await selectWorkspaceMutation.mutateAsync({ workspaceId });
 
+      // Replace access token + optionally the refresh token with the new org-scoped pair.
+      // DO NOT call queryClient.invalidateQueries() here — it triggers refetches on
+      // still-mounted queries (e.g. the workspace list) which may return 401, causing
+      // the interceptor to rotate the freshly-stored refresh token out of localStorage.
+      // Dashboard queries fetch fresh naturally when their components mount.
       applyTokens(result.data.accessToken, AuthStage.WORKSPACE_SCOPED, {
         refreshToken: result.data.refreshToken,
-        organizationId: workspaceId, // use the ID we sent — never decode from JWT
+        organizationId: workspaceId,
       });
     },
     [selectWorkspaceMutation, applyTokens],
@@ -194,7 +208,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // result.data.accessToken — the nested envelope format
       const result = await AuthRepository.refresh();
       const { accessToken, refreshToken } = result.data;
-
       setAccessToken(accessToken);
       if (refreshToken) setRefreshToken(refreshToken);
 

@@ -30,8 +30,12 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
         aria-label="Collapse menu"
       />
 
-      <div className="search-box d-none d-md-block border-0 aling-itmes-center">
-        <InputGroup leftIcon="search" placeholder="Search here..." className="w-100 border-0" />
+      <div className=" d-none d-md-flex align-items-center border-0">
+        <InputGroup
+          leftIcon="search"
+          placeholder="Search here..."
+          className="w-100 border-0 from-controller"
+        />
       </div>
 
       <div className="ms-auto d-flex align-items-center gap-1">
