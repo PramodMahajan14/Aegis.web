@@ -11,10 +11,11 @@ const DUMMY_DATA: Prospect[] = [
     { id: 5, name: "Evan Wright", description: "Custom software development", estimatedValue: 100000, location: "Berlin", expectedDecisionDate: "2025-03-01" },
 ];
 
-import { Popover, Menu, MenuItem, Button, Position } from "@blueprintjs/core"
+import { Popover, Menu, MenuItem, Button, Position, Alert, Intent } from "@blueprintjs/core"
 
 export const ProspectTable: React.FC = () => {
     const [data, setData] = useState<Prospect[]>(DUMMY_DATA);
+    const [deletingId, setDeletingId] = useState<number | null>(null);
 
     // Handle our custom inline editing
     const handleCellEdit = (rowIndex: number, columnId: string, newValue: string) => {
@@ -28,10 +29,11 @@ export const ProspectTable: React.FC = () => {
         console.log("Selected Rows:", selectedIndices.map(index => data[index]));
     };
 
-    const handleDelete = (id: number | undefined) => {
-        if (!id) return;
-        setData(prev => prev.filter(p => p.id !== id));
-        console.log("Deleted Prospect ID:", id);
+    const handleDeleteConfirm = () => {
+        if (!deletingId) return;
+        setData(prev => prev.filter(p => p.id !== deletingId));
+        console.log("Deleted Prospect ID:", deletingId);
+        setDeletingId(null);
     };
 
     const handleEdit = (row: Prospect) => {
@@ -64,7 +66,9 @@ export const ProspectTable: React.FC = () => {
                         content={
                             <Menu>
                                 <MenuItem icon="edit" text="Edit Prospect" onClick={() => handleEdit(row)} />
-                                <MenuItem icon="trash" text="Delete" intent="danger" onClick={() => handleDelete(row.id)} />
+                                <MenuItem icon="trash" text="Delete" intent="danger" onClick={() => {
+                                    if(row.id) setDeletingId(row.id);
+                                }} />
                             </Menu>
                         }
                     >
@@ -87,6 +91,20 @@ export const ProspectTable: React.FC = () => {
                 onSelectionChange={handleSelectionChange}
                 pageSize={10}
             />
+            
+            <Alert
+                cancelButtonText="Cancel"
+                confirmButtonText="Delete Prospect"
+                icon="trash"
+                intent={Intent.DANGER}
+                isOpen={deletingId !== null}
+                onCancel={() => setDeletingId(null)}
+                onConfirm={handleDeleteConfirm}
+            >
+                <p>
+                    Are you sure you want to delete this prospect? This action cannot be undone.
+                </p>
+            </Alert>
         </div>
     );
 };

@@ -9,6 +9,7 @@ import Login from '../pages/AuthPages/Login';
 import WorkspaceSelect from '../pages/AuthPages/WorkspaceSelect';
 import Prospectpage from '../pages/Prospectpages/ProjectPage';
 import ManageProspectPage from '../pages/Prospectpages/ManageProspectPage';
+import MasterDashboard from '../pages/MasterPages/MasterDashboard';
 import ErrorPage from '../pages/errors/ErrorPage';
 
 /**
@@ -59,6 +60,8 @@ const routes: RouteObject[] = [
         children: [
           { path: '/', element: <Home /> },
           { path: '/prospects', element: <Prospectpage /> },
+          { path: '/settings', element: <div className="p-4"><h3>Settings (Coming Soon)</h3></div> },
+          { path: '/master', element: <MasterDashboard /> },
           { path: '/prospects/manage', element: <ManageProspectPage /> },
         ],
       },

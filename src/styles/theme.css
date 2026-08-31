@@ -888,7 +888,7 @@ fieldset legend {
   gap: 1rem;
   position: sticky;
   top: 0;
-  z-index: 1030;
+  z-index: 5;
 }
 
 .topbar .brand {
@@ -1226,4 +1226,9 @@ fieldset legend {
 .page-header .bp6-breadcrumbs {
   background: transparent;
   font-size: 0.8rem;
+}
+
+/* BlueprintJS Overlay Z-Index Override to appear above Topbar/Sidebar */
+.bp5-overlay {
+  z-index: 2000 !important;
 }

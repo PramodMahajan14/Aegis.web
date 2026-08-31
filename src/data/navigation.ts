@@ -8,6 +8,15 @@ const navigation: NavSection[] = [
     key: 'dashboard',
     items: [{ label: 'Home', path: '/' }, { label: 'Prospects', path: '/prospects' }],
   },
+  {
+    label: 'Administrator',
+    icon: 'bi-shield-lock',
+    key: 'administrator',
+    items: [
+      { label: 'Settings', path: '/settings' },
+      { label: 'Master', path: '/master' }
+    ],
+  },
 ];
 
 export default navigation;
