@@ -20,9 +20,10 @@
     "bootstrap-icons": "^1.13.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-hook-form": "^7.86.0",
+    "react-hook-form": "^7.87.0",
     "react-router-dom": "^7.18.2",
-    "zod": "^4.4.3"
+    "zod": "^4.5.4",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.62.7",

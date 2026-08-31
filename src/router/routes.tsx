@@ -7,6 +7,8 @@ import Blank from '../layouts/Blank';
 import Home from '../pages/Home';
 import Login from '../pages/AuthPages/Login';
 import WorkspaceSelect from '../pages/AuthPages/WorkspaceSelect';
+import Prospectpage from '../pages/Prospectpages/ProjectPage';
+import ManageProspectPage from '../pages/Prospectpages/ManageProspectPage';
 import ErrorPage from '../pages/errors/ErrorPage';
 
 /**
@@ -56,7 +58,8 @@ const routes: RouteObject[] = [
         element: <WorkspaceLayout />,
         children: [
           { path: '/', element: <Home /> },
-          { path: '/employees', element: <div>Hello Employees</div> },
+          { path: '/prospects', element: <Prospectpage /> },
+          { path: '/prospects/manage', element: <ManageProspectPage /> },
         ],
       },
     ],

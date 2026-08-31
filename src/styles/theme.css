@@ -21,7 +21,7 @@
   --aegis-accent-foreground: #ffffff;
 
   /* Neutral scale — shadcn/ui "zinc" palette */
-  --aegis-gray-50: #fafafa;
+  --aegis-gray-50: #fff;
   --aegis-gray-100: #f4f4f5;
   --aegis-gray-200: #e4e4e7;
   --aegis-gray-300: #d4d4d8;
@@ -287,9 +287,9 @@ a:hover {
 /* Primary */
 .btn-accent,
 .btn-primary {
-  background-color: var(--aegis-accent);
-  border-color: var(--aegis-accent);
-  color: #fff;
+  background-color: var(--aegis-text-strong);
+  border-color: var(--aegis-text-strong);
+  color: var(--aegis-bg);
   box-shadow: var(--aegis-shadow-xs);
 }
 
@@ -297,16 +297,16 @@ a:hover {
 .btn-accent:focus,
 .btn-primary:hover,
 .btn-primary:focus {
-  background-color: var(--aegis-accent-dark);
-  border-color: var(--aegis-accent-dark);
-  color: #fff;
+  background-color: var(--aegis-text);
+  border-color: var(--aegis-text);
+  color: var(--aegis-bg);
   box-shadow: var(--aegis-shadow-sm);
 }
 
 .btn-accent:active,
 .btn-primary:active {
-  background-color: var(--aegis-accent-darker);
-  border-color: var(--aegis-accent-darker);
+  background-color: var(--aegis-text-muted);
+  border-color: var(--aegis-text-muted);
 }
 
 /* Secondary (neutral, filled) */
@@ -326,24 +326,23 @@ a:hover {
 /* Outline */
 .btn-outline-accent,
 .btn-outline-primary {
-  color: var(--aegis-accent-dark);
+  color: var(--aegis-text-strong);
   border-color: var(--aegis-input-border);
   background: var(--aegis-surface);
 }
 
 .btn-outline-accent:hover,
 .btn-outline-primary:hover {
-  background: var(--aegis-accent-light);
-  /* border-color: var(--aegis-accent); */
-  color: var(--aegis-accent-darker);
+  background: var(--aegis-gray-100);
+  color: var(--aegis-text-strong);
 }
 
 .btn-check:checked+.btn-outline-accent,
 .btn-check:active+.btn-outline-accent,
 .btn-check:checked+.btn-outline-primary {
-  background: var(--aegis-accent);
-  border-color: var(--aegis-accent);
-  color: #fff;
+  background: var(--aegis-text-strong);
+  border-color: var(--aegis-text-strong);
+  color: var(--aegis-bg);
 }
 
 /* Ghost / text button */
@@ -401,6 +400,7 @@ a:hover {
   border-radius: var(--aegis-radius-sm);
   padding: 0.5rem 0.85rem;
   min-height: 40px;
+  box-shadow: var(--aegis-shadow-xs);
   transition: border-color var(--aegis-transition-fast), box-shadow var(--aegis-transition-fast);
 }
 
@@ -412,8 +412,8 @@ a:hover {
 .form-control:focus,
 .form-select:focus {
   outline: none;
-  border-color: var(--aegis-accent);
-  box-shadow: var(--aegis-focus-ring);
+  border-color: var(--aegis-gray-600);
+  box-shadow: 0 0 0 2px var(--aegis-gray-200);
 }
 
 .form-control::placeholder {
@@ -437,18 +437,20 @@ textarea.form-control {
   width: 1.05rem;
   height: 1.05rem;
   border: 1px solid var(--aegis-input-border);
+  border-radius: 4px;
+  background-color: var(--aegis-surface);
   transition: background-color var(--aegis-transition-fast), border-color var(--aegis-transition-fast),
     box-shadow var(--aegis-transition-fast);
 }
 
 .form-check-input:checked {
-  background-color: var(--aegis-accent);
-  border-color: var(--aegis-accent);
+  background-color: var(--aegis-text-strong);
+  border-color: var(--aegis-text-strong);
 }
 
 .form-check-input:focus {
   outline: none;
-  box-shadow: var(--aegis-focus-ring);
+  box-shadow: 0 0 0 2px var(--aegis-gray-200);
 }
 
 .form-switch .form-check-input {
@@ -556,6 +558,7 @@ fieldset legend {
   font-weight: 600;
 }
 
+
 .stat-card .stat-value {
   font-size: 1.6rem;
   font-weight: 600;
@@ -571,19 +574,23 @@ fieldset legend {
 .table {
   color: var(--aegis-text);
   font-size: 0.875rem;
-  --bs-table-hover-bg: var(--aegis-bg);
+  --bs-table-hover-bg: var(--aegis-gray-50);
 }
 
 .table> :not(caption)>*>* {
-  border-bottom-color: var(--aegis-border);
-  padding: 0.75rem;
+  border-bottom: 1px solid var(--aegis-border);
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
 }
 
 .table thead th {
   color: var(--aegis-text-muted);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  border-bottom-width: 1px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--aegis-border);
+  background-color: var(--aegis-gray-50);
 }
 
 .table-bordered,
@@ -592,16 +599,17 @@ fieldset legend {
   border-color: var(--aegis-border);
 }
 
-.table-striped>tbody>tr:nth-of-type(odd)>* {
-  background-color: rgba(var(--aegis-accent-rgb), 0.04);
-}
 
 /* ---------- Badges ---------- */
 .badge {
   font-weight: 500;
-  padding: 0.28em 0.65em;
-  border-radius: var(--aegis-radius-sm);
-  border: 1px solid transparent;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  padding: 0.25em 0.6em;
+  border-radius: var(--aegis-radius-xs);
+  border: 1px solid var(--aegis-border);
+  background-color: var(--aegis-surface);
+  color: var(--aegis-text-strong);
 }
 
 .badge.rounded-pill {
@@ -609,33 +617,38 @@ fieldset legend {
 }
 
 .bg-accent-subtle {
-  background-color: var(--aegis-accent-light) !important;
+  background-color: var(--aegis-gray-100) !important;
 }
 
 .text-accent-emphasis {
-  color: var(--aegis-accent-dark) !important;
+  color: var(--aegis-text-strong) !important;
 }
 
 /* ---------- Alerts ---------- */
 .alert {
-  border: none;
+  border: 1px solid var(--aegis-border);
+  background-color: var(--aegis-surface);
+  color: var(--aegis-text-strong);
   border-radius: var(--aegis-radius-sm);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
 }
 
 .alert-accent {
-  background-color: var(--aegis-accent-light);
-  color: var(--aegis-accent-dark);
+  background-color: var(--aegis-gray-50);
+  border-color: var(--aegis-gray-300);
+  color: var(--aegis-text-strong);
 }
 
 /* ---------- Progress ---------- */
 .progress {
-  background-color: var(--aegis-bg);
+  background-color: var(--aegis-gray-100);
   border-radius: 10rem;
+  height: 0.5rem;
 }
 
 .progress-bar {
-  background-color: var(--aegis-accent);
+  background-color: var(--aegis-text-strong);
 }
 
 /* ---------- Nav tabs / pills ---------- */
@@ -659,14 +672,17 @@ fieldset legend {
 }
 
 .nav-pills .nav-link {
-  color: var(--aegis-text);
-  font-size: 0.875rem;
+  color: var(--aegis-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
   border-radius: var(--aegis-radius-sm);
+  padding: 0.4rem 0.8rem;
+  transition: all var(--aegis-transition-fast);
 }
 
 .nav-pills .nav-link.active {
-  background-color: var(--aegis-accent);
-  color: #fff;
+  background-color: var(--aegis-gray-100);
+  color: var(--aegis-text-strong);
 }
 
 /* ---------- Breadcrumbs ---------- */
