@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@blueprintjs/core';
 import { JobRoleSchema, type JobRoleFormData } from './MasterSchemas';
 import { useWindowStore } from '../../store/useWindowStore';
+import { useCreateJobeRole } from '../../hooks/Master/useMaster';
 
 interface JobRoleModalProps {
   windowId: string;
@@ -25,11 +26,18 @@ export const JobRoleModal: React.FC<JobRoleModalProps> = ({ windowId }) => {
     },
   });
 
+  const createJobRole = useCreateJobeRole();
+
   const onSubmit = async (data: JobRoleFormData) => {
-    console.log("Saving JobRole:", data);
-    // Simulate API call
-    await new Promise(r => setTimeout(r, 800));
-    closeWindow(windowId);
+    try {
+      await createJobRole.mutateAsync({
+        name: data.title,
+        description: data.description,
+      });
+      closeWindow(windowId);
+    } catch (error) {
+      console.error("Failed to create job role:", error);
+    }
   };
 
   return (
