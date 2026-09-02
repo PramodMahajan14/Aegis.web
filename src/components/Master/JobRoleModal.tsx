@@ -4,13 +4,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@blueprintjs/core';
 import { JobRoleSchema, type JobRoleFormData } from './MasterSchemas';
 import { useWindowStore } from '../../store/useWindowStore';
-import { useCreateJobeRole } from '../../hooks/Master/useMaster';
+import { useCreateJobeRole, useUpdateJobeRole } from '../../hooks/Master/useMaster';
+
+import type { JobRole } from '../../hooks/Master/MasterTypes';
 
 interface JobRoleModalProps {
   windowId: string;
+  initialData?: any; // Replace with JobRole or the form data type
 }
 
-export const JobRoleModal: React.FC<JobRoleModalProps> = ({ windowId }) => {
+export const JobRoleModal: React.FC<JobRoleModalProps> = ({ windowId, initialData }) => {
   const { closeWindow } = useWindowStore();
 
   const {
@@ -20,23 +23,35 @@ export const JobRoleModal: React.FC<JobRoleModalProps> = ({ windowId }) => {
   } = useForm<JobRoleFormData>({
     resolver: zodResolver(JobRoleSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      isActive: true,
+      title: initialData?.name || '',
+      description: initialData?.description || '',
+      isActive: initialData?.isActive ?? true,
     },
   });
 
   const createJobRole = useCreateJobeRole();
+  const updateJobRole = useUpdateJobeRole();
 
   const onSubmit = async (data: JobRoleFormData) => {
     try {
-      await createJobRole.mutateAsync({
-        name: data.title,
-        description: data.description,
-      });
+      if (initialData?.id) {
+        await updateJobRole.mutateAsync({
+          id: initialData.id,
+          data: {
+            id: initialData.id,
+            name: data.title,
+            description: data.description,
+          }
+        });
+      } else {
+        await createJobRole.mutateAsync({
+          name: data.title,
+          description: data.description,
+        });
+      }
       closeWindow(windowId);
     } catch (error) {
-      console.error("Failed to create job role:", error);
+      console.error("Failed to save job role:", error);
     }
   };
 
@@ -102,7 +117,7 @@ export const JobRoleModal: React.FC<JobRoleModalProps> = ({ windowId }) => {
             disabled={isSubmitting}
           >
             <Icon icon="floppy-disk" className="me-2" size={14} />
-            {isSubmitting ? 'Saving...' : 'Save Role'}
+            {isSubmitting ? 'Saving...' : initialData ? 'Update Role' : 'Save Role'}
           </button>
         </div>
       </form>

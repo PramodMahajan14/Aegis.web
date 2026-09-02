@@ -2,7 +2,7 @@ import type { ApiResponse } from "../authApi/authTypes";
 
 
 export interface JobRole {
-    Id?: string;
+    id?: string;
     name: string;
     description: string
 }

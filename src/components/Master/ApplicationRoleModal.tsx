@@ -7,9 +7,10 @@ import { useWindowStore } from '../../store/useWindowStore';
 
 interface ApplicationRoleModalProps {
   windowId: string;
+  initialData?: any; // Replace with ApplicationRole or form data type
 }
 
-export const ApplicationRoleModal: React.FC<ApplicationRoleModalProps> = ({ windowId }) => {
+export const ApplicationRoleModal: React.FC<ApplicationRoleModalProps> = ({ windowId, initialData }) => {
   const { closeWindow } = useWindowStore();
 
   const {
@@ -19,9 +20,9 @@ export const ApplicationRoleModal: React.FC<ApplicationRoleModalProps> = ({ wind
   } = useForm<ApplicationRoleFormData>({
     resolver: zodResolver(ApplicationRoleSchema),
     defaultValues: {
-      roleName: '',
-      accessLevel: 'User',
-      isActive: true,
+      roleName: initialData?.roleName || '',
+      accessLevel: initialData?.accessLevel || 'User',
+      isActive: initialData?.isActive ?? true,
     },
   });
 
@@ -97,7 +98,7 @@ export const ApplicationRoleModal: React.FC<ApplicationRoleModalProps> = ({ wind
             disabled={isSubmitting}
           >
             <Icon icon="floppy-disk" className="me-2" size={14} />
-            {isSubmitting ? 'Saving...' : 'Save Role'}
+            {isSubmitting ? 'Saving...' : initialData ? 'Update Role' : 'Save Role'}
           </button>
         </div>
       </form>
