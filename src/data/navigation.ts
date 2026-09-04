@@ -14,7 +14,8 @@ const navigation: NavSection[] = [
     key: 'administrator',
     items: [
       { label: 'Settings', path: '/settings' },
-      { label: 'Master', path: '/master' }
+      { label: 'Master', path: '/master' },
+      { label: 'Employee', path: '/employee' }
     ],
   },
 ];

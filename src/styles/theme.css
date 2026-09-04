@@ -109,9 +109,9 @@
   --aegis-bg: var(--aegis-gray-950);
   --aegis-surface: var(--aegis-gray-900);
   --aegis-sidebar-bg: var(--aegis-gray-900);
-  --aegis-text: var(--aegis-gray-400);
-  --aegis-text-strong: var(--aegis-gray-50);
-  --aegis-text-muted: var(--aegis-gray-500);
+  --aegis-text: var(--aegis-gray-200);
+  --aegis-text-strong: #ffffff;
+  --aegis-text-muted: var(--aegis-gray-400);
   --aegis-border: var(--aegis-gray-800);
   --aegis-input-border: var(--aegis-gray-700);
 
@@ -212,6 +212,7 @@ p {
   margin-bottom: 0.75rem;
 }
 
+
 small,
 .small {
   font-size: 0.8rem;
@@ -240,6 +241,37 @@ a:hover {
 
 .border-accent {
   border-color: var(--aegis-accent) !important;
+}
+
+/* Background color */
+.bg-primary-light {
+  background-color: var(--bs-tertiary-bg);
+  color: var(--aegis-text);
+}
+
+.bg-secondary-light {
+  background-color: var(--bs-secondary-bg);
+  color: var(--aegis-text);
+}
+
+.bg-light {
+  background-color: var(--bs-tertiary-bg);
+  color: var(--aegis-text);
+}
+
+.bg-primary {
+  background-color: var(--aegis-accent);
+  color: var(--aegis-text);
+}
+
+.bg-dark {
+  background-color: var(--aegis-gray-900);
+  color: var(--aegis-text);
+}
+
+.bg-dark {
+  background-color: var(--aegis-gray-900);
+  color: var(--aegis-text);
 }
 
 /* ---------- Buttons ---------- */
@@ -448,6 +480,10 @@ textarea.form-control {
   border-color: var(--aegis-text-strong);
 }
 
+[data-theme='dark'] .form-check-input:checked {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+
 .form-check-input:focus {
   outline: none;
   box-shadow: 0 0 0 2px var(--aegis-gray-200);
@@ -529,7 +565,7 @@ fieldset legend {
 .aegis-card {
   background: var(--aegis-surface);
   border: 1px solid var(--aegis-border);
-  border-radius: var(--aegis-radius-lg);
+  border-radius: 0;
   box-shadow: var(--aegis-card-shadow);
 }
 
@@ -574,7 +610,7 @@ fieldset legend {
 .table {
   color: var(--aegis-text);
   font-size: 0.875rem;
-  --bs-table-hover-bg: var(--aegis-gray-50);
+  --bs-table-hover-bg: var(--bs-secondary-bg);
 }
 
 .table> :not(caption)>*>* {
@@ -590,7 +626,7 @@ fieldset legend {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--aegis-border);
-  background-color: var(--aegis-gray-50);
+  background-color: var(--bs-tertiary-bg);
 }
 
 .table-bordered,

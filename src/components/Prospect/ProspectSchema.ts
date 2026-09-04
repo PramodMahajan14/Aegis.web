@@ -7,6 +7,7 @@ export const ProspectSchema = z.object({
   estimatedValue: z.number().min(0, "Value cannot be negative").optional(),
   location: z.string().min(1, "Location is required"),
   expectedDecisionDate: z.string().min(1, "Date is required"),
+  stage: z.string().optional(),
 });
 
 // Infer TypeScript types directly from Zod schema
