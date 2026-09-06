@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon, Spinner, Button, MenuItem } from '@blueprintjs/core';
@@ -6,13 +6,19 @@ import { Select, type ItemRenderer } from '@blueprintjs/select';
 import { useNavigate } from 'react-router-dom';
 import { EmployeeSchema, type EmployeeFormData, Gender } from './EmployeeSchemas';
 import { useGetJobeRoles } from '../../hooks/Master/useMaster';
-import { useCreateEmployee } from '../../hooks/Employee/useEmployee';
-import { localToUtc } from '../../Utility/DateUtility';
+import { useCreateEmployee, useGetEmployee, useUpdateEmployee } from '../../hooks/Employee/useEmployee';
+import { FormatUtcToInputDate, localToUtc, UTCToLocal } from '../../Utility/DateUtility';
+import { useParams } from 'react-router-dom';
 
 export function ManageEmployee() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { data: jobRoles, isLoading: isJobRolesLoading } = useGetJobeRoles();
   const { mutate: Create, isPending: creating } = useCreateEmployee()
+  const { mutate: Update, isPending: updating } = useUpdateEmployee(id)
+  const { data: employee, isLoading: isEmployeeLoading } = useGetEmployee(id)
+  console.log(employee)
+
   const {
     register,
     handleSubmit,
@@ -25,7 +31,7 @@ export function ManageEmployee() {
     defaultValues: {
       firstName: '',
       lastName: '',
-      eMail: '',
+      email: '',
       gender: Gender.Male,
       dateOfBirth: '',
       joiningDate: '',
@@ -68,14 +74,31 @@ export function ManageEmployee() {
     );
   };
 
-  const onSubmit = async (data: EmployeeFormData) => {
+  useEffect(() => {
+    if (employee) {
+      setValue("firstName", employee.firstName)
+      setValue("lastName", employee.lastName)
+      setValue("email", employee.email)
+      setValue("gender", employee.gender)
+      setValue("dateOfBirth", FormatUtcToInputDate(employee.dateOfBirth ?? ""))
+      setValue("joiningDate", FormatUtcToInputDate(employee.joiningDate ?? ""))
+      setValue("contactNumber", employee.contactNumber)
+      setValue("jobRoleId", employee.jobRoleId)
+    }
+  }, [employee])
 
+  const onSubmit = async (data: EmployeeFormData) => {
     let payload: EmployeeFormData = {
       ...data,
       joiningDate: localToUtc(data.joiningDate) ?? null,
       dateOfBirth: localToUtc(data.dateOfBirth) ?? null
     }
-    Create(payload)
+
+    if (id) {
+      Update({ id, data: payload });
+    } else {
+      Create(payload);
+    }
   };
   let isSubmitting = creating ?? false;
   return (
@@ -130,7 +153,7 @@ export function ManageEmployee() {
                 const l = watch('lastName');
                 if (f && l) {
                   const generated = `${f.toLowerCase()}.${l.toLowerCase()}@aegis.com`.replace(/\s+/g, '');
-                  setValue('eMail', generated, { shouldValidate: true, shouldDirty: true });
+                  setValue('email', generated, { shouldValidate: true, shouldDirty: true });
                 }
               }}
               disabled={!watch('firstName') || !watch('lastName')}
@@ -138,11 +161,13 @@ export function ManageEmployee() {
           </div>
           <input
             type="email"
-            className={`form-control form-control-lg fs-6 ${errors.eMail ? 'is-invalid' : ''}`}
+            className={`form-control form-control-lg fs-6 ${errors.email ? 'is-invalid' : ''}`}
             placeholder="john.doe@aegis.com"
-            {...register('eMail')}
+            {...register('email')}
           />
-          {errors.eMail && <div className="invalid-feedback">{errors.eMail.message}</div>}
+          {errors.email
+            && <div className="invalid-feedback">{errors.email
+              .message}</div>}
         </div>
 
         {/* Contact Number */}

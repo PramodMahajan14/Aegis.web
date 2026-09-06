@@ -3,6 +3,8 @@ import EmployeeRepository from '../../api/repositories/EmployeRepository';
 import type { Employee } from './EmployeeTypes';
 import { Toast2 } from '@blueprintjs/core';
 import { useToast } from '../../Services/ToastServices';
+import { getErrorMessage } from '../../Utility/errorHelpers';
+import { useNavigate } from 'react-router-dom';
 
 export const EMPLOYEE_QUERY_KEYS = {
   all: ['employee'] as const,
@@ -40,6 +42,7 @@ export const useGetEmployee = (id: string) => {
 export const useCreateEmployee = () => {
   const queryClient = useQueryClient();
   const toast = useToast()
+  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: async (data: Partial<Employee>) => {
@@ -50,18 +53,21 @@ export const useCreateEmployee = () => {
       return response.data;
     },
     onSuccess: () => {
+
       queryClient.invalidateQueries({ queryKey: EMPLOYEE_QUERY_KEYS.employees() });
+      navigate("/employee");
     },
-    onError: (err) => {
-      let message = err?.response.data.message ?? err.name;
-      toast.error(message)
+    onError: (err: unknown) => {
+      const message = getErrorMessage(err);
+      toast.error(message);
     }
   });
 };
 
 export const useUpdateEmployee = () => {
   const queryClient = useQueryClient();
-
+  const toast = useToast()
+  const navigate = useNavigate()
   return useMutation({
     mutationFn: async ({ id, data }: { id: string, data: any }) => {
       const response = await EmployeeRepository.UpdateEmployee(id, data);
@@ -71,8 +77,13 @@ export const useUpdateEmployee = () => {
       return response.data;
     },
     onSuccess: () => {
+      navigate("/employee");
       queryClient.invalidateQueries({ queryKey: EMPLOYEE_QUERY_KEYS.employees() });
     },
+    onError: (err: unknown) => {
+      const message = getErrorMessage(err);
+      toast.error(message);
+    }
   });
 };
 

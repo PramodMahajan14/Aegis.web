@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Icon, Button, InputGroup, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Icon, Button, InputGroup, Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 import { Popover } from '@blueprintjs/core';
 import { Avatar } from '../common/Avatar';
 import { useGetEmployees } from '../../hooks/Employee/useEmployee';
+import { UTCToLocal } from '../../Utility/DateUtility';
+import { useHandleDeleteEmployee } from './HandleDelete';
+import { useNavigate } from 'react-router-dom';
 
 export interface Employee {
   id: string;
@@ -12,43 +15,25 @@ export interface Employee {
   status: string;
 }
 
-const DUMMY_EMPLOYEES: Employee[] = [
-  { id: '1', name: 'John Doe', email: 'john.doe@example.com', role: 'Software Engineer', status: 'Active' },
-  { id: '2', name: 'Jane Smith', email: 'jane.smith@example.com', role: 'Product Manager', status: 'Active' },
-  { id: '3', name: 'Michael Brown', email: 'michael.b@example.com', role: 'Designer', status: 'Inactive' },
-  { id: '4', name: 'Emily Davis', email: 'emily.d@example.com', role: 'Data Scientist', status: 'Active' },
-  { id: '5', name: 'William Wilson', email: 'william.w@example.com', role: 'DevOps Engineer', status: 'On Leave' },
-];
+
 
 export function EmployeeList() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: EmpList, isLoading: loading } = useGetEmployees()
+  const { data: EmpList, isLoading: loading } = useGetEmployees();
+  const handleDeleteEmployee = useHandleDeleteEmployee();
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  console.log(EmpList)
-  const filteredEmployees = DUMMY_EMPLOYEES.filter(emp => {
-    const matchesSearch =
-      emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      emp.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      emp.role.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'All' || emp.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const navigate = useNavigate()
 
-  const toggleSelection = (id: string) => {
-    const newSet = new Set(selectedIds);
-    if (newSet.has(id)) newSet.delete(id);
-    else newSet.add(id);
-    setSelectedIds(newSet);
-  };
-
-  const toggleAll = () => {
-    if (selectedIds.size === filteredEmployees.length && filteredEmployees.length > 0) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(filteredEmployees.map(e => e.id)));
-    }
-  };
+  if (EmpList?.length == 0) {
+    return (
+      <div>
+        <Icon icon="search" size={32} className="text-muted mb-3 opacity-50" />
+        <p className="mb-1 fw-semibold">No Employees Found</p>
+        <p className="text-muted small">Try adjusting your search or filters.</p>
+      </div>
+    )
+  }
 
   return (
     <div className="d-flex flex-column w-100">
@@ -104,76 +89,63 @@ export function EmployeeList() {
                   type="checkbox"
                   className="form-check-input shadow-sm"
                   style={{ cursor: 'pointer' }}
-                  checked={selectedIds.size === filteredEmployees.length && filteredEmployees.length > 0}
-                  onChange={toggleAll}
+
                 />
               </th>
               <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Employee</th>
-              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Role</th>
-              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Status</th>
+              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Email</th>
+              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Joining Date</th>
               <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom text-end" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredEmployees.map((emp) => (
+            {EmpList?.map((emp) => (
               <tr
                 key={emp.id}
                 style={{ cursor: 'pointer', transition: 'background 0.2s' }}
-                className={selectedIds.has(emp.id) ? 'bg-primary-subtle' : ''}
-                onClick={(e) => {
-                  if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('.bp5-popover-target')) return;
-                  toggleSelection(emp.id);
-                }}
+              // className={selectedIds.has(emp.id) ? 'bg-primary-subtle' : ''}
+              // onClick={(e) => {
+              //   if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('.bp5-popover-target')) return;
+              //   toggleSelection(emp.id);
+              // }}
               >
                 <td className="px-4 py-3 border-0 border-bottom" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="checkbox"
                     className="form-check-input shadow-sm"
                     style={{ cursor: 'pointer' }}
-                    checked={selectedIds.has(emp.id)}
-                    onChange={() => toggleSelection(emp.id)}
+                  // checked={selectedIds.has(emp.id)}
+                  // onChange={() => toggleSelection(emp.id)}
                   />
                 </td>
                 <td className="px-4 py-3 border-0 border-bottom">
                   <div className="d-flex align-items-center gap-3">
-                    <Avatar name={emp.name} email={emp.email} />
-                    <div>
-                      <div className="fw-semibold text-body-emphasis">{emp.name}</div>
-                      <div className="text-muted small">{emp.email}</div>
-                    </div>
+                    <Avatar firstName={emp.firstName} lastName={emp.lastName} jobRole={emp.jobRole?.name as string} />
+
                   </div>
                 </td>
                 <td className="px-4 py-3 border-0 border-bottom">
-                  <span className="text-body-emphasis fw-medium">{emp.role}</span>
+                  <span className="text-body-emphasis fw-medium">{emp?.email}</span>
                 </td>
                 <td className="px-4 py-3 border-0 border-bottom">
-                  {emp.status === 'Active' ? (
-                    <span className="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-2 rounded-pill px-2 py-1 shadow-sm">
-                      <div className="rounded-circle bg-success shadow-sm" style={{ width: '6px', height: '6px' }}></div>
-                      Active
-                    </span>
-                  ) : emp.status === 'Inactive' ? (
-                    <span className="badge bg-secondary-subtle text-secondary border border-secondary-subtle d-inline-flex align-items-center gap-2 rounded-pill px-2 py-1 shadow-sm">
-                      <div className="rounded-circle bg-secondary shadow-sm" style={{ width: '6px', height: '6px' }}></div>
-                      Inactive
-                    </span>
-                  ) : (
-                    <span className="badge bg-warning-subtle text-warning border border-warning-subtle d-inline-flex align-items-center gap-2 rounded-pill px-2 py-1 shadow-sm">
-                      <div className="rounded-circle bg-warning shadow-sm" style={{ width: '6px', height: '6px' }}></div>
-                      {emp.status}
-                    </span>
-                  )}
+                  <span className="text-body-emphasis fw-medium">{UTCToLocal(emp?.joiningDate as string)}</span>
                 </td>
                 <td className="px-4 py-3 border-0 border-bottom text-end">
                   <div className="d-flex justify-content-end gap-1">
-                    <Button icon="edit" minimal intent="primary" title="Edit Employee" />
+                    <Button icon="edit" minimal intent="primary" title="Edit Employee" onClick={() => navigate(`/employee/manage/${emp.id}`)} />
                     <Popover
                       content={
                         <Menu>
                           <MenuItem icon="eye-open" text="View Details" />
                           <MenuItem icon="history" text="Activity Log" />
-                          <MenuDivider />
-                          <MenuItem icon="trash" text="Delete" intent="danger" />
+
+                          {!emp.isRoot && (
+                            <>
+
+                              <MenuDivider />
+                              <MenuItem icon="trash" text="Delete" intent={Intent.DANGER} onClick={() => handleDeleteEmployee(emp)} /></>
+
+                          )}
                         </Menu>
                       }
                       placement="bottom-end"
@@ -184,7 +156,7 @@ export function EmployeeList() {
                 </td>
               </tr>
             ))}
-            {filteredEmployees.length === 0 && (
+            {EmpList?.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-center py-5 border-0">
                   <Icon icon="search" size={32} className="text-muted mb-3 opacity-50" />
@@ -198,7 +170,7 @@ export function EmployeeList() {
 
       {/* Footer / Pagination */}
       <div className="d-flex justify-content-between align-items-center p-3  border-top">
-        <span className="text-muted small fw-medium">Showing {filteredEmployees.length} of {DUMMY_EMPLOYEES.length} results</span>
+        <span className="text-muted small fw-medium">Showing {EmpList?.length} of {EmpList?.length} results</span>
         <div className="d-flex gap-2">
           <Button icon="chevron-left" disabled minimal className="text-muted" />
           <Button icon="chevron-right" disabled minimal className="text-muted" />

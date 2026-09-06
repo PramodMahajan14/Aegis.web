@@ -9,7 +9,7 @@ export enum Gender {
 export const EmployeeSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  eMail: z.string().min(1, 'Email is required').email('Invalid email address'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
   gender: z.nativeEnum(Gender, { errorMap: () => ({ message: 'Please select a gender' }) }),
   dateOfBirth: z.string().min(1, 'Date of birth is required') ?? z.null(),
   joiningDate: z.string().min(1, 'Joining date is required') ?? z.null(),

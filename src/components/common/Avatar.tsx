@@ -1,23 +1,27 @@
+import { Icon } from '@blueprintjs/core';
 import React from 'react';
 
 export interface AvatarProps {
-  name: string;
+  firstName: string;
+  lastName: string;
+
   imageUrl?: string;
-  jobRole?: string;
-  email?: string;
+  jobRole?: string | undefined | null;
+  email?: string | undefined | null;
   size?: 'sm' | 'md' | 'lg';
   hideDetails?: boolean;
 }
 
 export const Avatar: React.FC<AvatarProps> = ({
-  name,
+  firstName,
+  lastName,
   imageUrl,
-  jobRole,
-  email,
+  jobRole = null,
+  email = null,
   size = 'md',
   hideDetails = false
 }) => {
-  const initials = name
+  const initials = firstName
     .split(' ')
     .filter(n => n.length > 0)
     .map(n => n[0])
@@ -34,12 +38,13 @@ export const Avatar: React.FC<AvatarProps> = ({
   const dimension = sizeMap[size];
   const subtitle = jobRole || email;
 
+
   return (
     <div className="d-flex align-items-center py-1">
       {imageUrl ? (
         <img
           src={imageUrl}
-          alt={name}
+          alt={firstName}
           className="rounded-circle me-3 object-fit-cover"
           style={{ width: dimension, height: dimension, flexShrink: 0 }}
         />
@@ -54,8 +59,8 @@ export const Avatar: React.FC<AvatarProps> = ({
 
       {!hideDetails && (
         <div>
-          <div className="fw-semibold text-strong" style={{ marginBottom: subtitle ? '2px' : '0' }}>{name}</div>
-          {subtitle && <div className="small text-muted" style={{ fontSize: '0.8rem' }}>{subtitle}</div>}
+          <div className="fw-semibold text-strong" style={{ marginBottom: subtitle ? '2px' : '0' }}>{firstName + " " + lastName}</div>
+          {subtitle && <div className="small text-muted d-flex align-items-center" >  <Icon icon={email ? "envelope" : "briefcase"} size={10} />  <small className='ms-2'>{subtitle}</small></div>}
         </div>
       )}
 
