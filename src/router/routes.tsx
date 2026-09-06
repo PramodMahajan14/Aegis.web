@@ -67,6 +67,7 @@ const routes: RouteObject[] = [
           { path: '/employee', element: <EmployeePage /> },
           { path: '/employee/manage', element: <ManageEmployeePage /> },
           { path: '/prospects/manage', element: <ManageProspectPage /> },
+          { path: "/employee/manage/:id", element: <ManageEmployeePage /> }
         ],
       },
     ],

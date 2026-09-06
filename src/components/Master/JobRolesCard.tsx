@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Icon, Spinner, Drawer, Position, Button, Intent, Alert } from '@blueprintjs/core';
+import { Icon, Spinner, Drawer, Position, Button, Intent } from '@blueprintjs/core';
 import { useWindowStore } from '../../store/useWindowStore';
+import { useConfirmStore } from '../../store/useConfirmStore';
 import { JobRoleModal } from './JobRoleModal';
 import { useGetJobeRoles, useDeleteJobeRole } from '../../hooks/Master/useMaster';
 
@@ -9,7 +10,7 @@ export function JobRolesCard() {
   const { data: jobRoles, isLoading: isLoadingJobRoles, isError: isJobRolesError } = useGetJobeRoles();
   const deleteJobRole = useDeleteJobeRole();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [roleToDelete, setRoleToDelete] = useState<any>(null);
+  const { openConfirm } = useConfirmStore();
 
   const handleOpenJobRoleModal = (role?: any) => {
     setIsDrawerOpen(false); // Close drawer so modal isn't behind it
@@ -94,7 +95,29 @@ export function JobRolesCard() {
                 </div>
                 <div className="d-flex gap-2">
                   <Button icon="edit" minimal title="Edit Role" onClick={() => handleOpenJobRoleModal(role)} />
-                  <Button icon="trash" intent={Intent.DANGER} minimal title="Delete Role" onClick={() => setRoleToDelete(role)} />
+                  <Button icon="trash" intent={Intent.DANGER} minimal title="Delete Role" onClick={() => {
+                    openConfirm({
+                      cancelButtonText: "Cancel",
+                      confirmButtonText: "Delete Role",
+                      icon: "trash",
+                      intent: Intent.DANGER,
+                      content: (
+                        <p>
+                          Are you sure you want to delete <b>{role.name}</b>? This action cannot be undone.
+                        </p>
+                      ),
+                      onConfirm: async () => {
+                        if (role?.id) {
+                          try {
+                            await deleteJobRole.mutateAsync(role.id);
+                          } catch (error) {
+                            console.error("Failed to delete role:", error);
+                            throw error;
+                          }
+                        }
+                      }
+                    });
+                  }} />
                 </div>
               </div>
             ))}
@@ -105,28 +128,6 @@ export function JobRolesCard() {
         </div>
       </Drawer>
 
-      <Alert
-        cancelButtonText="Cancel"
-        confirmButtonText="Delete Role"
-        icon="trash"
-        intent={Intent.DANGER}
-        isOpen={!!roleToDelete}
-        onCancel={() => setRoleToDelete(null)}
-        onConfirm={async () => {
-          if (roleToDelete?.id) {
-            try {
-              await deleteJobRole.mutateAsync(roleToDelete.id);
-              setRoleToDelete(null);
-            } catch (error) {
-              console.error("Failed to delete role:", error);
-            }
-          }
-        }}
-      >
-        <p>
-          Are you sure you want to delete <b>{roleToDelete?.name}</b>? This action cannot be undone.
-        </p>
-      </Alert>
     </>
   );
 }
