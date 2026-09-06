@@ -32,7 +32,7 @@ export default function ManageEmployeePage() {
         </div>
 
         {/* Right Side: Information / Guidelines */}
-        <div className="col-12 col-lg-4">
+        <div className="col-12 d-none d-lg-block col-lg-4">
           <div className="aegis-card border-0 shadow-sm bg-primary h-100 position-relative overflow-hidden text-white" style={{ borderRadius: 'var(--aegis-radius-lg)' }}>
             {/* Background pattern */}
             <div className="position-absolute top-0 end-0 opacity-10" style={{ transform: 'translate(20%, -20%)' }}>

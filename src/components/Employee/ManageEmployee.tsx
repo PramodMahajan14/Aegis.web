@@ -6,18 +6,20 @@ import { Select, type ItemRenderer } from '@blueprintjs/select';
 import { useNavigate } from 'react-router-dom';
 import { EmployeeSchema, type EmployeeFormData, Gender } from './EmployeeSchemas';
 import { useGetJobeRoles } from '../../hooks/Master/useMaster';
+import { useCreateEmployee } from '../../hooks/Employee/useEmployee';
+import { localToUtc } from '../../Utility/DateUtility';
 
 export function ManageEmployee() {
   const navigate = useNavigate();
   const { data: jobRoles, isLoading: isJobRolesLoading } = useGetJobeRoles();
-
+  const { mutate: Create, isPending: creating } = useCreateEmployee()
   const {
     register,
     handleSubmit,
     control,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<EmployeeFormData>({
     resolver: zodResolver(EmployeeSchema),
     defaultValues: {
@@ -67,12 +69,15 @@ export function ManageEmployee() {
   };
 
   const onSubmit = async (data: EmployeeFormData) => {
-    console.log("Submitting employee data:", data);
-    // Simulate API call
-    await new Promise(r => setTimeout(r, 1000));
-    navigate('/employee');
-  };
 
+    let payload: EmployeeFormData = {
+      ...data,
+      joiningDate: localToUtc(data.joiningDate) ?? null,
+      dateOfBirth: localToUtc(data.dateOfBirth) ?? null
+    }
+    Create(payload)
+  };
+  let isSubmitting = creating ?? false;
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="row g-4">
@@ -113,11 +118,11 @@ export function ManageEmployee() {
               <Icon icon="envelope" size={14} className="text-muted" />
               <span>Email Address <span className="text-danger">*</span></span>
             </label>
-            <Button 
-              minimal 
-              small 
-              icon="magic" 
-              text="Auto-generate" 
+            <Button
+              minimal
+              small
+              // icon="magic"
+              text="Auto-generate"
               className="text-primary py-0"
               style={{ fontSize: '12px' }}
               onClick={() => {
@@ -256,25 +261,25 @@ export function ManageEmployee() {
       </div>
 
       <div className="d-flex justify-content-end mt-5 pt-4 border-top gap-3">
-        <button 
-          type="button" 
-          className="btn btn-ghost btn-lg fs-6 px-4" 
+        <button
+          type="button"
+          className="btn btn-ghost btn-lg fs-6 px-4"
           onClick={() => navigate('/employee')}
           disabled={isSubmitting}
         >
           Cancel
         </button>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="btn btn-primary btn-lg fs-6 px-4 d-flex align-items-center shadow-sm"
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <Spinner size={16} className="me-2" />
+            <>  <Spinner size={16} className="me-2" /> saving... </>
           ) : (
-            <Icon icon="saved" className="me-2" size={16} />
+            (<><Icon icon="saved" className="me-2" size={16} /> Save Employee</>)
           )}
-          Save Employee
+
         </button>
       </div>
     </form>

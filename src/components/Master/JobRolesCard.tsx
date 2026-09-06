@@ -26,43 +26,43 @@ export function JobRolesCard() {
   return (
     <>
       <div className="aegis-card h-100">
-      <div className="aegis-card-header border-bottom pb-3 d-flex justify-content-between align-items-center">
-        <h6 className="mb-0 d-flex align-items-center">
-          <Icon icon="briefcase" className="me-2 text-muted" />
-          Job Roles
-        </h6>
-        <button className="btn btn-primary btn-sm rounded-pill px-3" onClick={handleOpenJobRoleModal}>
-          <Icon icon="plus" size={12} className="me-1" /> Add
-        </button>
-      </div>
-      <div className="aegis-card-body p-0">
-        <div className="list-group list-group-flush border-0">
-          {isLoadingJobRoles ? (
-            <div className="p-4 text-center"><Spinner size={24} /></div>
-          ) : isJobRolesError ? (
-            <div className="p-4 text-center text-danger">Failed to load job roles</div>
-          ) : jobRoles?.slice(0, 5).map(role => (
-            <div key={role.id} className="list-group-item d-flex justify-content-between align-items-center border-0 border-bottom py-3">
-              <div>
-                <div className="fw-semibold text-strong">{role.name}</div>
-                <div className="small text-muted text-truncate" style={{ maxWidth: '250px' }}>
-                  {role.description}
+        <div className="aegis-card-header border-bottom pb-3 d-flex justify-content-between align-items-center">
+          <h6 className="mb-0 d-flex align-items-center">
+            <Icon icon="briefcase" className="me-2 text-muted" />
+            Job Roles
+          </h6>
+          <button className="btn btn-primary btn-sm rounded-pill px-3" onClick={handleOpenJobRoleModal}>
+            <Icon icon="plus" size={12} className="me-1" /> Add
+          </button>
+        </div>
+        <div className="aegis-card-body p-0">
+          <div className="list-group list-group-flush border-0">
+            {isLoadingJobRoles ? (
+              <div className="p-4 text-center"><Spinner size={24} /></div>
+            ) : isJobRolesError ? (
+              <div className="p-4 text-center text-danger">Failed to load job roles</div>
+            ) : jobRoles?.slice(0, 5).map(role => (
+              <div key={role.id} className="list-group-item d-flex justify-content-between align-items-center border-0 border-bottom py-3">
+                <div>
+                  <div className="fw-semibold text-strong">{role.name}</div>
+                  <div className="small text-muted text-truncate" style={{ maxWidth: '250px' }}>
+                    {role.description}
+                  </div>
+                </div>
+                <div>
+                  <span className="badge bg-success-subtle text-success">Active</span>
                 </div>
               </div>
-              <div>
-                <span className="badge bg-success-subtle text-success">Active</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+        <div
+          className="aegis-card-footer border-top bg-light pt-2 pb-2 text-center text-muted small cursor-pointer hover-bg-gray"
+          onClick={() => setIsDrawerOpen(true)}
+        >
+          View All Job Roles
         </div>
       </div>
-      <div 
-        className="aegis-card-footer border-top bg-light pt-2 pb-2 text-center text-muted small cursor-pointer hover-bg-gray"
-        onClick={() => setIsDrawerOpen(true)}
-      >
-        View All Job Roles
-      </div>
-    </div>
 
       <Drawer
         icon="briefcase"
@@ -70,7 +70,7 @@ export function JobRolesCard() {
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         position={Position.RIGHT}
-        size={Drawer.SIZE_LARGE}
+        size={Drawer?.SIZE_LARGE}
       >
         <div className="p-3">
           <div className="d-flex justify-content-end mb-3">

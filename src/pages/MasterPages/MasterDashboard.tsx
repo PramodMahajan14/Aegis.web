@@ -4,7 +4,7 @@ import { ApplicationRolesCard } from '../../components/Master/ApplicationRolesCa
 
 export default function MasterDashboard() {
   return (
-    <div className="d-flex flex-column p-4 w-100">
+    <div className="d-flex flex-column  p-1 w-100">
       <div className="d-flex justify-content-between align-items-start mb-4">
         <PageHeader crumbs={['Administrator', 'Master Data']} />
       </div>

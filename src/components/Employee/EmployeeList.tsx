@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Icon, Button, InputGroup, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { Popover } from '@blueprintjs/core';
 import { Avatar } from '../common/Avatar';
+import { useGetEmployees } from '../../hooks/Employee/useEmployee';
 
 export interface Employee {
   id: string;
@@ -21,9 +22,10 @@ const DUMMY_EMPLOYEES: Employee[] = [
 
 export function EmployeeList() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { data: EmpList, isLoading: loading } = useGetEmployees()
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-
+  console.log(EmpList)
   const filteredEmployees = DUMMY_EMPLOYEES.filter(emp => {
     const matchesSearch =
       emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
