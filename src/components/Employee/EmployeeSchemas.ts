@@ -11,8 +11,8 @@ export const EmployeeSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   eMail: z.string().min(1, 'Email is required').email('Invalid email address'),
   gender: z.nativeEnum(Gender, { errorMap: () => ({ message: 'Please select a gender' }) }),
-  dateOfBirth: z.string().min(1, 'Date of birth is required'),
-  joiningDate: z.string().min(1, 'Joining date is required'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required') ?? z.null(),
+  joiningDate: z.string().min(1, 'Joining date is required') ?? z.null(),
   contactNumber: z.string().min(1, 'Contact number is required'),
   jobRoleId: z.string().min(1, 'Job role is required'),
 });

@@ -15,9 +15,11 @@ export const WindowProvider: React.FC = () => {
                     isOpen={win.isOpen}
                     onClose={() => closeWindow(win.id)}
                     style={{ width: win.width || 500 }}
-                    // Blueprint handles exit animations; we keep it mounted until animation finishes
-                    // If you want it completely unmounted immediately, you can filter `isOpen` in the map,
-                    // but Blueprint's Dialog is designed to handle `isOpen` prop for transitions.
+                    lazy={true}
+                    usePortal={false}
+                // Blueprint handles exit animations; we keep it mounted until animation finishes
+                // If you want it completely unmounted immediately, you can filter `isOpen` in the map,
+                // but Blueprint's Dialog is designed to handle `isOpen` prop for transitions.
                 >
                     <div className="bp5-dialog-body" style={{ margin: 0, padding: '1rem' }}>
                         {win.content}

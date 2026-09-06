@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Icon, Button, InputGroup, Menu, MenuItem, MenuDivider, Popover, Alert, Intent } from "@blueprintjs/core";
 import { Avatar } from "../common/Avatar";
 import { type Prospect } from "./ProspectSchema";
+import { useWindowStore } from "../../store/useWindowStore";
+import FilterModel from "./FIlterModel";
 
 const DUMMY_DATA: Prospect[] = [
     { id: 1, name: "Alice Johnson", description: "Looking for ERP integration", estimatedValue: 50000, location: "New York", expectedDecisionDate: "2024-12-01", stage: "Lead" },
@@ -17,6 +19,19 @@ export const ProspectTable: React.FC = () => {
     const [stageFilter, setStageFilter] = useState('All');
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
     const [deletingId, setDeletingId] = useState<number | null>(null);
+    const { openWindow } = useWindowStore()
+
+
+    const handleFilterTable = () => {
+        let windowId = "prospect-filter";
+        openWindow({
+            id: windowId,
+            title: "FIlter",
+            icon: "filter",
+            width: 1000,
+            content: <FilterModel windowId={windowId} />
+        })
+    }
 
     const filteredProspects = data.filter(p => {
         const matchesSearch =
@@ -89,7 +104,7 @@ export const ProspectTable: React.FC = () => {
                 )}
                 <div>
                     <Button icon="export" text="Export CSV" className="btn-ghost me-2" />
-                    <Button icon="plus" intent="primary" text="New Prospect" className="shadow-sm" />
+                    <Button icon="settings" minimal className="text-muted" onClick={handleFilterTable} />
                 </div>
             </div>
 
@@ -137,10 +152,7 @@ export const ProspectTable: React.FC = () => {
                                 <td className="px-4 py-3 border-0 border-bottom">
                                     <div className="d-flex align-items-center gap-3">
                                         <Avatar name={prospect.name} />
-                                        <div>
-                                            <div className="fw-semibold text-body-emphasis">{prospect.name}</div>
-                                            <div className="text-muted small"><Icon icon="map-marker" size={10} className="me-1" style={{ opacity: 0.7 }} />{prospect.location}</div>
-                                        </div>
+
                                     </div>
                                 </td>
                                 <td className="px-4 py-3 border-0 border-bottom">
