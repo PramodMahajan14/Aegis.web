@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { Icon, Drawer, Position, Button, Intent, Alert } from '@blueprintjs/core';
+import { Alert, Drawer, Position } from '@blueprintjs/core';
 import { useWindowStore } from '../../store/useWindowStore';
 import { ApplicationRoleModal } from './ApplicationRoleModal';
 import { type ApplicationRoleFormData } from './MasterSchemas';
+import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
+import { IconButton } from '../ui/IconButton';
+import { Badge } from '../ui/Badge';
 
 const DUMMY_APP_ROLES: ApplicationRoleFormData[] = [
   { id: 1, roleName: 'System Admin', accessLevel: 'Admin', isActive: true },
@@ -14,62 +18,61 @@ export function ApplicationRolesCard() {
   const { openWindow } = useWindowStore();
   const [appRoles] = useState<ApplicationRoleFormData[]>(DUMMY_APP_ROLES);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [roleToDelete, setRoleToDelete] = useState<any>(null);
+  const [roleToDelete, setRoleToDelete] = useState<ApplicationRoleFormData | null>(null);
 
-  const handleOpenAppRoleModal = (role?: any) => {
-    setIsDrawerOpen(false); // Close drawer so modal isn't behind it
+  const openModal = (role?: ApplicationRoleFormData) => {
+    setIsDrawerOpen(false);
     const windowId = 'modal-app-role';
     openWindow({
       id: windowId,
       title: role ? 'Edit Application Role' : 'Create Application Role',
       icon: 'badge',
       width: 500,
-      content: <ApplicationRoleModal windowId={windowId} initialData={role} />
+      content: <ApplicationRoleModal windowId={windowId} initialData={role} />,
     });
   };
 
+  const RoleRow = ({ role }: { role: ApplicationRoleFormData }) => (
+    <div className="min-w-0">
+      <div className="font-semibold text-foreground">{role.roleName}</div>
+      <div className="mt-0.5 flex items-center gap-1.5 text-[0.8125rem] text-muted-foreground">
+        <i className="bi bi-lock text-xs" /> {role.accessLevel}
+      </div>
+    </div>
+  );
+
   return (
     <>
-      <div className="aegis-card h-100">
-        <div className="aegis-card-header border-bottom pb-3 d-flex justify-content-between align-items-center">
-          <h6 className="mb-0 d-flex align-items-center">
-            <Icon icon="badge" className="me-2 text-muted" />
-            Application Roles
-          </h6>
-          <button className="btn btn-primary btn-sm rounded-pill px-3" onClick={handleOpenAppRoleModal}>
-            <Icon icon="plus" size={12} className="me-1" /> Add
-          </button>
+      <Card className="h-full">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <h3 className="flex items-center gap-2 text-[0.9375rem] font-semibold">
+            <i className="bi bi-person-badge text-muted-foreground" /> Application Roles
+          </h3>
+          <Button size="sm" onClick={() => openModal()}>
+            <i className="bi bi-plus-lg" /> Add
+          </Button>
         </div>
-        <div className="aegis-card-body p-0">
-          <div className="list-group list-group-flush border-0">
-            {appRoles.slice(0, 5).map(role => (
-              <div key={role.id} className="list-group-item d-flex justify-content-between align-items-center border-0 border-bottom py-3">
-                <div>
-                  <div className="fw-semibold text-strong">{role.roleName}</div>
-                  <div className="small text-muted d-flex align-items-center mt-1">
-                    <Icon icon="lock" size={10} className="me-1" /> {role.accessLevel}
-                  </div>
-                </div>
-                <div>
-                  {role.isActive ? (
-                    <span className="badge bg-success-subtle text-success">Active</span>
-                  ) : (
-                    <span className="badge bg-secondary-subtle text-secondary">Inactive</span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+
+        <div className="divide-y divide-border">
+          {appRoles.slice(0, 5).map((role) => (
+            <div key={role.id} className="flex items-center justify-between gap-3 px-5 py-3">
+              <RoleRow role={role} />
+              <Badge variant={role.isActive ? 'success' : 'neutral'} dot>
+                {role.isActive ? 'Active' : 'Inactive'}
+              </Badge>
+            </div>
+          ))}
         </div>
+
         {appRoles.length > 5 && (
-          <div
-            className="aegis-card-footer border-top bg-light pt-2 pb-2 text-center text-muted small cursor-pointer hover-bg-gray"
+          <button
+            className="border-t border-border bg-surface-2 py-2.5 text-center text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
             onClick={() => setIsDrawerOpen(true)}
           >
-            View All App Roles
-          </div>
+            View all app roles
+          </button>
         )}
-      </div>
+      </Card>
 
       <Drawer
         icon="badge"
@@ -77,39 +80,38 @@ export function ApplicationRolesCard() {
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         position={Position.RIGHT}
-      // size={Drawer.SIZE_LARGE}
+        size="480px"
       >
-        <div className="p-3">
-          <div className="d-flex justify-content-end mb-3">
-            <Button intent={Intent.PRIMARY} icon="plus" onClick={handleOpenAppRoleModal}>
-              Add Application Role
+        <div className="p-4">
+          <div className="mb-3 flex justify-end">
+            <Button size="sm" onClick={() => openModal()}>
+              <i className="bi bi-plus-lg" /> Add Application Role
             </Button>
           </div>
-          <div className="list-group">
-            {appRoles.map(role => (
-              <div key={role.id} className="list-group-item d-flex justify-content-between align-items-center py-3">
+          <div className="divide-y divide-border rounded-lg border border-border">
+            {appRoles.map((role) => (
+              <div key={role.id} className="flex items-start justify-between gap-3 p-3">
                 <div>
-                  <div className="fw-semibold text-strong">{role.roleName}</div>
-                  <div className="small text-muted d-flex align-items-center mt-1">
-                    <Icon icon="lock" size={10} className="me-1" /> {role.accessLevel}
-                  </div>
-                  <div className="mt-1">
-                    {role.isActive ? (
-                      <span className="badge bg-success-subtle text-success">Active</span>
-                    ) : (
-                      <span className="badge bg-secondary-subtle text-secondary">Inactive</span>
-                    )}
-                  </div>
+                  <RoleRow role={role} />
+                  <Badge variant={role.isActive ? 'success' : 'neutral'} dot className="mt-1.5">
+                    {role.isActive ? 'Active' : 'Inactive'}
+                  </Badge>
                 </div>
-                <div className="d-flex gap-2">
-                  <Button icon="edit" minimal title="Edit Role" onClick={() => handleOpenAppRoleModal(role)} />
-                  <Button icon="trash" intent={Intent.DANGER} minimal title="Delete Role" onClick={() => setRoleToDelete(role)} />
+                <div className="flex gap-1">
+                  <IconButton size="sm" title="Edit role" onClick={() => openModal(role)}>
+                    <i className="bi bi-pencil" />
+                  </IconButton>
+                  <IconButton
+                    size="sm"
+                    title="Delete role"
+                    className="hover:text-danger"
+                    onClick={() => setRoleToDelete(role)}
+                  >
+                    <i className="bi bi-trash" />
+                  </IconButton>
                 </div>
               </div>
             ))}
-            {appRoles.length === 0 && (
-              <div className="p-4 text-center text-muted">No application roles found.</div>
-            )}
           </div>
         </div>
       </Drawer>
@@ -118,17 +120,14 @@ export function ApplicationRolesCard() {
         cancelButtonText="Cancel"
         confirmButtonText="Delete Role"
         icon="trash"
-        intent={Intent.DANGER}
+        intent="danger"
         isOpen={!!roleToDelete}
         onCancel={() => setRoleToDelete(null)}
-        onConfirm={() => {
-          // TODO: implement delete mutation
-          console.log("Deleted", roleToDelete);
-          setRoleToDelete(null);
-        }}
+        onConfirm={() => setRoleToDelete(null)}
       >
         <p>
-          Are you sure you want to delete <b>{roleToDelete?.roleName}</b>? This action cannot be undone.
+          Are you sure you want to delete <b>{roleToDelete?.roleName}</b>? This action cannot be
+          undone.
         </p>
       </Alert>
     </>

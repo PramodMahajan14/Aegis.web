@@ -1,3 +1,5 @@
+import { Spinner } from '../ui/Spinner';
+
 interface LoaderProps {
   text?: string;
   fullscreen?: boolean;
@@ -5,17 +7,13 @@ interface LoaderProps {
 
 export default function Loader({ text, fullscreen = false }: LoaderProps) {
   const content = (
-    <div className="d-flex flex-column align-items-center justify-content-center gap-2">
-      <i className="pi pi-spin pi-spinner" style={{ fontSize: '1.5rem' }} aria-label="Loading" />
-      {text && <div className="text-muted small">{text}</div>}
+    <div className="flex flex-col items-center justify-center gap-3">
+      <Spinner className="size-6 border-[2.5px]" />
+      {text && <div className="text-sm text-muted-foreground">{text}</div>}
     </div>
   );
 
   if (!fullscreen) return content;
 
-  return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      {content}
-    </div>
-  );
+  return <div className="flex min-h-screen items-center justify-center">{content}</div>;
 }

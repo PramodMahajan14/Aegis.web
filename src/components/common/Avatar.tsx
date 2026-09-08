@@ -1,10 +1,10 @@
 import { Icon } from '@blueprintjs/core';
 import React from 'react';
+import { cn } from '../../lib/cn';
 
 export interface AvatarProps {
   firstName: string;
-  lastName: string;
-
+  lastName?: string;
   imageUrl?: string;
   jobRole?: string | undefined | null;
   email?: string | undefined | null;
@@ -12,59 +12,63 @@ export interface AvatarProps {
   hideDetails?: boolean;
 }
 
+const sizeMap = {
+  sm: 'size-8 text-xs',
+  md: 'size-10 text-sm',
+  lg: 'size-14 text-base',
+};
+
 export const Avatar: React.FC<AvatarProps> = ({
   firstName,
-  lastName,
+  lastName = '',
   imageUrl,
   jobRole = null,
   email = null,
   size = 'md',
-  hideDetails = false
+  hideDetails = false,
 }) => {
-  const initials = firstName
+  const initials = `${firstName} ${lastName}`
     .split(' ')
-    .filter(n => n.length > 0)
-    .map(n => n[0])
+    .filter((n) => n.length > 0)
+    .map((n) => n[0])
     .join('')
     .substring(0, 2)
     .toUpperCase();
 
-  const sizeMap = {
-    sm: '32px',
-    md: '40px',
-    lg: '56px'
-  };
-
-  const dimension = sizeMap[size];
   const subtitle = jobRole || email;
 
-
   return (
-    <div className="d-flex align-items-center py-1">
+    <div className="flex items-center gap-3">
       {imageUrl ? (
         <img
           src={imageUrl}
           alt={firstName}
-          className="rounded-circle me-3 object-fit-cover"
-          style={{ width: dimension, height: dimension, flexShrink: 0 }}
+          className={cn('shrink-0 rounded-full object-cover', sizeMap[size])}
         />
       ) : (
         <div
-          className="d-flex align-items-center justify-content-center rounded-circle me-3 fw-bold text-primary"
-          style={{ width: dimension, height: dimension, backgroundColor: 'var(--aegis-accent-light)', flexShrink: 0 }}
+          className={cn(
+            'flex shrink-0 items-center justify-center rounded-full bg-brand-soft font-semibold text-brand-stronger',
+            sizeMap[size],
+          )}
         >
           {initials}
         </div>
       )}
 
       {!hideDetails && (
-        <div>
-          <div className="fw-semibold text-strong" style={{ marginBottom: subtitle ? '2px' : '0' }}>{firstName + " " + lastName}</div>
-          {subtitle && <div className="small text-muted d-flex align-items-center" >  <Icon icon={email ? "envelope" : "briefcase"} size={10} />  <small className='ms-2'>{subtitle}</small></div>}
+        <div className="min-w-0">
+          <div className="truncate font-semibold text-foreground">
+            {`${firstName} ${lastName}`.trim()}
+          </div>
+          {subtitle && (
+            <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Icon icon={email ? 'envelope' : 'briefcase'} size={11} />
+              <span className="truncate">{subtitle}</span>
+            </div>
+          )}
         </div>
       )}
-
-
     </div>
   );
 };

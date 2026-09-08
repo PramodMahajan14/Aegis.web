@@ -1,18 +1,20 @@
 import { z } from 'zod';
 
-export enum Gender {
-  Female = 0,
-  Male = 1,
-  Other = 2
-}
+export const Gender = {
+  Female: 0,
+  Male: 1,
+  Other: 2,
+} as const;
+
+export type Gender = (typeof Gender)[keyof typeof Gender];
 
 export const EmployeeSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().min(1, 'Email is required').email('Invalid email address'),
-  gender: z.nativeEnum(Gender, { errorMap: () => ({ message: 'Please select a gender' }) }),
-  dateOfBirth: z.string().min(1, 'Date of birth is required') ?? z.null(),
-  joiningDate: z.string().min(1, 'Joining date is required') ?? z.null(),
+  gender: z.nativeEnum(Gender, { message: 'Please select a gender' }),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  joiningDate: z.string().min(1, 'Joining date is required'),
   contactNumber: z.string().min(1, 'Contact number is required'),
   jobRoleId: z.string().min(1, 'Job role is required'),
 });

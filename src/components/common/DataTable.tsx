@@ -132,105 +132,127 @@ export function DataTable<T>({
     }
   };
 
+  const colCount = columns.length + (enableRowHeader ? 1 : 0) + (enableRowSelection ? 1 : 0);
+
   return (
-    <div className={`table-responsive ${className}`}>
-      {/* Wrapper using pure Bootstrap styling for a clean card-like table view */}
-      <div className="card  border-0">
-        <table className="table table-hover align-middle mb-0">
-          <thead >
+    <div className={className}>
+      <div className="w-full overflow-x-auto rounded-lg border border-border bg-card">
+        <table className="w-full border-collapse text-sm">
+          <thead className="border-b border-border bg-surface-2">
             <tr>
               {enableRowSelection && (
-                <th scope="col" className="text-center" style={{ width: '50px' }}>
+                <th className="w-12 px-4 py-3">
                   <input
                     type="checkbox"
-                    className="form-check-input"
+                    className="size-4 cursor-pointer accent-primary"
                     checked={selectedRows.size > 0 && selectedRows.size === sortedData.length}
                     onChange={toggleAllSelection}
                   />
                 </th>
               )}
-              {enableRowHeader && <th scope="col" className="text-center text-muted" style={{ width: '50px' }}>#</th>}
-
-              {columns.map(col => (
+              {enableRowHeader && (
+                <th className="w-12 px-4 py-3 text-center text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">
+                  #
+                </th>
+              )}
+              {columns.map((col) => (
                 <th
-                  scope="col"
                   key={col.id}
                   onClick={() => handleSort(col.id, col.sortable)}
-                  className={`text-secondary ${col.sortable ? 'user-select-none' : ''}`}
-                  style={{ cursor: col.sortable ? 'pointer' : 'default', whiteSpace: 'nowrap' }}
+                  className={
+                    'whitespace-nowrap px-4 py-3 text-left text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground ' +
+                    (col.sortable ? 'cursor-pointer select-none hover:text-foreground' : '')
+                  }
                 >
                   {col.name}
                   {col.sortable && (
-                    <span className="ms-2 text-muted" style={{ fontSize: '0.8em' }}>
-                      {sortConfig?.key === col.id ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '↕'}
+                    <span className="ml-2 text-[0.7rem]">
+                      {sortConfig?.key === col.id
+                        ? sortConfig.direction === 'asc'
+                          ? '▲'
+                          : '▼'
+                        : '↕'}
                     </span>
                   )}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
-            {paginatedData.length > 0 ? paginatedData.map((row, relativeIndex) => {
-              const absoluteIndex = (currentPage - 1) * pageSize + relativeIndex;
-              const isSelected = selectedRows.has(absoluteIndex);
+          <tbody className="[&_td]:px-4 [&_td]:py-3 [&_tr]:border-b [&_tr]:border-border [&_tr:last-child]:border-0">
+            {paginatedData.length > 0 ? (
+              paginatedData.map((row, relativeIndex) => {
+                const absoluteIndex = (currentPage - 1) * pageSize + relativeIndex;
+                const isSelected = selectedRows.has(absoluteIndex);
 
-              return (
-                <tr key={absoluteIndex} className={isSelected ? 'table-active' : ''}>
-                  {enableRowSelection && (
-                    <td className="text-center">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        checked={isSelected}
-                        onChange={() => toggleSelection(absoluteIndex)}
-                      />
-                    </td>
-                  )}
-                  {enableRowHeader && <th scope="row" className="text-center text-muted fw-normal">{absoluteIndex + 1}</th>}
-
-                  {columns.map(col => {
-                    const rawValue = getCellValue(row, col);
-                    const displayValue = rawValue !== null && rawValue !== undefined ? String(rawValue) : emptyCellPlaceholder;
-                    const isEditing = editingCell?.row === absoluteIndex && editingCell?.col === col.id;
-                    const isEditable = col.editable && !isEditing;
-
-                    let cellContent: React.ReactNode = displayValue;
-
-                    if (isEditing) {
-                      cellContent = (
+                return (
+                  <tr
+                    key={absoluteIndex}
+                    className={isSelected ? 'bg-brand-soft/40' : 'hover:bg-accent/60'}
+                  >
+                    {enableRowSelection && (
+                      <td className="text-center">
                         <input
-                          ref={editInputRef}
-                          type="text"
-                          className="form-control form-control-sm"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          onBlur={() => handleEditSave(absoluteIndex, col.id)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleEditSave(absoluteIndex, col.id);
-                            if (e.key === 'Escape') setEditingCell(null);
-                          }}
+                          type="checkbox"
+                          className="size-4 cursor-pointer accent-primary"
+                          checked={isSelected}
+                          onChange={() => toggleSelection(absoluteIndex)}
                         />
-                      );
-                    } else if (col.cellRenderer) {
-                      cellContent = col.cellRenderer(row, absoluteIndex);
-                    }
-
-                    return (
-                      <td
-                        key={col.id}
-                        onClick={() => { if (isEditable) handleEditStart(absoluteIndex, col.id, displayValue); }}
-                        style={{ cursor: isEditable ? 'pointer' : 'default' }}
-                        title={isEditable ? "Click to edit" : undefined}
-                      >
-                        {cellContent}
                       </td>
-                    );
-                  })}
-                </tr>
-              );
-            }) : (
+                    )}
+                    {enableRowHeader && (
+                      <td className="text-center text-muted-foreground">{absoluteIndex + 1}</td>
+                    )}
+
+                    {columns.map((col) => {
+                      const rawValue = getCellValue(row, col);
+                      const displayValue =
+                        rawValue !== null && rawValue !== undefined
+                          ? String(rawValue)
+                          : emptyCellPlaceholder;
+                      const isEditing =
+                        editingCell?.row === absoluteIndex && editingCell?.col === col.id;
+                      const isEditable = col.editable && !isEditing;
+
+                      let cellContent: React.ReactNode = displayValue;
+
+                      if (isEditing) {
+                        cellContent = (
+                          <input
+                            ref={editInputRef}
+                            type="text"
+                            className="h-8 w-full rounded-md border border-input bg-surface px-2 text-sm"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={() => handleEditSave(absoluteIndex, col.id)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleEditSave(absoluteIndex, col.id);
+                              if (e.key === 'Escape') setEditingCell(null);
+                            }}
+                          />
+                        );
+                      } else if (col.cellRenderer) {
+                        cellContent = col.cellRenderer(row, absoluteIndex);
+                      }
+
+                      return (
+                        <td
+                          key={col.id}
+                          onClick={() => {
+                            if (isEditable) handleEditStart(absoluteIndex, col.id, displayValue);
+                          }}
+                          className={isEditable ? 'cursor-pointer' : ''}
+                          title={isEditable ? 'Click to edit' : undefined}
+                        >
+                          {cellContent}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+            ) : (
               <tr>
-                <td colSpan={columns.length + (enableRowHeader ? 1 : 0) + (enableRowSelection ? 1 : 0)} className="text-center py-5 text-muted">
+                <td colSpan={colCount} className="px-4 py-14 text-center text-muted-foreground">
                   No data available
                 </td>
               </tr>
@@ -239,25 +261,42 @@ export function DataTable<T>({
         </table>
       </div>
 
-      {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-between align-items-center mt-3 px-1">
-          <span className="text-muted small">
-            Showing {(currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, sortedData.length)} of {sortedData.length} entries
+        <div className="mt-3 flex items-center justify-between px-1">
+          <span className="text-xs text-muted-foreground">
+            Showing {(currentPage - 1) * pageSize + 1} to{' '}
+            {Math.min(currentPage * pageSize, sortedData.length)} of {sortedData.length} entries
           </span>
-          <ul className="pagination pagination-sm mb-0 shadow-sm">
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => setCurrentPage(p => Math.max(1, p - 1))}>Previous</button>
-            </li>
+          <div className="flex items-center gap-1">
+            <button
+              className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground disabled:opacity-40"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            >
+              Previous
+            </button>
             {Array.from({ length: totalPages }).map((_, i) => (
-              <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
-                <button className="page-link" onClick={() => setCurrentPage(i + 1)}>{i + 1}</button>
-              </li>
+              <button
+                key={i}
+                className={
+                  'min-w-8 rounded-md px-2.5 py-1.5 text-sm ' +
+                  (currentPage === i + 1
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-accent hover:text-foreground')
+                }
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </button>
             ))}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}>Next</button>
-            </li>
-          </ul>
+            <button
+              className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground disabled:opacity-40"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

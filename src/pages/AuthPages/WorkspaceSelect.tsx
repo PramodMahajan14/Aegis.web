@@ -4,6 +4,8 @@ import { useAuth } from '../../auth/AuthContext';
 import { useWorkspacesQuery } from '../../hooks/authApi/useAuthApi';
 import { AuthStage } from '../../hooks/authApi/authTypes';
 import Loader from '../../components/common/Loader';
+import AuthShell from '../../components/common/AuthShell';
+import { Spinner } from '../../components/ui/Spinner';
 
 export default function WorkspaceSelect() {
   const { selectWorkspace, stage } = useAuth();
@@ -11,7 +13,6 @@ export default function WorkspaceSelect() {
   const [selectingId, setSelectingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Only fetch workspaces when the user is authenticated at the user level
   const workspacesQuery = useWorkspacesQuery(stage === AuthStage.AUTHENTICATED_NO_WORKSPACE);
 
   const handleSelect = async (workspaceId: string) => {
@@ -37,67 +38,55 @@ export default function WorkspaceSelect() {
   const displayError = fetchError ?? error;
 
   return (
-    <div className="auth-shell">
-      <div className="auth-card">
-        <div className="mb-4">
-          <h1>Choose a workspace</h1>
-          <p className="text-muted mb-0">Select the workspace you want to access.</p>
+    <AuthShell title="Choose a workspace" subtitle="Select the workspace you want to access.">
+      {displayError && (
+        <div
+          className="mb-4 flex items-center gap-2 rounded-md border border-danger/30 bg-danger-soft px-3 py-2 text-[0.8125rem] text-danger"
+          role="alert"
+        >
+          <i className="bi bi-exclamation-circle" />
+          {displayError}
         </div>
+      )}
 
-        {displayError && (
-          <div className="alert alert-danger py-2" style={{ fontSize: 13.5 }} role="alert">
-            {displayError}
+      <div className="divide-y divide-border overflow-hidden rounded-lg border border-border">
+        {workspaces.map((ws) => (
+          <button
+            key={ws.id}
+            id={`workspace-btn-${ws.id}`}
+            type="button"
+            onClick={() => handleSelect(ws.id)}
+            disabled={selectingId !== null}
+            className="flex w-full items-center justify-between gap-3 px-4 py-3.5 text-left transition-colors hover:bg-accent disabled:opacity-60"
+          >
+            <div>
+              <div className="text-sm font-medium text-foreground">{ws.name}</div>
+              <div className="text-xs text-muted-foreground">{ws.role}</div>
+            </div>
+            {selectingId === ws.id ? (
+              <Spinner className="size-4" />
+            ) : (
+              <i className="bi bi-chevron-right text-sm text-muted-foreground" />
+            )}
+          </button>
+        ))}
+
+        {workspaces.length === 0 && !workspacesQuery.isError && (
+          <div className="px-4 py-8 text-center text-[0.8125rem] text-muted-foreground">
+            No workspaces found for your account.
           </div>
         )}
-
-        <div className="border rounded overflow-hidden">
-          {workspaces.map((ws, i) => (
-            <button
-              key={ws.id}
-              id={`workspace-btn-${ws.id}`}
-              type="button"
-              onClick={() => handleSelect(ws.id)}
-              disabled={selectingId !== null}
-              className={`btn w-100 text-start d-flex align-items-center justify-content-between px-3 py-3 rounded-0 shadow-none${
-                i !== 0 ? ' border-top' : ''
-              }`}
-            >
-              <div>
-                <div className="fw-medium" style={{ fontSize: 14 }}>
-                  {ws.name}
-                </div>
-                <div className="text-muted" style={{ fontSize: 12 }}>
-                  {ws.role}
-                </div>
-              </div>
-
-              {selectingId === ws.id && (
-                <span
-                  className="spinner-border spinner-border-sm text-primary"
-                  role="status"
-                  aria-label="Loading"
-                />
-              )}
-            </button>
-          ))}
-
-          {workspaces.length === 0 && !workspacesQuery.isError && (
-            <div className="text-center text-muted p-4" style={{ fontSize: 13.5 }}>
-              No workspaces found for your account.
-            </div>
-          )}
-        </div>
-
-        {workspacesQuery.isError && (
-          <button
-            type="button"
-            className="btn btn-link p-0 mt-3 shadow-none"
-            onClick={() => workspacesQuery.refetch()}
-          >
-            Retry
-          </button>
-        )}
       </div>
-    </div>
+
+      {workspacesQuery.isError && (
+        <button
+          type="button"
+          className="mt-3 text-sm font-medium text-brand-strong hover:text-brand-stronger"
+          onClick={() => workspacesQuery.refetch()}
+        >
+          Retry
+        </button>
+      )}
+    </AuthShell>
   );
 }

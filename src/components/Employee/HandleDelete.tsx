@@ -1,4 +1,3 @@
-import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { useConfirmStore } from '../../store/useConfirmStore';
 import { useDeleteEmployee } from '../../hooks/Employee/useEmployee';
