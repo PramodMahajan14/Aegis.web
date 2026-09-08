@@ -4,11 +4,13 @@ import { AuthStage } from '../auth/AuthContext';
 import WorkspaceLayout from '../layouts/WorkspaceLayout';
 import AuthLayout from '../layouts/AuthLayout';
 import Blank from '../layouts/Blank';
-import Home from '../pages/Home';
 import Login from '../pages/AuthPages/Login';
 import WorkspaceSelect from '../pages/AuthPages/WorkspaceSelect';
-import Prospectpage from '../pages/Prospectpages/ProjectPage';
-import ManageProspectPage from '../pages/Prospectpages/ManageProspectPage';
+import SalesWorkspacePage from '../pages/crm/SalesWorkspacePage';
+import ProspectsPage from '../pages/crm/ProspectsPage';
+import ProspectDetailPage from '../pages/crm/ProspectDetailPage';
+import PipelineBoardPage from '../pages/crm/PipelineBoardPage';
+import DailyPlannerPage from '../pages/crm/DailyPlannerPage';
 import MasterDashboard from '../pages/MasterPages/MasterDashboard';
 import EmployeePage from '../pages/Employee/EmployeePage';
 import ManageEmployeePage from '../pages/Employee/ManageEmployeePage';
@@ -60,14 +62,27 @@ const routes: RouteObject[] = [
       {
         element: <WorkspaceLayout />,
         children: [
-          { path: '/', element: <Home /> },
-          { path: '/prospects', element: <Prospectpage /> },
-          { path: '/settings', element: <div className="p-4"><h3>Settings (Coming Soon)</h3></div> },
+          { path: '/', element: <SalesWorkspacePage /> },
+          { path: '/prospects', element: <ProspectsPage /> },
+          { path: '/prospects/:id', element: <ProspectDetailPage /> },
+          { path: '/pipeline', element: <PipelineBoardPage /> },
+          { path: '/planner', element: <DailyPlannerPage /> },
+          {
+            path: '/settings',
+            element: (
+              <div className="w-full p-4 sm:p-6 lg:p-8">
+                <div className="grid place-items-center rounded-lg border border-dashed border-border bg-card p-16 text-center">
+                  <i className="bi bi-gear mb-3 text-3xl text-muted-foreground" />
+                  <h3>Settings</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">Coming soon.</p>
+                </div>
+              </div>
+            ),
+          },
           { path: '/master', element: <MasterDashboard /> },
           { path: '/employee', element: <EmployeePage /> },
           { path: '/employee/manage', element: <ManageEmployeePage /> },
-          { path: '/prospects/manage', element: <ManageProspectPage /> },
-          { path: "/employee/manage/:id", element: <ManageEmployeePage /> }
+          { path: '/employee/manage/:id', element: <ManageEmployeePage /> },
         ],
       },
     ],

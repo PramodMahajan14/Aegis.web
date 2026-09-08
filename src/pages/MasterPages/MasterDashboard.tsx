@@ -1,25 +1,20 @@
 import PageHeader from '../../components/Layout/PageHeader';
 import { JobRolesCard } from '../../components/Master/JobRolesCard';
 import { ApplicationRolesCard } from '../../components/Master/ApplicationRolesCard';
+import { PageContainer } from '../../components/ui/PageContainer';
 
 export default function MasterDashboard() {
   return (
-    <div className="d-flex flex-column  p-1 w-100">
-      <div className="d-flex justify-content-between align-items-start mb-4">
-        <PageHeader crumbs={['Administrator', 'Master Data']} />
-      </div>
+    <PageContainer>
+      <PageHeader
+        crumbs={['Administrator', 'Master Data']}
+        description="Reference data that powers roles and permissions across Aegis."
+      />
 
-      <div className="row g-4">
-        {/* Job Roles Card */}
-        <div className="col-md-6 col-xl-4">
-          <JobRolesCard />
-        </div>
-
-        {/* Application Roles Card */}
-        <div className="col-md-6 col-xl-4">
-          <ApplicationRolesCard />
-        </div>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <JobRolesCard />
+        <ApplicationRolesCard />
       </div>
-    </div>
+    </PageContainer>
   );
 }

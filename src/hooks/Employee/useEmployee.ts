@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import EmployeeRepository from '../../api/repositories/EmployeRepository';
 import type { Employee } from './EmployeeTypes';
-import { Toast2 } from '@blueprintjs/core';
 import { useToast } from '../../Services/ToastServices';
 import { getErrorMessage } from '../../Utility/errorHelpers';
 import { useNavigate } from 'react-router-dom';

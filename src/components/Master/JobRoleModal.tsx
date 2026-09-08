@@ -1,16 +1,18 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Icon } from '@blueprintjs/core';
 import { JobRoleSchema, type JobRoleFormData } from './MasterSchemas';
 import { useWindowStore } from '../../store/useWindowStore';
 import { useCreateJobeRole, useUpdateJobeRole } from '../../hooks/Master/useMaster';
-
-import type { JobRole } from '../../hooks/Master/MasterTypes';
+import { Field } from '../ui/Field';
+import { Input } from '../ui/Input';
+import { Textarea } from '../ui/Textarea';
+import { Switch } from '../ui/Switch';
+import { Button } from '../ui/Button';
 
 interface JobRoleModalProps {
   windowId: string;
-  initialData?: any; // Replace with JobRole or the form data type
+  initialData?: { id?: string; name?: string; description?: string; isActive?: boolean };
 }
 
 export const JobRoleModal: React.FC<JobRoleModalProps> = ({ windowId, initialData }) => {
@@ -37,90 +39,62 @@ export const JobRoleModal: React.FC<JobRoleModalProps> = ({ windowId, initialDat
       if (initialData?.id) {
         await updateJobRole.mutateAsync({
           id: initialData.id,
-          data: {
-            id: initialData.id,
-            name: data.title,
-            description: data.description,
-          }
+          data: { id: initialData.id, name: data.title, description: data.description },
         });
       } else {
-        await createJobRole.mutateAsync({
-          name: data.title,
-          description: data.description,
-        });
+        await createJobRole.mutateAsync({ name: data.title, description: data.description });
       }
       closeWindow(windowId);
     } catch (error) {
-      console.error("Failed to save job role:", error);
+      console.error('Failed to save job role:', error);
     }
   };
 
   return (
-    <div className="p-3">
-      <form onSubmit={handleSubmit(onSubmit)} className="d-flex flex-column gap-4">
-        
-        <div>
-          <label className="form-label d-flex align-items-center">
-            <Icon icon="briefcase" className="me-2 text-muted" size={14} /> 
-            Job Title <span className="text-danger ms-1">*</span>
-          </label>
-          <input 
-            type="text" 
-            className={`form-control ${errors.title ? 'is-invalid' : ''}`} 
-            placeholder="e.g. Senior Developer"
-            {...register('title')}
-          />
-          {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
-        </div>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 p-1">
+      <Field
+        label={
+          <>
+            <i className="bi bi-briefcase text-muted-foreground" /> Job title
+          </>
+        }
+        required
+        error={errors.title?.message}
+      >
+        <Input placeholder="e.g. Senior Developer" invalid={!!errors.title} {...register('title')} />
+      </Field>
 
-        <div>
-          <label className="form-label d-flex align-items-center">
-            <Icon icon="document" className="me-2 text-muted" size={14} /> 
-            Description <span className="text-danger ms-1">*</span>
-          </label>
-          <textarea 
-            className={`form-control ${errors.description ? 'is-invalid' : ''}`} 
-            rows={3}
-            placeholder="Details about the role..."
-            {...register('description')}
-          ></textarea>
-          {errors.description && <div className="invalid-feedback">{errors.description.message}</div>}
-        </div>
+      <Field
+        label={
+          <>
+            <i className="bi bi-file-text text-muted-foreground" /> Description
+          </>
+        }
+        required
+        error={errors.description?.message}
+      >
+        <Textarea
+          rows={3}
+          placeholder="Details about the role…"
+          invalid={!!errors.description}
+          {...register('description')}
+        />
+      </Field>
 
-        <div>
-          <div className="form-check form-switch d-flex align-items-center gap-2 ps-0">
-            <label className="form-check-label mb-0" htmlFor={`isActive-${windowId}`}>
-              Active Status
-            </label>
-            <input 
-              className="form-check-input ms-auto" 
-              type="checkbox" 
-              role="switch" 
-              id={`isActive-${windowId}`}
-              {...register('isActive')}
-            />
-          </div>
-        </div>
+      <div className="flex items-center justify-between rounded-md border border-border px-3 py-2.5">
+        <span className="text-sm text-foreground">Active status</span>
+        <Switch id={`isActive-${windowId}`} {...register('isActive')} />
+      </div>
 
-        <div className="d-flex justify-content-end mt-2 pt-3 border-top">
-          <button 
-            type="button" 
-            className="btn btn-ghost me-3" 
-            onClick={() => closeWindow(windowId)}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
-          <button 
-            type="submit" 
-            className="btn btn-primary d-flex align-items-center"
-            disabled={isSubmitting}
-          >
-            <Icon icon="floppy-disk" className="me-2" size={14} />
-            {isSubmitting ? 'Saving...' : initialData ? 'Update Role' : 'Save Role'}
-          </button>
-        </div>
-      </form>
-    </div>
+      <div className="mt-1 flex justify-end gap-3 border-t border-border pt-4">
+        <Button type="button" variant="ghost" onClick={() => closeWindow(windowId)} disabled={isSubmitting}>
+          Cancel
+        </Button>
+        <Button type="submit" loading={isSubmitting}>
+          <i className="bi bi-check2" />
+          {initialData ? 'Update role' : 'Save role'}
+        </Button>
+      </div>
+    </form>
   );
 };

@@ -2,13 +2,14 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-import '@blueprintjs/core/lib/css/blueprint.css';
-import '@blueprintjs/select/lib/css/blueprint-select.css';
+import { FocusStyleManager } from '@blueprintjs/core';
+// Vendor CSS (bootstrap-icons, Blueprint) is imported inside theme.css so it can
+// be placed in a lower cascade layer than Tailwind's utilities.
 import './styles/theme.css';
 import { queryClient } from './lib/queryClient';
+
+// Only show focus outlines during keyboard navigation, not on mouse click.
+FocusStyleManager.onlyShowFocusOnTabs();
 import { AuthProvider } from './auth/AuthContext';
 import { ThemeProvider } from './theme/ThemeContext';
 import router from './router';

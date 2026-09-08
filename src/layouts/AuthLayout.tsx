@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 
 export default function AuthLayout() {
   return (
-    <div className="main-content-auth">
+    <div className="min-h-screen overflow-y-auto">
       <Outlet />
     </div>
   );

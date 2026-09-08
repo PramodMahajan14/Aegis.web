@@ -21,9 +21,7 @@ export const WindowProvider: React.FC = () => {
                 // If you want it completely unmounted immediately, you can filter `isOpen` in the map,
                 // but Blueprint's Dialog is designed to handle `isOpen` prop for transitions.
                 >
-                    <div className="bp5-dialog-body" style={{ margin: 0, padding: '1rem' }}>
-                        {win.content}
-                    </div>
+                    <div className="p-4">{win.content}</div>
                 </Dialog>
             ))}
         </>

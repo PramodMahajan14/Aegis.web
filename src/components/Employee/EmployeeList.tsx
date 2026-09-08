@@ -1,179 +1,202 @@
-import React, { useState } from 'react';
-import { Icon, Button, InputGroup, Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
-import { Popover } from '@blueprintjs/core';
+import { useMemo, useState } from 'react';
+import { Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core';
+import { useNavigate } from 'react-router-dom';
 import { Avatar } from '../common/Avatar';
 import { useGetEmployees } from '../../hooks/Employee/useEmployee';
 import { UTCToLocal } from '../../Utility/DateUtility';
 import { useHandleDeleteEmployee } from './HandleDelete';
-import { useNavigate } from 'react-router-dom';
+import { Spinner } from '../ui/Spinner';
+import { SearchInput } from '../ui/SearchInput';
+import { IconButton } from '../ui/IconButton';
+import { Button } from '../ui/Button';
+import { Checkbox } from '../ui/Switch';
+import { TableWrap, Table, THead, TBody, EmptyRow } from '../ui/Table';
 
-export interface Employee {
+type EmployeeRow = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  role: string;
-  status: string;
-}
-
-
+  joiningDate?: string;
+  isRoot?: boolean;
+  jobRole?: { name?: string } | null;
+};
 
 export function EmployeeList() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const { data: EmpList, isLoading: loading } = useGetEmployees();
+  const navigate = useNavigate();
+  const { data, isLoading } = useGetEmployees();
   const handleDeleteEmployee = useHandleDeleteEmployee();
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const navigate = useNavigate()
 
-  if (EmpList?.length == 0) {
-    return (
-      <div>
-        <Icon icon="search" size={32} className="text-muted mb-3 opacity-50" />
-        <p className="mb-1 fw-semibold">No Employees Found</p>
-        <p className="text-muted small">Try adjusting your search or filters.</p>
-      </div>
-    )
+  const [search, setSearch] = useState('');
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const rows = useMemo(() => (data ?? []) as unknown as EmployeeRow[], [data]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((e) =>
+      `${e.firstName} ${e.lastName} ${e.email}`.toLowerCase().includes(q),
+    );
+  }, [rows, search]);
+
+  function toggle(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    setSelectedIds((prev) =>
+      prev.size === filtered.length ? new Set() : new Set(filtered.map((e) => e.id)),
+    );
   }
 
   return (
-    <div className="d-flex flex-column w-100">
+    <div className="flex w-full flex-col">
       {/* Toolbar */}
-      <div className="d-flex justify-content-between align-items-center p-3 border-bottom" style={{ minHeight: '64px' }}>
+      <div className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
         {selectedIds.size > 0 ? (
-          <div className="d-flex align-items-center bg-primary-subtle rounded px-3 py-1 shadow-sm border border-primary text-primary">
-            <span className="fw-medium me-3 small">{selectedIds.size} selected</span>
-            <div className="d-flex gap-1 border-start border-primary border-opacity-25 ps-2">
-              <Button icon="trash" intent="danger" minimal small text="Delete" onClick={() => setSelectedIds(new Set())} />
-              <Button icon="envelope" intent="primary" minimal small text="Email" />
-              <Button icon="cross" minimal small onClick={() => setSelectedIds(new Set())} />
-            </div>
+          <div className="flex items-center gap-1 rounded-lg border border-brand/40 bg-brand-soft px-2 py-1 text-brand-stronger">
+            <span className="px-2 text-sm font-medium">{selectedIds.size} selected</span>
+            <span className="mx-1 h-4 w-px bg-brand/30" />
+            <Button variant="danger-ghost" size="sm">
+              <i className="bi bi-trash" /> Delete
+            </Button>
+            <Button variant="ghost" size="sm">
+              <i className="bi bi-envelope" /> Email
+            </Button>
+            <IconButton size="sm" onClick={() => setSelectedIds(new Set())} aria-label="Clear selection">
+              <i className="bi bi-x-lg" />
+            </IconButton>
           </div>
         ) : (
-          <div className="d-flex align-items-center gap-3">
-            <InputGroup
-              leftIcon="search"
-              placeholder="Search employees..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="rounded shadow-sm"
-              style={{ minWidth: '280px' }}
-            />
-            <Popover
-              content={
-                <Menu>
-                  <MenuItem icon={statusFilter === 'All' ? 'tick' : 'blank'} text="All Statuses" onClick={() => setStatusFilter('All')} />
-                  <MenuItem icon={statusFilter === 'Active' ? 'tick' : 'blank'} text="Active" onClick={() => setStatusFilter('Active')} />
-                  <MenuItem icon={statusFilter === 'Inactive' ? 'tick' : 'blank'} text="Inactive" onClick={() => setStatusFilter('Inactive')} />
-                  <MenuItem icon={statusFilter === 'On Leave' ? 'tick' : 'blank'} text="On Leave" onClick={() => setStatusFilter('On Leave')} />
-                </Menu>
-              }
-              placement="bottom-start"
-            >
-              <Button icon="filter" text={`Filter: ${statusFilter}`} rightIcon="caret-down" className="btn-ghost" />
-            </Popover>
-          </div>
+          <SearchInput
+            placeholder="Search employees…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            wrapClassName="w-full max-w-xs"
+          />
         )}
-        <div>
-          <Button icon="export" text="Export CSV" className="btn-ghost me-2" />
-          <Button icon="settings" minimal className="text-muted" />
+
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm">
+            <i className="bi bi-download" /> Export CSV
+          </Button>
+          <IconButton aria-label="Table settings">
+            <i className="bi bi-sliders" />
+          </IconButton>
         </div>
       </div>
 
       {/* Table */}
-      <div className="table-responsive">
-        <table className="table table-hover align-middle mb-0 border-0">
-          <thead>
-            <tr>
-              <th className="px-4 py-3 border-0 border-bottom" style={{ width: '48px' }}>
-                <input
-                  type="checkbox"
-                  className="form-check-input shadow-sm"
-                  style={{ cursor: 'pointer' }}
-
-                />
-              </th>
-              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Employee</th>
-              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Email</th>
-              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Joining Date</th>
-              <th className="px-4 py-3 text-uppercase font-monospace text-muted border-0 border-bottom text-end" style={{ fontSize: '11px', letterSpacing: '0.05em' }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {EmpList?.map((emp) => (
-              <tr
-                key={emp.id}
-                style={{ cursor: 'pointer', transition: 'background 0.2s' }}
-              // className={selectedIds.has(emp.id) ? 'bg-primary-subtle' : ''}
-              // onClick={(e) => {
-              //   if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('.bp5-popover-target')) return;
-              //   toggleSelection(emp.id);
-              // }}
-              >
-                <td className="px-4 py-3 border-0 border-bottom" onClick={(e) => e.stopPropagation()}>
-                  <input
-                    type="checkbox"
-                    className="form-check-input shadow-sm"
-                    style={{ cursor: 'pointer' }}
-                  // checked={selectedIds.has(emp.id)}
-                  // onChange={() => toggleSelection(emp.id)}
-                  />
-                </td>
-                <td className="px-4 py-3 border-0 border-bottom">
-                  <div className="d-flex align-items-center gap-3">
-                    <Avatar firstName={emp.firstName} lastName={emp.lastName} jobRole={emp.jobRole?.name as string} />
-
-                  </div>
-                </td>
-                <td className="px-4 py-3 border-0 border-bottom">
-                  <span className="text-body-emphasis fw-medium">{emp?.email}</span>
-                </td>
-                <td className="px-4 py-3 border-0 border-bottom">
-                  <span className="text-body-emphasis fw-medium">{UTCToLocal(emp?.joiningDate as string)}</span>
-                </td>
-                <td className="px-4 py-3 border-0 border-bottom text-end">
-                  <div className="d-flex justify-content-end gap-1">
-                    <Button icon="edit" minimal intent="primary" title="Edit Employee" onClick={() => navigate(`/employee/manage/${emp.id}`)} />
-                    <Popover
-                      content={
-                        <Menu>
-                          <MenuItem icon="eye-open" text="View Details" />
-                          <MenuItem icon="history" text="Activity Log" />
-
-                          {!emp.isRoot && (
-                            <>
-
-                              <MenuDivider />
-                              <MenuItem icon="trash" text="Delete" intent={Intent.DANGER} onClick={() => handleDeleteEmployee(emp)} /></>
-
-                          )}
-                        </Menu>
-                      }
-                      placement="bottom-end"
-                    >
-                      <Button icon="more" minimal />
-                    </Popover>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {EmpList?.length === 0 && (
+      {isLoading ? (
+        <div className="flex items-center justify-center py-16">
+          <Spinner className="size-6" />
+        </div>
+      ) : (
+        <TableWrap>
+          <Table>
+            <THead>
               <tr>
-                <td colSpan={5} className="text-center py-5 border-0">
-                  <Icon icon="search" size={32} className="text-muted mb-3 opacity-50" />
-                  <h6 className="text-muted fw-normal">No employees found matching your criteria.</h6>
-                </td>
+                <th className="w-12">
+                  <Checkbox
+                    checked={filtered.length > 0 && selectedIds.size === filtered.length}
+                    onChange={toggleAll}
+                    aria-label="Select all"
+                  />
+                </th>
+                <th>Employee</th>
+                <th>Email</th>
+                <th>Joining date</th>
+                <th className="text-right">Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            </THead>
+            <TBody>
+              {filtered.map((emp) => (
+                <tr key={emp.id}>
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selectedIds.has(emp.id)}
+                      onChange={() => toggle(emp.id)}
+                      aria-label={`Select ${emp.firstName}`}
+                    />
+                  </td>
+                  <td>
+                    <Avatar
+                      firstName={emp.firstName}
+                      lastName={emp.lastName}
+                      jobRole={emp.jobRole?.name ?? null}
+                    />
+                  </td>
+                  <td className="font-medium text-foreground">{emp.email}</td>
+                  <td className="text-muted-foreground">
+                    {emp.joiningDate ? UTCToLocal(emp.joiningDate) : '—'}
+                  </td>
+                  <td>
+                    <div className="flex justify-end gap-1">
+                      <IconButton
+                        size="sm"
+                        title="Edit employee"
+                        onClick={() => navigate(`/employee/manage/${emp.id}`)}
+                      >
+                        <i className="bi bi-pencil" />
+                      </IconButton>
+                      <Popover
+                        placement="bottom-end"
+                        content={
+                          <Menu>
+                            <MenuItem icon="eye-open" text="View details" />
+                            <MenuItem icon="history" text="Activity log" />
+                            {!emp.isRoot && (
+                              <>
+                                <MenuDivider />
+                                <MenuItem
+                                  icon="trash"
+                                  text="Delete"
+                                  intent="danger"
+                                  onClick={() => handleDeleteEmployee(emp)}
+                                />
+                              </>
+                            )}
+                          </Menu>
+                        }
+                      >
+                        <IconButton size="sm" title="More">
+                          <i className="bi bi-three-dots" />
+                        </IconButton>
+                      </Popover>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <EmptyRow colSpan={5}>
+                  <i className="bi bi-search mb-2 block text-2xl opacity-40" />
+                  <p className="font-medium text-foreground">No employees found</p>
+                  <p className="text-sm">Try adjusting your search.</p>
+                </EmptyRow>
+              )}
+            </TBody>
+          </Table>
+        </TableWrap>
+      )}
 
-      {/* Footer / Pagination */}
-      <div className="d-flex justify-content-between align-items-center p-3  border-top">
-        <span className="text-muted small fw-medium">Showing {EmpList?.length} of {EmpList?.length} results</span>
-        <div className="d-flex gap-2">
-          <Button icon="chevron-left" disabled minimal className="text-muted" />
-          <Button icon="chevron-right" disabled minimal className="text-muted" />
+      {/* Footer */}
+      <div className="flex items-center justify-between border-t border-border px-4 py-3">
+        <span className="text-xs font-medium text-muted-foreground">
+          Showing {filtered.length} of {rows.length} results
+        </span>
+        <div className="flex gap-1">
+          <IconButton size="sm" disabled aria-label="Previous page">
+            <i className="bi bi-chevron-left" />
+          </IconButton>
+          <IconButton size="sm" disabled aria-label="Next page">
+            <i className="bi bi-chevron-right" />
+          </IconButton>
         </div>
       </div>
     </div>
