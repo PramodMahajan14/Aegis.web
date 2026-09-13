@@ -18,3 +18,11 @@ export const ApplicationRoleSchema = z.object({
 
 export type JobRoleFormData = z.infer<typeof JobRoleSchema>;
 export type ApplicationRoleFormData = z.infer<typeof ApplicationRoleSchema>;
+
+export const ProjectStageSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().min(1, 'Stage name is required').max(100, 'Name is too long'),
+  description: z.string().min(1, 'Description is required'),
+});
+
+export type ProjectStageFormData = z.infer<typeof ProjectStageSchema>;

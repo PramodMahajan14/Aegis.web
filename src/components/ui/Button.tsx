@@ -68,7 +68,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
   return (
     <button
       ref={ref}
-      className={buttonVariants({ variant, size, className })}
+      className={buttonVariants({ variant, size, className }) + " cursor-pointer"}
       disabled={disabled || loading}
       {...props}
     >

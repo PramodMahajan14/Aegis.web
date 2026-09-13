@@ -82,36 +82,38 @@ export function ApplicationRolesCard() {
         position={Position.RIGHT}
         size="480px"
       >
-        <div className="p-4">
-          <div className="mb-3 flex justify-end">
+        <div className="flex h-full flex-col overflow-hidden">
+          <div className="flex shrink-0 justify-end border-b border-border px-4 py-3">
             <Button size="sm" onClick={() => openModal()}>
               <i className="bi bi-plus-lg" /> Add Application Role
             </Button>
           </div>
-          <div className="divide-y divide-border rounded-lg border border-border">
-            {appRoles.map((role) => (
-              <div key={role.id} className="flex items-start justify-between gap-3 p-3">
-                <div>
-                  <RoleRow role={role} />
-                  <Badge variant={role.isActive ? 'success' : 'neutral'} dot className="mt-1.5">
-                    {role.isActive ? 'Active' : 'Inactive'}
-                  </Badge>
+          <div className="flex-1 overflow-y-auto p-4">
+            <div className="divide-y divide-border rounded-lg border border-border">
+              {appRoles.map((role) => (
+                <div key={role.id} className="flex items-start justify-between gap-3 p-3">
+                  <div>
+                    <RoleRow role={role} />
+                    <Badge variant={role.isActive ? 'success' : 'neutral'} dot className="mt-1.5">
+                      {role.isActive ? 'Active' : 'Inactive'}
+                    </Badge>
+                  </div>
+                  <div className="flex gap-1">
+                    <IconButton size="sm" title="Edit role" onClick={() => openModal(role)}>
+                      <i className="bi bi-pencil" />
+                    </IconButton>
+                    <IconButton
+                      size="sm"
+                      title="Delete role"
+                      className="hover:text-danger"
+                      onClick={() => setRoleToDelete(role)}
+                    >
+                      <i className="bi bi-trash" />
+                    </IconButton>
+                  </div>
                 </div>
-                <div className="flex gap-1">
-                  <IconButton size="sm" title="Edit role" onClick={() => openModal(role)}>
-                    <i className="bi bi-pencil" />
-                  </IconButton>
-                  <IconButton
-                    size="sm"
-                    title="Delete role"
-                    className="hover:text-danger"
-                    onClick={() => setRoleToDelete(role)}
-                  >
-                    <i className="bi bi-trash" />
-                  </IconButton>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </Drawer>

@@ -1,5 +1,5 @@
 import { api } from '../index';
-import type { JobRole, JobeRoles } from "../../hooks/Master/MasterTypes";
+import type { JobRole, JobeRoles, ProjectStage, ProjectStages } from "../../hooks/Master/MasterTypes";
 import type { ApiResponse } from "../../hooks/authApi/authTypes";
 
 
@@ -13,7 +13,14 @@ const MasterRepository = {
     GetJobeRole: (id: string): Promise<ApiResponse<JobRole>> => api.get(`/master/get-jobrole/${id}`),
     CreateJobeRole: (data: Partial<JobRole>): Promise<ApiResponse<JobRole>> => api.post(`/master/create-jobrole`, data),
     UpdateJobeRole: (id: string, data: any): Promise<ApiResponse<JobRole>> => api.put(`/master/update-jobrole/${id}`, data),
-    DeleteJobeRole: (id: string): Promise<ApiResponse<void>> => api.delete(`/master/delete-jobrole/${id}`)
+    DeleteJobeRole: (id: string): Promise<ApiResponse<void>> => api.delete(`/master/delete-jobrole/${id}`),
+    //#endregion
+
+    //#region Project Stage
+    GetProjectStages: (): Promise<ProjectStages> => api.get(`/master/project-stages`),
+    CreateProjectStage: (data: Partial<ProjectStage>): Promise<ApiResponse<ProjectStage>> => api.post(`/master/create-project-stage`, data),
+    UpdateProjectStage: (id: string, data: Partial<ProjectStage>): Promise<ApiResponse<ProjectStage>> => api.put(`/master/project-stage-update/${id}`, data),
+    DeleteProjectStage: (id: string): Promise<ApiResponse<void>> => api.delete(`/master/project-stage-delete/${id}`),
     //#endregion
 
     //#region Application Role

@@ -9,3 +9,11 @@ export interface JobRole {
 
 
 export type JobeRoles = ApiResponse<JobRole[]>;
+
+export interface ProjectStage {
+    id?: string;
+    name: string;
+    description: string;
+}
+
+export type ProjectStages = ApiResponse<ProjectStage[]>;
