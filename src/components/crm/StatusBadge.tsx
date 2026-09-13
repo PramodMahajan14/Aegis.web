@@ -3,6 +3,7 @@ import { Badge } from '../ui/Badge';
 import { cn } from '../../lib/cn';
 import { STATUS_LABEL, STATUS_TRANSITIONS, STATUS_VARIANT } from '../../crm/constants';
 import type { ProspectStatus } from '../../crm/types';
+import type { basicNext } from '../../hooks/Prospect/ProspectType';
 
 const DOT_CLASS: Record<ProspectStatus, string> = {
   NEW: 'bg-muted-foreground',
@@ -15,10 +16,10 @@ const DOT_CLASS: Record<ProspectStatus, string> = {
   CONVERTED: 'bg-success',
 };
 
-export function StatusBadge({ status, className }: { status: ProspectStatus; className?: string }) {
+export function StatusBadge({ status, className }: { status: basicNext; className?: string }) {
   return (
-    <Badge variant={STATUS_VARIANT[status]} dot className={className}>
-      {STATUS_LABEL[status]}
+    <Badge variant={STATUS_VARIANT[status.code as ProspectStatus]} dot className={className}>
+      {status.name}
     </Badge>
   );
 }

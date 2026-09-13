@@ -23,8 +23,17 @@ const MasterRepository = {
     DeleteProjectStage: (id: string): Promise<ApiResponse<void>> => api.delete(`/master/project-stage-delete/${id}`),
     //#endregion
 
-    //#region Application Role
+    //#region Source
+    GetSources: (): Promise<Source> => api.get(`/master/sources`),
+    GetSource: (id: string): Promise<ApiResponse<Source>> => api.get(`/master/source/${id}`),
+    CreateSource: (data: Partial<Source>): Promise<ApiResponse<Source>> => api.post(`/master/create-source`, data),
+    UpdateSource: (id: string, data: any): Promise<ApiResponse<Source>> => api.put(`/master/update-source/${id}`, data),
+    DeleteSource: (id: string): Promise<ApiResponse<void>> => api.delete(`/master/delete-source/${id}`),
+    //#endregion
 
 }
+
+
+
 
 export default MasterRepository

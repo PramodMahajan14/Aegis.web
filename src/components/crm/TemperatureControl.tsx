@@ -1,6 +1,7 @@
 import { cn } from '../../lib/cn';
 import { TEMPERATURE_META } from '../../crm/constants';
 import type { Temperature } from '../../crm/types';
+import type { basicNext } from '../../hooks/Prospect/ProspectType';
 
 const ORDER: Temperature[] = ['COLD', 'WARM', 'HOT'];
 
@@ -52,13 +53,13 @@ export function TemperatureControl({
   );
 }
 
-export function TemperaturePill({ value }: { value?: Temperature }) {
+export function TemperaturePill({ value }: { value?: basicNext }) {
   if (!value) return <span className="text-xs text-muted-foreground">Not set</span>;
-  const meta = TEMPERATURE_META[value];
+  const meta = TEMPERATURE_META[value.code as Temperature];
   return (
-    <span className={cn('inline-flex items-center gap-1 text-xs font-medium', meta.className)}>
-      <i className={`bi ${meta.icon}`} />
-      {meta.label}
+    <span className={cn('inline-flex items-center gap-1 text-xs font-medium', meta?.className)}>
+      <i className={`bi ${meta?.icon}`} />
+      {meta?.label}
     </span>
   );
 }

@@ -18,25 +18,28 @@ import { formatDate, formatMoney, isOverdue, relativeTime } from '../../crm/form
 import type { ProspectStatus, Temperature } from '../../crm/types';
 import { cn } from '../../lib/cn';
 import { PageContainer } from '../../components/ui/PageContainer';
+import { useProspectsList } from '../../hooks/Prospect/useProspect';
 
 export default function ProspectsPage() {
+  const { data, isPending } = useProspectsList()
+  console.log(data)
   const navigate = useNavigate();
   const composers = useComposers();
-  const allProspects = useCrmStore((s) => s.prospects);
+  // const allProspects = useCrmStore((s) => s.prospects);
 
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<ProspectStatus | 'ALL' | 'ACTIVE_SET'>('ALL');
-  const [temperature, setTemperature] = useState<Temperature | 'ALL'>('ALL');
+  // const [search, setSearch] = useState('');
+  // const [status, setStatus] = useState<ProspectStatus | 'ALL' | 'ACTIVE_SET'>('ALL');
+  // const [temperature, setTemperature] = useState<Temperature | 'ALL'>('ALL');
 
-  const rows = useProspects({ search, status, temperature });
+  // const rows = useProspects({ search, status, temperature });
 
-  const funnel = useMemo(() => {
-    const counts = STATUS_ORDER.map((s) => ({
-      status: s,
-      count: allProspects.filter((p) => p.status === s).length,
-    }));
-    return counts.filter((c) => c.count > 0 || ['NEW', 'ACTIVE', 'QUALIFICATION', 'QUALIFIED'].includes(c.status));
-  }, [allProspects]);
+  // const funnel = useMemo(() => {
+  //   const counts = STATUS_ORDER.map((s) => ({
+  //     status: s,
+  //     count: allProspects.filter((p) => p.status === s).length,
+  //   }));
+  //   return counts.filter((c) => c.count > 0 || ['NEW', 'ACTIVE', 'QUALIFICATION', 'QUALIFIED'].includes(c.status));
+  // }, [allProspects]);
 
   return (
     <PageContainer>
@@ -52,7 +55,7 @@ export default function ProspectsPage() {
       />
 
       {/* Funnel strip */}
-      <div className="mb-4 flex flex-wrap gap-2">
+      {/* <div className="mb-4 flex flex-wrap gap-2">
         {funnel.map((f) => (
           <button
             key={f.status}
@@ -69,17 +72,17 @@ export default function ProspectsPage() {
             <span className="text-xs text-muted-foreground">{STATUS_LABEL[f.status]}</span>
           </button>
         ))}
-      </div>
+      </div> */}
 
       <Card className="overflow-hidden">
         <div className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-3">
           <SearchInput
             placeholder="Search prospects…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            // value={search}
+            // onChange={(e) => setSearch(e.target.value)}
             wrapClassName="w-full max-w-xs"
           />
-          <NativeSelect
+          {/* <NativeSelect
             className="h-9 w-auto"
             value={status}
             onChange={(e) => setStatus(e.target.value as ProspectStatus | 'ALL' | 'ACTIVE_SET')}
@@ -91,8 +94,8 @@ export default function ProspectsPage() {
                 {STATUS_LABEL[s]}
               </option>
             ))}
-          </NativeSelect>
-          <NativeSelect
+          </NativeSelect> */}
+          {/* <NativeSelect
             className="h-9 w-auto"
             value={temperature}
             onChange={(e) => setTemperature(e.target.value as Temperature | 'ALL')}
@@ -101,11 +104,11 @@ export default function ProspectsPage() {
             <option value="HOT">Hot</option>
             <option value="WARM">Warm</option>
             <option value="COLD">Cold</option>
-          </NativeSelect>
-          <span className="ml-auto text-xs text-muted-foreground">{rows.length} shown</span>
+          </NativeSelect> */}
+          <span className="ml-auto text-xs text-muted-foreground">{data?.data.length} shown</span>
         </div>
 
-        {allProspects.length === 0 ? (
+        {data?.data.length === 0 && isPending ? (
           <EmptyState
             icon="bi-folder-plus"
             title="No prospects yet"
@@ -130,7 +133,7 @@ export default function ProspectsPage() {
                 </tr>
               </THead>
               <TBody>
-                {rows.map((p) => (
+                {data?.data.map((p) => (
                   <tr
                     key={p.id}
                     className="cursor-pointer"
@@ -144,7 +147,7 @@ export default function ProspectsPage() {
                           <div className="text-xs text-muted-foreground">
                             {p.prospectNo}
                             {p.businessName ? ` · ${p.businessName}` : ''}
-                            {p.projectLocation ? ` · ${p.projectLocation}` : ''}
+                            {p.location ? ` · ${p.location}` : ''}
                           </div>
                         </div>
                       </div>
@@ -159,9 +162,9 @@ export default function ProspectsPage() {
                       {formatMoney(p.estimatedValue)}
                     </td>
                     <td>
-                      {p.nextTask ? (
+                      {p?.nextAction ? (
                         <div className="text-xs">
-                          <div className="text-foreground">{p.nextTask.title}</div>
+                          {/* <div className="text-foreground">{p.nextTask.title}</div>
                           <div
                             className={cn(
                               'text-muted-foreground',
@@ -171,18 +174,18 @@ export default function ProspectsPage() {
                             {isOverdue(p.nextTask.dueAt) ? 'Overdue · ' : ''}
                             {formatDate(p.nextTask.dueAt)}
                             {p.overdueTaskCount > 1 ? ` · +${p.overdueTaskCount - 1} overdue` : ''}
-                          </div>
+                          </div> */}
                         </div>
                       ) : (
                         <span className="text-xs text-muted-foreground">—</span>
                       )}
                     </td>
                     <td className="text-xs text-muted-foreground">
-                      {p.lastActivityAt ? relativeTime(p.lastActivityAt) : 'None'}
+                      {/* {p.lastActivityAt ? relativeTime(p.lastActivityAt) : 'None'} */}
                     </td>
                   </tr>
                 ))}
-                {rows.length === 0 && (
+                {data?.data?.length === 0 && (
                   <EmptyRow colSpan={6}>
                     <i className="bi bi-search mb-2 block text-2xl opacity-40" />
                     <p className="font-medium text-foreground">No prospects match</p>
