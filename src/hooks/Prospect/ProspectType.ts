@@ -1,3 +1,4 @@
+import type { Temperature } from "../../crm/types";
 import type { ApiResponse } from "../authApi/authTypes";
 
 
@@ -31,6 +32,21 @@ interface _Prospect {
     status: ProspectSatus,
     temperature: ProspectTemperature,
     nextAction?: NextAction;
+}
+
+
+export interface ProspectPayload {
+    Id?: string;
+    name: string;
+    businessName: string;
+    description: string;
+    projectLocation: string;
+    officeLocation: string;
+    sourceId: string;
+    temperatureId: string;
+    estimatedValue: string;
+    expectedDecisionDate: string;
+    projectStageId: string;
 }
 
 export type Prospects = ApiResponse<_Prospect[]>;

@@ -16,4 +16,18 @@ export interface ProjectStage {
     description: string;
 }
 
+export interface Source {
+    id?: string;
+    name: string;
+    code: string;
+}
+
+export interface MasterTemperature {
+    id?: string;
+    name: string;
+    code: string;
+}
+
 export type ProjectStages = ApiResponse<ProjectStage[]>;
+export type Sources = ApiResponse<Source[]>;
+export type Temperatures = ApiResponse<MasterTemperature[]>;

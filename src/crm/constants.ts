@@ -76,6 +76,7 @@ export const TEMPERATURE_LABEL: Record<Temperature, string> = {
   COLD: 'Cold',
   WARM: 'Warm',
   HOT: 'Hot',
+  NOT_SET: 'Not Set',
 };
 
 export const TEMPERATURE_META: Record<
@@ -85,6 +86,7 @@ export const TEMPERATURE_META: Record<
   COLD: { label: 'Cold', icon: 'bi-snow2', className: 'text-info' },
   WARM: { label: 'Warm', icon: 'bi-thermometer-half', className: 'text-warning' },
   HOT: { label: 'Hot', icon: 'bi-fire', className: 'text-danger' },
+  NOT_SET: { label: 'Not Set', icon: 'bi-dash-circle', className: 'text-muted-foreground' },
 };
 
 // ---- Activities (blueprint §9) ------------------------------------------

@@ -9,6 +9,7 @@ const ACTIVE: Record<Temperature, string> = {
   COLD: 'bg-info-soft text-info',
   WARM: 'bg-warning-soft text-warning',
   HOT: 'bg-danger-soft text-danger',
+  NOT_SET: 'bg-secondary-soft text-muted',
 };
 
 export function TemperatureControl({
@@ -20,6 +21,14 @@ export function TemperatureControl({
   onChange: (t: Temperature) => void;
   size?: 'sm' | 'md';
 }) {
+  if (!value || value === 'NOT_SET') {
+    return (
+      <span className="text-xs text-muted-foreground">
+        Not set
+      </span>
+    );
+  }
+
   return (
     <div
       role="radiogroup"
@@ -29,6 +38,7 @@ export function TemperatureControl({
       {ORDER.map((t) => {
         const meta = TEMPERATURE_META[t];
         const active = value === t;
+
         return (
           <button
             key={t}
@@ -38,7 +48,9 @@ export function TemperatureControl({
             onClick={() => onChange(t)}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-md font-medium transition-colors',
-              size === 'sm' ? 'px-2 py-1 text-xs' : 'px-2.5 py-1.5 text-[0.8125rem]',
+              size === 'sm'
+                ? 'px-2 py-1 text-xs'
+                : 'px-2.5 py-1.5 text-[0.8125rem]',
               active
                 ? ACTIVE[t]
                 : 'text-muted-foreground hover:text-foreground',
@@ -54,8 +66,13 @@ export function TemperatureControl({
 }
 
 export function TemperaturePill({ value }: { value?: basicNext }) {
-  if (!value) return <span className="text-xs text-muted-foreground">Not set</span>;
-  const meta = TEMPERATURE_META[value.code as Temperature];
+
+  // if (value?.code === 'NOT_SET') return <span className="text-xs text-muted-foreground">Not set</span>;
+  const code: Temperature = value?.code
+    ? (value.code as Temperature)
+    : 'NOT_SET';
+
+  const meta = TEMPERATURE_META[code];
   return (
     <span className={cn('inline-flex items-center gap-1 text-xs font-medium', meta?.className)}>
       <i className={`bi ${meta?.icon}`} />

@@ -1,12 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import MasterRepository from '../../api/repositories/MasterRepository';
-import type { JobRole, ProjectStage } from './MasterTypes';
+import type { JobRole, ProjectStage, Source, MasterTemperature } from './MasterTypes';
 
 export const MASTER_QUERY_KEYS = {
   all: ['master'] as const,
   jobRoles: () => [...MASTER_QUERY_KEYS.all, 'jobRoles'] as const,
   jobRole: (id: string) => [...MASTER_QUERY_KEYS.all, 'jobRole', id] as const,
   projectStages: () => [...MASTER_QUERY_KEYS.all, 'projectStages'] as const,
+  sources: () => [...MASTER_QUERY_KEYS.all, 'sources'] as const,
+  temperatures: () => [...MASTER_QUERY_KEYS.all, 'temperatures'] as const,
 };
 
 export const useGetJobeRoles = () => {
@@ -149,6 +151,36 @@ export const useDeleteProjectStage = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: MASTER_QUERY_KEYS.projectStages() });
+    },
+  });
+};
+
+// ─── Source Hooks ──────────────────────────────────────────────────────────
+
+export const useGetSources = () => {
+  return useQuery({
+    queryKey: MASTER_QUERY_KEYS.sources(),
+    queryFn: async () => {
+      const response = await MasterRepository.GetSources();
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to fetch sources');
+      }
+      return response.data as Source[];
+    },
+  });
+};
+
+// ─── Temperature Hooks ─────────────────────────────────────────────────────
+
+export const useGetTemperatures = () => {
+  return useQuery({
+    queryKey: MASTER_QUERY_KEYS.temperatures(),
+    queryFn: async () => {
+      const response = await MasterRepository.GetTemperatures();
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to fetch temperatures');
+      }
+      return response.data as MasterTemperature[];
     },
   });
 };

@@ -1,5 +1,5 @@
 import { api } from '../index';
-import type { JobRole, JobeRoles, ProjectStage, ProjectStages } from "../../hooks/Master/MasterTypes";
+import type { JobRole, JobeRoles, ProjectStage, ProjectStages, Source, Sources, MasterTemperature, Temperatures } from "../../hooks/Master/MasterTypes";
 import type { ApiResponse } from "../../hooks/authApi/authTypes";
 
 
@@ -24,11 +24,15 @@ const MasterRepository = {
     //#endregion
 
     //#region Source
-    GetSources: (): Promise<Source> => api.get(`/master/sources`),
-    GetSource: (id: string): Promise<ApiResponse<Source>> => api.get(`/master/source/${id}`),
-    CreateSource: (data: Partial<Source>): Promise<ApiResponse<Source>> => api.post(`/master/create-source`, data),
-    UpdateSource: (id: string, data: any): Promise<ApiResponse<Source>> => api.put(`/master/update-source/${id}`, data),
-    DeleteSource: (id: string): Promise<ApiResponse<void>> => api.delete(`/master/delete-source/${id}`),
+    GetSources: (): Promise<Sources> => api.get(`/master/sources`),
+    // GetSource: (id: string): Promise<ApiResponse<Source>> => api.get(`/master/source/${id}`),
+    // CreateSource: (data: Partial<Source>): Promise<ApiResponse<Source>> => api.post(`/master/create-source`, data),
+    // UpdateSource: (id: string, data: any): Promise<ApiResponse<Source>> => api.put(`/master/update-source/${id}`, data),
+    // DeleteSource: (id: string): Promise<ApiResponse<void>> => api.delete(`/master/delete-source/${id}`),
+    //#endregion
+
+    //#region Temperature
+    GetTemperatures: (): Promise<Temperatures> => api.get(`/master/temperatures`),
     //#endregion
 
 }

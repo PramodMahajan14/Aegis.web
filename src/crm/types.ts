@@ -19,7 +19,7 @@ export type ProspectStatus =
   | 'DISQUALIFIED'
   | 'CONVERTED';
 
-export type Temperature = 'COLD' | 'WARM' | 'HOT';
+export type Temperature = 'COLD' | 'WARM' | 'HOT' | 'NOT_SET';
 
 export type ActivityType = 'CALL' | 'EMAIL' | 'NOTE' | 'CUSTOM';
 

@@ -57,7 +57,6 @@ export function useComposers() {
             onCancel: () => closeWindow(id),
             onDone: () => {
               closeWindow(id);
-              toast.success('Prospect updated');
             },
           }),
         });
