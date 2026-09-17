@@ -25,6 +25,10 @@ export default function ProspectsPage() {
   console.log(data)
   const navigate = useNavigate();
   const composers = useComposers();
+
+  const handleMoveDetails = (id: string) => {
+    navigate(`/prospects/${id}`);
+  }
   // const allProspects = useCrmStore((s) => s.prospects);
 
   // const [search, setSearch] = useState('');
@@ -142,7 +146,7 @@ export default function ProspectsPage() {
                     <td>
                       <div className="flex items-center gap-3">
                         <PersonAvatar name={p.name} size="md" />
-                        <div className="min-w-0">
+                        <div className="min-w-0" >
                           <div className="font-medium text-foreground">{p.name}</div>
                           <div className="text-xs text-muted-foreground">
                             {p.prospectNo}

@@ -24,6 +24,7 @@ import { useCrmActions } from '../../crm/hooks';
 import { formatDate, formatMoney } from '../../crm/format';
 import { cn } from '../../lib/cn';
 import type { ProspectStatus } from '../../crm/types';
+import { useProspect } from '../../hooks/Prospect/useProspect';
 
 const TABS = [
   { key: 'overview', label: 'Overview', icon: 'bi-grid-1x2' },
@@ -40,10 +41,26 @@ const TABS = [
 export default function ProspectDetailPage() {
   const { id } = useParams();
   const [params, setParams] = useSearchParams();
-  const detail = useProspectDetail(id);
+  const { data: detail, isLoading } = useProspect(id || "");
   const composers = useComposers();
   const { changeStatus, changeTemperature } = useCrmActions();
 
+  if (isLoading) {
+    return (
+      <PageContainer>
+        <EmptyState
+          icon="bi-folder-x"
+          title="Prospect not found"
+          description="It may have been removed."
+          action={
+            <Link to="/prospects" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+              Back to prospects
+            </Link>
+          }
+        />
+      </PageContainer>
+    );
+  }
   if (!detail) {
     return (
       <PageContainer>
@@ -61,25 +78,35 @@ export default function ProspectDetailPage() {
     );
   }
 
-  const { prospect } = detail;
   const tab = (params.get('tab') as (typeof TABS)[number]['key']) || 'overview';
   const setTab = (t: string) => setParams((p) => {
     p.set('tab', t);
     return p;
   }, { replace: true });
 
-  const counts: Record<string, number> = {
-    contacts: detail.contacts.length,
-    activities: detail.activities.length,
-    tasks: detail.tasks.filter((t) => t.status === 'OPEN' || t.status === 'IN_PROGRESS').length,
-    meetings: detail.meetings.length,
-    visits: detail.siteVisits.length,
-    requirements: detail.requirementResponses.length,
-    documents: detail.documents.length,
+  const prospect = {
+    ...detail,
+    projectLocation: detail.location,
+    status: detail.status?.code || detail.status?.name || 'NEW',
+    temperature: detail.temperature?.code || detail.temperature?.name || 'NOT_SET',
+    ownerName: '—',
+    expectedDecisionDate: detail.nextAction?.date || '',
+    source: '—',
+    projectProgress: ''
   };
 
-  const panelProps = { detail, composers };
-  const canConvert = prospect.status === 'QUALIFIED';
+  // const counts: Record<string, number> = {
+  //   contacts: detail.contacts.length,
+  //   activities: detail.activities.length,
+  //   tasks: detail.tasks.filter((t) => t.status === 'OPEN' || t.status === 'IN_PROGRESS').length,
+  //   meetings: detail.meetings.length,
+  //   visits: detail.siteVisits.length,
+  //   requirements: detail.requirementResponses.length,
+  //   documents: detail.documents.length,
+  // };
+
+  // const panelProps = { detail, composers };
+  // const canConvert = prospect.status === 'QUALIFIED';
 
   return (
     <PageContainer>
@@ -131,11 +158,11 @@ export default function ProspectDetailPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {canConvert && (
+            {/* {canConvert && (
               <Button size="sm" onClick={() => composers.convert(prospect.id)}>
                 <i className="bi bi-trophy" /> Convert
               </Button>
-            )}
+            )} */}
             <Button size="sm" variant="outline" onClick={() => composers.editProspect(prospect)}>
               <i className="bi bi-pencil" /> Edit
             </Button>
@@ -200,7 +227,7 @@ export default function ProspectDetailPage() {
       </div>
 
       {/* Tabs */}
-      <div className="no-scrollbar mt-5 flex gap-1 overflow-x-auto border-b border-border">
+      {/* <div className="no-scrollbar mt-5 flex gap-1 overflow-x-auto border-b border-border">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -222,9 +249,9 @@ export default function ProspectDetailPage() {
             ) : null}
           </button>
         ))}
-      </div>
+      </div> */}
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         {tab === 'overview' && <OverviewPanel {...panelProps} />}
         {tab === 'contacts' && <ContactsPanel {...panelProps} />}
         {tab === 'activities' && <ActivitiesPanel {...panelProps} />}
@@ -234,7 +261,7 @@ export default function ProspectDetailPage() {
         {tab === 'requirements' && <RequirementsPanel {...panelProps} />}
         {tab === 'documents' && <DocumentsPanel {...panelProps} />}
         {tab === 'timeline' && <TimelinePanel {...panelProps} />}
-      </div>
+      </div> */}
     </PageContainer>
   );
 }

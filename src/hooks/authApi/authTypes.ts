@@ -107,6 +107,14 @@ export type WorkspaceListResult = ApiResponse<Workspace[]>;
 
 // ── Context surface (what consumers see via useAuth()) ───────────────────────
 
+// Basic Employee -
+
+export interface BasicEmployee {
+  id: string
+  fisrtName: string
+  lastName: string
+}
+
 export interface AuthState {
   stage: AuthStageType;
   user: User | null;

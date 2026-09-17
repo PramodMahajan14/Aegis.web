@@ -21,6 +21,21 @@ export const useProspectsList = () => {
     });
 }
 
+
+export const useProspect = (id: string) => {
+    return useQuery({
+        queryKey: Prospect_QUERY_KEYS.prospect(id),
+        queryFn: async () => {
+            const response = await ProspectRepository.GetProspectById(id);
+            return response.data;
+        },
+        enabled: !!id,
+        staleTime: 5 * 60 * 1000,
+        retry: false,
+        refetchOnWindowFocus: false,
+    });
+}
+
 export const useCreateProspect = (successCall?: () => void) => {
     const toast = useToast()
     const queryClient = useQueryClient();
