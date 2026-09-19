@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useWindowStore } from '../../store/useWindowStore';
 import { useToast } from '../../Services/ToastServices';
 import { STATUS_LABEL } from '../../crm/constants';
-import type { Prospect, ProspectStatus } from '../../crm/types';
+import type { Prospect, ProspectDetail, ProspectStatus } from '../../crm/types';
 import { ProspectForm } from './forms/ProspectForm';
 import {
   ChangeStatusForm,
@@ -35,25 +35,24 @@ export function useComposers() {
         width: 620,
         content: createElement(ProspectForm, {
           onCancel: () => closeWindow(id),
-          onDone: (pid: string) => {
+          onDone: () => {
             closeWindow(id);
             toast.success('Prospect created');
-            navigate(`/prospects/${pid}`);
+            navigate(`/prospects`);
           },
         }),
       });
     }, [openWindow, closeWindow, toast, navigate]),
 
     editProspect: useCallback(
-      (prospect: Prospect) => {
-        const id = 'cmp-prospect';
+      (id: string) => {
         openWindow({
           id,
           title: 'Edit prospect',
           icon: 'edit',
           width: 620,
           content: createElement(ProspectForm, {
-            existing: prospect,
+            id,
             onCancel: () => closeWindow(id),
             onDone: () => {
               closeWindow(id);

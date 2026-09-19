@@ -34,6 +34,19 @@ interface _Prospect {
     nextAction?: NextAction;
 }
 
+interface _ProspectDetails extends _Prospect {
+    source: basicNext;
+    expectedDecisionDate: string;
+    description: string;
+    createdAt: string;
+    updatedAt?: string;
+    officeLocation: string;
+    createdBy: BasicEmployee;
+    updatedBy?: BasicEmployee;
+    temperature: basicNext;
+    progress: { id: string, name: string }
+
+}
 
 export interface ProspectPayload {
     Id?: string;
@@ -54,4 +67,4 @@ export interface ProspectPayload {
 }
 
 export type Prospects = ApiResponse<_Prospect[]>;
-export type Prospect = ApiResponse<_Prospect>;
+export type Prospect = ApiResponse<_ProspectDetails>;

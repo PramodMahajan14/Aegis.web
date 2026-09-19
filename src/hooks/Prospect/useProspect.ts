@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { ProspectRepository } from "../../api/repositories/ProspectRepository";
 import type { Prospect, ProspectPayload } from "./ProspectType";
 import { useToast } from "../../Services/ToastServices";
+import type { ProspectFormPayload } from "../../components/crm/forms/ProspectForm";
 
 export const Prospect_QUERY_KEYS = {
     all: ['prospect'] as const,
@@ -40,12 +41,30 @@ export const useCreateProspect = (successCall?: () => void) => {
     const toast = useToast()
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (prospect: ProspectPayload) => {
+        mutationFn: async (prospect: ProspectFormPayload) => {
             const response = await ProspectRepository.CreateProspect(prospect);
             return response;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: Prospect_QUERY_KEYS.prospects() });
+            successCall && successCall()
+        },
+        onError: (error: any) => {
+            toast.error(error.response.data.message);
+        }
+
+    });
+}
+export const useUpdateProspect = (successCall?: () => void) => {
+    const toast = useToast()
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (prospect: ProspectFormPayload) => {
+            const response = await ProspectRepository.UpdateProspect(prospect);
+            return response;
+        },
+        onSuccess: (_, paylod: ProspectFormPayload) => {
+            if (paylod.id) queryClient.invalidateQueries({ queryKey: Prospect_QUERY_KEYS.prospect(paylod.id) });
             successCall && successCall()
         },
         onError: (error: any) => {

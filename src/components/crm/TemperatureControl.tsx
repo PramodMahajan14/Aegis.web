@@ -21,13 +21,13 @@ export function TemperatureControl({
   onChange: (t: Temperature) => void;
   size?: 'sm' | 'md';
 }) {
-  if (!value || value === 'NOT_SET') {
-    return (
-      <span className="text-xs text-muted-foreground">
-        Not set
-      </span>
-    );
-  }
+  // if (!value || value === 'NOT_SET') {
+  //   return (
+  //     <span className="text-xs text-muted-foreground">
+  //       Not set
+  //     </span>
+  //   );
+  // }
 
   return (
     <div

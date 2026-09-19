@@ -8,11 +8,13 @@ import { NativeSelect } from '../../ui/NativeSelect';
 import { FormShell } from './FormShell';
 import { toInputDate, fromInput } from '../../../crm/format';
 import type { Prospect } from '../../../crm/types';
-import { useCreateProspect } from '../../../hooks/Prospect/useProspect';
+import { useCreateProspect, useProspect, useUpdateProspect } from '../../../hooks/Prospect/useProspect';
 import { useGetProjectStages, useGetSources, useGetTemperatures } from '../../../hooks/Master/useMaster';
+// import { useProspect, useProspectDetail } from '../../../crm/hooks';
 
 // ─── Zod schema — all fields required ─────────────────────────────────────────
 const prospectSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1, 'Project name is required'),
   businessName: z.string().min(1, 'Business / builder is required'),
   description: z.string().min(1, 'Description is required'),
@@ -22,22 +24,24 @@ const prospectSchema = z.object({
   temperatureId: z.string().min(1, 'Temperature is required'),
   estimatedValue: z.string().min(1, 'Estimated value is required'),
   expectedDecisionDate: z.string().min(1, 'Expected decision date is required'),
-  projectStageId: z.string().min(1, 'Construction stage is required'),
+  progressId: z.string().nullable().optional(),
 });
 
-type ProspectFormValues = z.infer<typeof prospectSchema>;
+export type ProspectFormPayload = z.infer<typeof prospectSchema>;
 
 export function ProspectForm({
-  existing,
+  id,
   onDone,
   onCancel,
 }: {
-  existing?: Prospect;
-  onDone: (id: string) => void;
+  id?: string,
+  onDone: () => void;
   onCancel: () => void;
 }) {
-  const { mutateAsync: createProspect, isPending: creating } = useCreateProspect(() => onDone(''));
-  // const { mutateAsync: updateProspect, isPending: updating } = useUpdat(() => onDone(''));
+  const { data: existing, isLoading } = useProspect(id || '')
+  console.log(existing)
+  const { mutateAsync: createProspect, isPending: creating } = useCreateProspect(() => onDone());
+  const { mutateAsync: updateProspect, isPending: updating } = useUpdateProspect(() => onDone());
 
   const { data: sources = [], isLoading: loadingSources } = useGetSources();
   const { data: temperatures = [], isLoading: loadingTemps } = useGetTemperatures();
@@ -48,23 +52,24 @@ export function ProspectForm({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<ProspectFormValues>({
+  } = useForm<ProspectFormPayload>({
     resolver: zodResolver(prospectSchema),
     defaultValues: {
+      id: existing?.id ?? '',
       name: existing?.name ?? '',
       businessName: existing?.businessName ?? '',
       description: existing?.description ?? '',
-      projectLocation: existing?.projectLocation ?? '',
+      projectLocation: existing?.location ?? '',
       officeLocation: existing?.officeLocation ?? '',
-      sourceId: existing?.source ?? '',
-      temperatureId: existing?.temperature ?? '',
+      sourceId: existing?.source.id ?? '',
+      temperatureId: existing?.temperature.id ?? '',
       estimatedValue: existing?.estimatedValue != null ? String(existing.estimatedValue) : '',
       expectedDecisionDate: toInputDate(existing?.expectedDecisionDate),
-      projectStageId: existing?.projectProgress ?? '',
+      progressId: existing?.progress?.id ?? null,
     },
   });
 
-  const submit = async (v: ProspectFormValues) => {
+  const submit = async (v: ProspectFormPayload) => {
     const payload = {
       ...v,
       name: v.name.trim(),
@@ -75,8 +80,8 @@ export function ProspectForm({
       expectedDecisionDate: fromInput(v.expectedDecisionDate),
     };
     if (existing) {
-      // updateProspect(existing.id, payload);
-      onDone(existing.id);
+      updateProspect(payload);
+      onDone();
     } else {
       await createProspect(payload);
     }
@@ -86,7 +91,7 @@ export function ProspectForm({
     <FormShell
       onSubmit={handleSubmit(submit)}
       onCancel={onCancel}
-      busy={creating}
+      busy={creating || updating}
       submitLabel={existing ? 'Save changes' : 'Create prospect'}
     >
       <Field label="Project name" required error={errors.name?.message}>
@@ -187,8 +192,8 @@ export function ProspectForm({
         </Field>
       </div>
 
-      <Field label="Construction stage" required error={errors.projectStageId?.message}>
-        <NativeSelect {...register('projectStageId')} invalid={!!errors.projectStageId}>
+      <Field label="Construction stage" required error={errors.progressId?.message}>
+        <NativeSelect {...register('progressId')} invalid={!!errors.progressId}>
           <option value="">{loadingProjects ? 'Loading…' : 'Select progress...'}</option>
           {projectsprogress.map((s) => (
             <option key={s.id} value={s.id}>

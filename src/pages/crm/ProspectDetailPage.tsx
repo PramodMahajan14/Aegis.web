@@ -23,7 +23,7 @@ import { useProspectDetail } from '../../crm/hooks';
 import { useCrmActions } from '../../crm/hooks';
 import { formatDate, formatMoney } from '../../crm/format';
 import { cn } from '../../lib/cn';
-import type { ProspectStatus } from '../../crm/types';
+import type { ProspectStatus, Temperature } from '../../crm/types';
 import { useProspect } from '../../hooks/Prospect/useProspect';
 
 const TABS = [
@@ -44,7 +44,7 @@ export default function ProspectDetailPage() {
   const { data: detail, isLoading } = useProspect(id || "");
   const composers = useComposers();
   const { changeStatus, changeTemperature } = useCrmActions();
-
+  console.log(detail)
   if (isLoading) {
     return (
       <PageContainer>
@@ -116,26 +116,26 @@ export default function ProspectDetailPage() {
           Prospects
         </Link>
         <i className="bi bi-chevron-right text-[0.65rem] opacity-60" />
-        <span className="font-medium text-foreground">{prospect.name}</span>
+        <span className="font-medium text-foreground">{detail.name}</span>
       </div>
 
       {/* Header card */}
       <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="flex min-w-0 items-start gap-3">
-            <PersonAvatar name={prospect.name} size="md" className="size-11 text-sm" />
+            <PersonAvatar name={detail.name} size="md" className="size-11 text-sm" />
             <div className="min-w-0">
               <h1 className="text-[1.35rem] font-semibold tracking-tight text-foreground">
-                {prospect.name}
+                {detail.name}
               </h1>
               <p className="mt-0.5 text-[0.8125rem] text-muted-foreground">
-                {prospect.prospectNo}
-                {prospect.businessName ? ` · ${prospect.businessName}` : ''}
-                {prospect.projectLocation ? ` · ${prospect.projectLocation}` : ''}
+                {detail.prospectNo}
+                {detail.businessName ? ` · ${detail.businessName}` : ''}
+                {detail.location ? ` · ${detail.location}` : ''}
               </p>
               <div className="mt-2.5 flex flex-wrap items-center gap-2">
                 <StatusMenu
-                  status={prospect.status}
+                  status={detail.status.code as ProspectStatus}
                   onChange={(t: ProspectStatus) => {
                     if (t === 'DISQUALIFIED') composers.changeStatus(prospect.id, t);
                     else changeStatus(prospect.id, t);
@@ -144,13 +144,13 @@ export default function ProspectDetailPage() {
                 />
                 <TemperatureControl
                   size="sm"
-                  value={prospect.temperature}
+                  value={detail.temperature.code as Temperature}
                   onChange={(t) => changeTemperature(prospect.id, t)}
                 />
-                {prospect.projectProgress && (
+                {prospect.progress && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-xs text-muted-foreground">
                     <i className="bi bi-buildings" />
-                    {prospect.projectProgress}
+                    {prospect.progress.name}
                   </span>
                 )}
               </div>
@@ -163,21 +163,21 @@ export default function ProspectDetailPage() {
                 <i className="bi bi-trophy" /> Convert
               </Button>
             )} */}
-            <Button size="sm" variant="outline" onClick={() => composers.editProspect(prospect)}>
+            <Button size="sm" variant="outline" onClick={() => detail.id && composers.editProspect(detail.id)}>
               <i className="bi bi-pencil" /> Edit
             </Button>
             <Popover
               placement="bottom-end"
               content={
                 <Menu>
-                  <MenuItem icon="chat" text="Log activity" onClick={() => composers.logActivity(prospect.id)} />
+                  <MenuItem icon="chat" text="Log activity" onClick={() => composers.logActivity(detail.id)} />
                   <MenuItem icon="tick" text="Add task" onClick={() => composers.addTask(prospect.id)} />
-                  <MenuItem icon="calendar" text="Schedule meeting" onClick={() => composers.scheduleMeeting(prospect.id)} />
-                  <MenuItem icon="map-marker" text="Start site visit" onClick={() => composers.startSiteVisit(prospect.id)} />
+                  <MenuItem icon="calendar" text="Schedule meeting" onClick={() => composers.scheduleMeeting(detail.id)} />
+                  <MenuItem icon="map-marker" text="Start site visit" onClick={() => composers.startSiteVisit(detail.id)} />
                   <MenuDivider />
-                  <MenuItem icon="new-person" text="Add contact" onClick={() => composers.addContact(prospect.id)} />
-                  <MenuItem icon="form" text="Capture requirement" onClick={() => composers.captureRequirement(prospect.id)} />
-                  <MenuItem icon="upload" text="Upload document" onClick={() => composers.uploadDocument(prospect.id)} />
+                  <MenuItem icon="new-person" text="Add contact" onClick={() => composers.addContact(detail.id)} />
+                  <MenuItem icon="form" text="Capture requirement" onClick={() => composers.captureRequirement(detail.id)} />
+                  <MenuItem icon="upload" text="Upload document" onClick={() => composers.uploadDocument(detail.id)} />
                 </Menu>
               }
             >
@@ -192,9 +192,9 @@ export default function ProspectDetailPage() {
         <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 border-t border-border pt-4 text-[0.8125rem] sm:grid-cols-4">
           {[
             ['Owner', prospect.ownerName],
-            ['Est. value', formatMoney(prospect.estimatedValue)],
-            ['Expected decision', formatDate(prospect.expectedDecisionDate)],
-            ['Source', prospect.source ?? '—'],
+            ['Est. value', formatMoney(detail.estimatedValue)],
+            ['Expected decision', formatDate(detail.expectedDecisionDate)],
+            ['Source', detail.source.name ?? '—'],
           ].map(([k, v]) => (
             <div key={k}>
               <div className="text-xs text-muted-foreground">{k}</div>
@@ -205,7 +205,7 @@ export default function ProspectDetailPage() {
       </div>
 
       {/* Quick capture bar */}
-      <div className="mt-4 flex flex-wrap gap-2">
+      {/* <div className="mt-4 flex flex-wrap gap-2">
         {[
           { label: 'Log activity', icon: 'bi-chat-dots', fn: () => composers.logActivity(prospect.id) },
           { label: 'Add task', icon: 'bi-check2-square', fn: () => composers.addTask(prospect.id) },
@@ -224,7 +224,7 @@ export default function ProspectDetailPage() {
             {a.label}
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Tabs */}
       {/* <div className="no-scrollbar mt-5 flex gap-1 overflow-x-auto border-b border-border">
