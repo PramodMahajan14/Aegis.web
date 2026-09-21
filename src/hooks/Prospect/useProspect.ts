@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { ProspectRepository } from "../../api/repositories/ProspectRepository";
-import type { Prospect, ProspectPayload } from "./ProspectType";
+import type { ChangeStatusPayload, Prospect, ProspectPayload } from "./ProspectType";
 import { useToast } from "../../Services/ToastServices";
 import type { ProspectFormPayload } from "../../components/crm/forms/ProspectForm";
 
@@ -21,7 +21,6 @@ export const useProspectsList = () => {
 
     });
 }
-
 
 export const useProspect = (id: string) => {
     return useQuery({
@@ -73,3 +72,41 @@ export const useUpdateProspect = (successCall?: () => void) => {
 
     });
 }
+
+export const useChangeProspectStatus = (successCall?: () => void) => {
+    const toast = useToast()
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, prospect }: { id: string, prospect: ChangeStatusPayload }) => {
+            const response = await ProspectRepository.ChangedProspectStatusOrTemplate(id, prospect);
+            return response;
+        },
+        onSuccess: (_, { id }: { id: string, prospect: ChangeStatusPayload }) => {
+            if (id) queryClient.invalidateQueries({ queryKey: Prospect_QUERY_KEYS.prospect(id) });
+            successCall && successCall()
+        },
+        onError: (error: any) => {
+            toast.error(error.response.data.message);
+        }
+
+    });
+}
+export const useChangeProspectTemperature = (successCall?: () => void) => {
+    const toast = useToast()
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, prospect }: { id: string, prospect: ChangeStatusPayload }) => {
+            const response = await ProspectRepository.ChangedProspectStatusOrTemplate(id, prospect);
+            return response;
+        },
+        onSuccess: (_, { id }: { id: string, prospect: ChangeStatusPayload }) => {
+            if (id) queryClient.invalidateQueries({ queryKey: Prospect_QUERY_KEYS.prospect(id) });
+            successCall && successCall()
+        },
+        onError: (error: any) => {
+            toast.error(error.response.data.message);
+        }
+
+    });
+}
+

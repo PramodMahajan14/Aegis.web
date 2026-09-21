@@ -11,4 +11,6 @@ export const ProspectRepository = {
     CreateProspect: (data: any) => api.post('/prospects', data),
     UpdateProspect: (data: any) => api.put('/prospects', data),
     DeleteProspect: (data: any) => api.delete('/prospects', data),
+
+    ChangedProspectStatusOrTemplate: (Id: string, data: any) => api.patch(`/prospects/${Id}`, data)
 }

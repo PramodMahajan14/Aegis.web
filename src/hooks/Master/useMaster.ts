@@ -9,6 +9,7 @@ export const MASTER_QUERY_KEYS = {
   projectStages: () => [...MASTER_QUERY_KEYS.all, 'projectStages'] as const,
   sources: () => [...MASTER_QUERY_KEYS.all, 'sources'] as const,
   temperatures: () => [...MASTER_QUERY_KEYS.all, 'temperatures'] as const,
+  status: () => [...MASTER_QUERY_KEYS.all, 'status'] as const,
 };
 
 export const useGetJobeRoles = () => {
@@ -177,6 +178,22 @@ export const useGetTemperatures = () => {
     queryKey: MASTER_QUERY_KEYS.temperatures(),
     queryFn: async () => {
       const response = await MasterRepository.GetTemperatures();
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to fetch temperatures');
+      }
+      return response.data as MasterTemperature[];
+    },
+  });
+};
+
+
+// ─── Status Hooks ─────────────────────────────────────────────────────
+
+export const useProspectStatusList = () => {
+  return useQuery({
+    queryKey: MASTER_QUERY_KEYS.status(),
+    queryFn: async () => {
+      const response = await MasterRepository.GetPropsectStatus();
       if (!response.success) {
         throw new Error(response.message || 'Failed to fetch temperatures');
       }

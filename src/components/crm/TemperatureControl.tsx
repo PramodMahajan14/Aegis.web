@@ -2,6 +2,8 @@ import { cn } from '../../lib/cn';
 import { TEMPERATURE_META } from '../../crm/constants';
 import type { Temperature } from '../../crm/types';
 import type { basicNext } from '../../hooks/Prospect/ProspectType';
+import { EntityTitle, Spinner } from '@blueprintjs/core';
+import { Spin } from '@blueprintjs/icons/lib/esm/generated/16px/paths';
 
 const ORDER: Temperature[] = ['COLD', 'WARM', 'HOT'];
 
@@ -16,10 +18,12 @@ export function TemperatureControl({
   value,
   onChange,
   size = 'md',
+  isChanging,
 }: {
   value?: Temperature;
   onChange: (t: Temperature) => void;
   size?: 'sm' | 'md';
+  isChanging?: boolean
 }) {
   // if (!value || value === 'NOT_SET') {
   //   return (
@@ -28,6 +32,35 @@ export function TemperatureControl({
   //     </span>
   //   );
   // }
+
+  if (isChanging) {
+    return (
+      <div
+        role="radiogroup"
+        aria-label="Temperature"
+        className="inline-flex gap-1 rounded-lg border border-border bg-surface-2 p-0.5"
+      >
+
+        {Array.from({ length: 3 }).map((_, i) => (
+          <button
+            type="button"
+            role="radio"
+            className='inline-flex items-center gap-1.5 rounded-md font-medium transition-colors'
+          >
+            <EntityTitle
+              title={"Lodaing"}
+              className='rounded-lg m-0.5'
+              loading={true}
+            />
+
+          </button>
+        ))
+        }
+
+
+      </div >
+    );
+  }
 
   return (
     <div
@@ -53,7 +86,7 @@ export function TemperatureControl({
                 : 'px-2.5 py-1.5 text-[0.8125rem]',
               active
                 ? ACTIVE[t]
-                : 'text-muted-foreground hover:text-foreground',
+                : 'text-muted-foreground hover:text-foreground cursor-pointer',
             )}
           >
             <i className={`bi ${meta.icon}`} />

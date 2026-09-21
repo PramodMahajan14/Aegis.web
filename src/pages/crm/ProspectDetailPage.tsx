@@ -24,7 +24,10 @@ import { useCrmActions } from '../../crm/hooks';
 import { formatDate, formatMoney } from '../../crm/format';
 import { cn } from '../../lib/cn';
 import type { ProspectStatus, Temperature } from '../../crm/types';
-import { useProspect } from '../../hooks/Prospect/useProspect';
+import { useChangeProspectStatus, useChangeProspectTemperature, useProspect } from '../../hooks/Prospect/useProspect';
+import type { ChangeStatusPayload, ChangeTemplatePayload } from '../../hooks/Prospect/ProspectType';
+import { useGetTemperatures, useProspectStatusList } from '../../hooks/Master/useMaster';
+import { useToast } from '../../Services/ToastServices';
 
 const TABS = [
   { key: 'overview', label: 'Overview', icon: 'bi-grid-1x2' },
@@ -40,11 +43,55 @@ const TABS = [
 
 export default function ProspectDetailPage() {
   const { id } = useParams();
+  const toast = useToast()
   const [params, setParams] = useSearchParams();
   const { data: detail, isLoading } = useProspect(id || "");
+  const { data: status, isLoading: isLoadingStatus } = useProspectStatusList();
+  const { data: temperatures, isLoading: isLoadingTemperature } = useGetTemperatures();
   const composers = useComposers();
-  const { changeStatus, changeTemperature } = useCrmActions();
-  console.log(detail)
+  // const { changeStatus, changeTemperature } = useCrmActions();
+
+  const { mutateAsync: changeStatus, isPending: isPendingStatusChanging } = useChangeProspectStatus();
+  const { mutateAsync: changeTemperature, isPending: isPendingTemperatureChanging } = useChangeProspectTemperature();
+
+
+  const handleStatusChange = (code: ProspectStatus) => {
+    if (!detail || !status || status.length == 0) return;
+    const targetStatus = status.find(s => s.code == code)
+    if (!targetStatus || !targetStatus.id) return toast.error("Invalid status")
+    if (code === 'DISQUALIFIED') composers.changeStatus(detail.id, code)
+    else {
+      let statusPaylaod: ChangeStatusPayload = [
+        {
+          path: "/StatusId",
+          op: "replace",
+          value: targetStatus.id,
+          from: detail?.status.id
+        }
+      ]
+      changeStatus({ id: detail?.id, prospect: statusPaylaod })
+    }
+  }
+
+  const handleTemperatureChange = (code: Temperature) => {
+    if (!detail || !temperatures || temperatures.length == 0) return;
+    const targetTemp = temperatures.find(temp => temp.code == code)
+
+    if (!targetTemp || !targetTemp.id) return toast.error("Invalid Temperature")
+    let temperaturePaylaod: ChangeTemplatePayload = [
+      {
+        path: "/ProspectTemperatureId",
+        op: "replace",
+        value: targetTemp.id,
+        from: detail?.temperature.id
+      }
+    ]
+    changeTemperature({ id: detail?.id, prospect: temperaturePaylaod })
+
+  }
+
+
+
   if (isLoading) {
     return (
       <PageContainer>
@@ -84,16 +131,7 @@ export default function ProspectDetailPage() {
     return p;
   }, { replace: true });
 
-  const prospect = {
-    ...detail,
-    projectLocation: detail.location,
-    status: detail.status?.code || detail.status?.name || 'NEW',
-    temperature: detail.temperature?.code || detail.temperature?.name || 'NOT_SET',
-    ownerName: '—',
-    expectedDecisionDate: detail.nextAction?.date || '',
-    source: '—',
-    projectProgress: ''
-  };
+
 
   // const counts: Record<string, number> = {
   //   contacts: detail.contacts.length,
@@ -136,21 +174,21 @@ export default function ProspectDetailPage() {
               <div className="mt-2.5 flex flex-wrap items-center gap-2">
                 <StatusMenu
                   status={detail.status.code as ProspectStatus}
-                  onChange={(t: ProspectStatus) => {
-                    if (t === 'DISQUALIFIED') composers.changeStatus(prospect.id, t);
-                    else changeStatus(prospect.id, t);
-                  }}
-                  onConvert={() => composers.convert(prospect.id)}
+                  isChangingStatus={isPendingStatusChanging}
+                  onChange={(t: ProspectStatus) => handleStatusChange(t)}
+                  onConvert={() => composers.convert(detail.id)}
                 />
                 <TemperatureControl
+
                   size="sm"
                   value={detail.temperature.code as Temperature}
-                  onChange={(t) => changeTemperature(prospect.id, t)}
+                  onChange={(t) => handleTemperatureChange(t)}
+                  isChanging={isPendingTemperatureChanging}
                 />
-                {prospect.progress && (
+                {detail.progress && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-xs text-muted-foreground">
                     <i className="bi bi-buildings" />
-                    {prospect.progress.name}
+                    {detail.progress.name}
                   </span>
                 )}
               </div>
@@ -171,7 +209,7 @@ export default function ProspectDetailPage() {
               content={
                 <Menu>
                   <MenuItem icon="chat" text="Log activity" onClick={() => composers.logActivity(detail.id)} />
-                  <MenuItem icon="tick" text="Add task" onClick={() => composers.addTask(prospect.id)} />
+                  <MenuItem icon="tick" text="Add task" onClick={() => composers.addTask(detail.id)} />
                   <MenuItem icon="calendar" text="Schedule meeting" onClick={() => composers.scheduleMeeting(detail.id)} />
                   <MenuItem icon="map-marker" text="Start site visit" onClick={() => composers.startSiteVisit(detail.id)} />
                   <MenuDivider />
@@ -191,7 +229,7 @@ export default function ProspectDetailPage() {
         {/* facts strip */}
         <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 border-t border-border pt-4 text-[0.8125rem] sm:grid-cols-4">
           {[
-            ['Owner', prospect.ownerName],
+            ['Owner', detail?.ownerName],
             ['Est. value', formatMoney(detail.estimatedValue)],
             ['Expected decision', formatDate(detail.expectedDecisionDate)],
             ['Source', detail.source.name ?? '—'],

@@ -35,6 +35,11 @@ const MasterRepository = {
     GetTemperatures: (): Promise<Temperatures> => api.get(`/master/temperatures`),
     //#endregion
 
+
+    //#region Status
+    GetPropsectStatus: (): Promise<Temperatures> => api.get(`/master/prospect-status`),
+    //#endregion
+
 }
 
 

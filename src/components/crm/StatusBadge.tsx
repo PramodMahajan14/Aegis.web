@@ -1,9 +1,9 @@
-import { Menu, MenuDivider, MenuItem, Popover } from '@blueprintjs/core';
+import { EntityTitle, Menu, MenuDivider, MenuItem, Popover, Spinner } from '@blueprintjs/core';
 import { Badge } from '../ui/Badge';
 import { cn } from '../../lib/cn';
 import { STATUS_LABEL, STATUS_TRANSITIONS, STATUS_VARIANT } from '../../crm/constants';
 import type { ProspectStatus } from '../../crm/types';
-import type { basicNext } from '../../hooks/Prospect/ProspectType';
+import type { basicNext, ChangeStatusPayload } from '../../hooks/Prospect/ProspectType';
 
 const DOT_CLASS: Record<ProspectStatus, string> = {
   NEW: 'bg-muted-foreground',
@@ -26,6 +26,7 @@ export function StatusBadge({ status, className }: { status: basicNext; classNam
 
 interface StatusMenuProps {
   status: ProspectStatus;
+  isChangingStatus: boolean;
   onChange: (next: ProspectStatus) => void;
   onConvert?: () => void;
   className?: string;
@@ -33,9 +34,20 @@ interface StatusMenuProps {
 
 /** Interactive status control — only offers transitions allowed by the
     state machine (blueprint §6, Figure 6). */
-export function StatusMenu({ status, onChange, onConvert, className }: StatusMenuProps) {
+export function StatusMenu({ status, isChangingStatus, onChange, onConvert, className }: StatusMenuProps) {
   const targets = STATUS_TRANSITIONS[status];
+  if (isChangingStatus) {
+    return (
+      <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface py-0.5 pl-2 pr-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:cursor-default disabled:opacity-100 disabled:hover:bg-surface">
 
+        <EntityTitle
+          title={"Lodaing"}
+          loading={true}
+        />
+        <Spinner size={0} intent='success' />
+      </div>
+    );
+  }
   return (
     <Popover
       placement="bottom-start"
@@ -72,7 +84,7 @@ export function StatusMenu({ status, onChange, onConvert, className }: StatusMen
         type="button"
         disabled={targets.length === 0}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-full border border-border bg-surface py-0.5 pl-2 pr-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:cursor-default disabled:opacity-100 disabled:hover:bg-surface',
+          'inline-flex items-center gap-1.5 text-white rounded-full border border-border bg-surface py-0.5 pl-2 pr-1.5 text-xs font-medium  hover:bg-accent disabled:cursor-default disabled:opacity-100 disabled:hover:bg-surface',
           className,
         )}
       >

@@ -1,4 +1,5 @@
 import type { Temperature } from "../../crm/types";
+import type { PatchPayload } from "../../types/appTypes";
 import type { ApiResponse, BasicEmployee } from "../authApi/authTypes";
 
 
@@ -65,6 +66,9 @@ export interface ProspectPayload {
     createdBy: BasicEmployee;
     updatedBy?: BasicEmployee;
 }
+
+export type ChangeStatusPayload = [PatchPayload]
+export type ChangeTemplatePayload = [PatchPayload]
 
 export type Prospects = ApiResponse<_Prospect[]>;
 export type Prospect = ApiResponse<_ProspectDetails>;
