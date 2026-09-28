@@ -7,6 +7,7 @@ import type { ProspectFormPayload } from "../../components/crm/forms/ProspectFor
 export const Prospect_QUERY_KEYS = {
     all: ['prospect'] as const,
     prospects: () => [...Prospect_QUERY_KEYS.all, 'prospects'] as const,
+    prospectDropdown: () => [...Prospect_QUERY_KEYS.all, 'prospectDropdown'] as const,
     prospect: (id: string) => [...Prospect_QUERY_KEYS.all, 'prospect', id] as const,
 };
 
@@ -37,7 +38,7 @@ export const useProspect = (id: string) => {
 }
 export const useProspectDropDown = () => {
     return useQuery({
-        queryKey: Prospect_QUERY_KEYS.prospects(),
+        queryKey: Prospect_QUERY_KEYS.prospectDropdown(),
         queryFn: async () => {
             const response = await ProspectRepository.GetProspectDropDown();
             return response.data;

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FormShell } from "../crm/forms/FormShell";
 import { Field, Input, NativeSelect } from "../ui";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +8,7 @@ import { Switch, TextArea } from "@blueprintjs/core";
 import { useGetJobeRoles } from "../../hooks/Master/useMaster";
 import { useCreateContact, useGetContactDeatils, useUpdateContact } from "../../hooks/Contact/useContact";
 import { useProspectDropDown } from "../../hooks/Prospect/useProspect";
+
 
 // 1. React.FC uses ManageContactProps for parent inputs
 const ManageContact: React.FC<ManageContactProps> = ({
@@ -26,9 +27,9 @@ const ManageContact: React.FC<ManageContactProps> = ({
     // 2. useForm uses the structural <ContactSchema> type
     const {
         register,
-        handleSubmit,
+        handleSubmit, control,
         reset,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<ContactSchema>({
         resolver: zodResolver(contactSchema), // 3. Pass runtime contactSchema object
         defaultValues: {
@@ -57,6 +58,7 @@ const ManageContact: React.FC<ManageContactProps> = ({
         if (contactId) updateContact({ ...v, id: contactId })
         else createContact(v)
     };
+
 
 
 
@@ -124,7 +126,19 @@ const ManageContact: React.FC<ManageContactProps> = ({
             </div>
 
             <Field label="Notes" error={errors.notes?.message}>
-                <TextArea rows={2} placeholder="e.g. Best reached mornings on site" {...register('notes')} />
+                <Controller
+                    name="notes"
+                    control={control} // Obtained from useForm()
+                    defaultValue=""
+                    render={({ field }) => (
+                        <TextArea
+                            rows={2}
+                            placeholder="e.g. Best reached mornings on site"
+                            fill={true}
+                            {...field}
+                        />
+                    )}
+                />
             </Field>
 
             <label className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5 text-sm">

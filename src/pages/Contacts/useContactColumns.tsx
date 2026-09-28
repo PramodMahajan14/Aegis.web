@@ -3,9 +3,10 @@ import { type GridColumn } from "pam-grid";
 import type { ContactRow } from "../../hooks/Contact/contacttype";
 import { Avatar } from "../../components/common/Avatar";
 import { formatDate } from "../../crm/format";
+import { useNavigate } from "react-router-dom";
 
-export const useContactColumns = (): GridColumn<ContactRow>[] => {
-
+export const useContactColumns = (ProspectId?: string): GridColumn<ContactRow>[] => {
+    const navigate = useNavigate()
     return useMemo(() => [
         {
             key: "name",
@@ -19,14 +20,6 @@ export const useContactColumns = (): GridColumn<ContactRow>[] => {
                         jobRole={row.jobRole?.name ?? null} />
                 </div>
             )
-        },
-        {
-            key: "prospect",
-            title: "Prospect",
-            Width: 250,
-            render: (row: ContactRow) =>
-                <span className="underline bold" >{row?.prospect?.name ?? ""}</span>
-
         },
 
         {
@@ -53,6 +46,21 @@ export const useContactColumns = (): GridColumn<ContactRow>[] => {
                 <span>{row?.jobRole.name ?? ""}</span>
             )
         },
+        ... (ProspectId ? [{
+            key: "createdBy",
+            title: "Created by",
+            Width: 250,
+            render: (row: ContactRow) =>
+                <span className="underline bold" >{`${row?.createdBy?.firstName} ${row?.createdBy?.lastName}`}</span>
+
+        }] : [{
+            key: "prospect",
+            title: "Prospect",
+            Width: 250,
+            render: (row: ContactRow) =>
+                <span className=" underline bold" onClick={() => navigate(`/prospects/${row?.prospect?.id}`)}>{row?.prospect?.name ?? ""}</span>
+
+        }]),
         {
             key: "CreatedAt",
             title: "Date Added",

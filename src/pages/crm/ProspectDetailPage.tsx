@@ -292,7 +292,7 @@ export default function ProspectDetailPage() {
 
       <div className="mt-4">
         {/* {tab === 'overview' && <OverviewPanel {...detail} />} */}
-        {tab === 'contacts' && <ContactTab ProspectId={id} />}
+        {(tab === 'contacts' && id) && <ContactTab ProspectId={id} />}
         {/* {tab === 'activities' && <ActivitiesPanel {...panelProps} />} */}
         {/* {tab === 'tasks' && <TasksPanel {...panelProps} />} */}
         {/* {tab === 'meetings' && <MeetingsPanel {...panelProps} />} */}

@@ -122,7 +122,7 @@ export function useComposers() {
     ),
 
     addContact: useCallback(
-      (contactId?: string, prospectId?: string) => {
+      (contactId: string | undefined, prospectId: string | undefined) => {
         const id = contactId ? Model_ID.UPDATE_CONTACT : Model_ID.ADD_CONTACT;
         openWindow({
           id,
@@ -130,7 +130,8 @@ export function useComposers() {
           icon: 'new-person',
           width: 560,
           content: createElement(ManageContact, {
-            contactId,
+            prospectId: prospectId ?? undefined,
+            contactId: contactId ?? undefined,
             onCancel: () => closeWindow(id),
             onDone: () => {
               closeWindow(id);

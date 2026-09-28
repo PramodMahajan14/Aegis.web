@@ -109,10 +109,15 @@ export type WorkspaceListResult = ApiResponse<Workspace[]>;
 
 // Basic Employee -
 
-export interface BasicEmployee {
+export interface BasicUser {
   id: string
-  fisrtName: string
+  firstName: string
   lastName: string
+}
+
+export interface BasicEntity {
+  id: string;
+  name: string;
 }
 
 export interface AuthState {

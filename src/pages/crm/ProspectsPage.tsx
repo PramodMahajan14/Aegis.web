@@ -109,10 +109,10 @@ export default function ProspectsPage() {
             <option value="WARM">Warm</option>
             <option value="COLD">Cold</option>
           </NativeSelect> */}
-          <span className="ml-auto text-xs text-muted-foreground">{data?.data.length} shown</span>
+          <span className="ml-auto text-xs text-muted-foreground">{data?.data?.length} shown</span>
         </div>
 
-        {data?.data.length === 0 && isPending ? (
+        {data?.data?.length === 0 && isPending ? (
           <EmptyState
             icon="bi-folder-plus"
             title="No prospects yet"
@@ -137,7 +137,7 @@ export default function ProspectsPage() {
                 </tr>
               </THead>
               <TBody>
-                {data?.data.map((p) => (
+                {data?.data?.map((p) => (
                   <tr
                     key={p.id}
                     className="cursor-pointer"

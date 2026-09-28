@@ -21,7 +21,7 @@ export type ContactSchema = z.infer<typeof contactSchema>;
 
 // Props passed from parent component
 export type ManageContactProps = {
-    prospectId?: string;
+    prospectId: string | undefined;
     contactId?: string;
     onDone?: () => void;
     onCancel: () => void;
