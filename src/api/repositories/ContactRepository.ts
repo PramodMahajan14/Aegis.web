@@ -6,6 +6,7 @@ import type { ContactDetails } from "../../hooks/Contact/contacttype";
 export const ContactRespository = {
     createContact: (data: any) => api.post('/contact', data),
     updateContact: (data: any) => api.put('/contact', data),
+    deleteContact: (id: string) => api.delete(`/contact/${id}`),
     getContactDetail: (id: string): Promise<ContactDetails> => api.get(`/contact/${id}`),
     getContactList: (prospectId?: string, page = 1, limit = 10, search = '') => {
         let url = `/contact?page=${page}&limit=${limit}`;
