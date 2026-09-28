@@ -23,6 +23,11 @@ export type CurrencyType = basicNext
 export type ProspectTemperature = basicNext
 
 
+export interface BasicProspect {
+    id: string,
+    name: string
+}
+
 interface _Prospect {
     id: string,
     name: string,
@@ -71,4 +76,5 @@ export type ChangeStatusPayload = [PatchPayload]
 export type ChangeTemplatePayload = [PatchPayload]
 
 export type Prospects = ApiResponse<_Prospect[]>;
+export type BasicProspects = ApiResponse<BasicProspect[]>;
 export type Prospect = ApiResponse<_ProspectDetails>;

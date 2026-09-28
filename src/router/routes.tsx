@@ -15,6 +15,7 @@ import MasterDashboard from '../pages/MasterPages/MasterDashboard';
 import EmployeePage from '../pages/Employee/EmployeePage';
 import ManageEmployeePage from '../pages/Employee/ManageEmployeePage';
 import ErrorPage from '../pages/errors/ErrorPage';
+import ContactPage from '../pages/Contacts/ContactPage';
 
 /**
  * Route tree implementing the 3-stage auth flow:
@@ -67,6 +68,7 @@ const routes: RouteObject[] = [
           { path: '/prospects/:id', element: <ProspectDetailPage /> },
           { path: '/pipeline', element: <PipelineBoardPage /> },
           { path: '/planner', element: <DailyPlannerPage /> },
+          { path: '/contacts', element: <ContactPage /> },
           {
             path: '/settings',
             element: (

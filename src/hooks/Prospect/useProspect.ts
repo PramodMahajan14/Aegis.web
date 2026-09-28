@@ -35,6 +35,17 @@ export const useProspect = (id: string) => {
         refetchOnWindowFocus: false,
     });
 }
+export const useProspectDropDown = () => {
+    return useQuery({
+        queryKey: Prospect_QUERY_KEYS.prospects(),
+        queryFn: async () => {
+            const response = await ProspectRepository.GetProspectDropDown();
+            return response.data;
+        },
+        staleTime: 5 * 60 * 1000,
+
+    });
+}
 
 export const useCreateProspect = (successCall?: () => void) => {
     const toast = useToast()

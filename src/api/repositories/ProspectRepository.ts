@@ -1,5 +1,5 @@
 import { api } from "..";
-import type { Prospects, Prospect } from "../../hooks/Prospect/ProspectType";
+import type { Prospects, Prospect, BasicProspects } from "../../hooks/Prospect/ProspectType";
 
 /**
  * Prospect data repository - endpoint definitions only.
@@ -7,6 +7,7 @@ import type { Prospects, Prospect } from "../../hooks/Prospect/ProspectType";
  */
 export const ProspectRepository = {
     GetProspect: (): Promise<Prospects> => api.get('/prospects/list'),
+    GetProspectDropDown: (): Promise<BasicProspects> => api.get('/prospects/dropdown'),
     GetProspectById: (Id: string): Promise<Prospect> => api.get(`/prospects/${Id}`),
     CreateProspect: (data: any) => api.post('/prospects', data),
     UpdateProspect: (data: any) => api.put('/prospects', data),

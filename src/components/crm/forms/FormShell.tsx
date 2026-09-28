@@ -1,5 +1,16 @@
-import type { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Button } from '../../ui/Button';
+
+interface FormShellProps {
+  onSubmit: (e: React.FormEvent) => void;
+  children: ReactNode;
+  submitLabel?: string;
+  submitIcon?: string;
+  onCancel: () => void;
+  busy?: boolean;
+  disabled?: boolean;
+  destructive?: boolean;
+}
 
 export function FormShell({
   onSubmit,
@@ -10,18 +21,16 @@ export function FormShell({
   busy,
   disabled,
   destructive,
-}: {
-  onSubmit: (e: React.FormEvent) => void;
-  children: ReactNode;
-  submitLabel?: string;
-  submitIcon?: string;
-  onCancel: () => void;
-  busy?: boolean;
-  disabled?: boolean;
-  destructive?: boolean;
-}) {
+}: FormShellProps) {
+
+  // Custom submit handler to intercept and guarantee page reloads never happen
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(e);
+  };
+
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-4">{children}</div>
       <div className="mt-1 flex justify-end gap-2 border-t border-border pt-4">
         <Button type="button" variant="ghost" onClick={onCancel} disabled={busy}>

@@ -28,6 +28,7 @@ import { useChangeProspectStatus, useChangeProspectTemperature, useProspect } fr
 import type { ChangeStatusPayload, ChangeTemplatePayload } from '../../hooks/Prospect/ProspectType';
 import { useGetTemperatures, useProspectStatusList } from '../../hooks/Master/useMaster';
 import { useToast } from '../../Services/ToastServices';
+import ContactTab from '../../components/Contact/ContactTab';
 
 const TABS = [
   { key: 'overview', label: 'Overview', icon: 'bi-grid-1x2' },
@@ -243,14 +244,14 @@ export default function ProspectDetailPage() {
       </div>
 
       {/* Quick capture bar */}
-      {/* <div className="mt-4 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         {[
-          { label: 'Log activity', icon: 'bi-chat-dots', fn: () => composers.logActivity(prospect.id) },
-          { label: 'Add task', icon: 'bi-check2-square', fn: () => composers.addTask(prospect.id) },
-          { label: 'Meeting', icon: 'bi-calendar-event', fn: () => composers.scheduleMeeting(prospect.id) },
-          { label: 'Site visit', icon: 'bi-geo-alt', fn: () => composers.startSiteVisit(prospect.id) },
-          { label: 'Contact', icon: 'bi-person-plus', fn: () => composers.addContact(prospect.id) },
-          { label: 'Document', icon: 'bi-upload', fn: () => composers.uploadDocument(prospect.id) },
+          { label: 'Log activity', icon: 'bi-chat-dots', fn: () => composers.logActivity(detail.id) },
+          { label: 'Add task', icon: 'bi-check2-square', fn: () => composers.addTask(detail.id) },
+          { label: 'Meeting', icon: 'bi-calendar-event', fn: () => composers.scheduleMeeting(detail.id) },
+          { label: 'Site visit', icon: 'bi-geo-alt', fn: () => composers.startSiteVisit(detail.id) },
+          { label: 'Contact', icon: 'bi-person-plus', fn: () => composers.addContact(detail.id) },
+          { label: 'Document', icon: 'bi-upload', fn: () => composers.uploadDocument(detail.id) },
         ].map((a) => (
           <button
             key={a.label}
@@ -262,10 +263,10 @@ export default function ProspectDetailPage() {
             {a.label}
           </button>
         ))}
-      </div> */}
+      </div>
 
       {/* Tabs */}
-      {/* <div className="no-scrollbar mt-5 flex gap-1 overflow-x-auto border-b border-border">
+      <div className="no-scrollbar mt-5 flex gap-1 overflow-x-auto border-b border-border">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -280,26 +281,26 @@ export default function ProspectDetailPage() {
           >
             <i className={`bi ${t.icon}`} />
             {t.label}
-            {counts[t.key] ? (
+            {/* {counts[t.key] ? (
               <span className="rounded-full bg-accent px-1.5 text-[0.6875rem] text-muted-foreground">
                 {counts[t.key]}
               </span>
-            ) : null}
+            ) : null} */}
           </button>
         ))}
-      </div> */}
+      </div>
 
-      {/* <div className="mt-4">
-        {tab === 'overview' && <OverviewPanel {...panelProps} />}
-        {tab === 'contacts' && <ContactsPanel {...panelProps} />}
-        {tab === 'activities' && <ActivitiesPanel {...panelProps} />}
-        {tab === 'tasks' && <TasksPanel {...panelProps} />}
-        {tab === 'meetings' && <MeetingsPanel {...panelProps} />}
-        {tab === 'visits' && <SiteVisitsPanel {...panelProps} />}
-        {tab === 'requirements' && <RequirementsPanel {...panelProps} />}
-        {tab === 'documents' && <DocumentsPanel {...panelProps} />}
-        {tab === 'timeline' && <TimelinePanel {...panelProps} />}
-      </div> */}
+      <div className="mt-4">
+        {/* {tab === 'overview' && <OverviewPanel {...detail} />} */}
+        {tab === 'contacts' && <ContactTab ProspectId={id} />}
+        {/* {tab === 'activities' && <ActivitiesPanel {...panelProps} />} */}
+        {/* {tab === 'tasks' && <TasksPanel {...panelProps} />} */}
+        {/* {tab === 'meetings' && <MeetingsPanel {...panelProps} />} */}
+        {/* {tab === 'visits' && <SiteVisitsPanel {...panelProps} />} */}
+        {/* {tab === 'requirements' && <RequirementsPanel {...panelProps} />} */}
+        {/* {tab === 'documents' && <DocumentsPanel {...panelProps} />} */}
+        {/* {tab === 'timeline' && <TimelinePanel {...panelProps} />} */}
+      </div>
     </PageContainer>
   );
 }

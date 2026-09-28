@@ -10,6 +10,7 @@ const navigation: NavSection[] = [
       { label: 'Pipeline', path: '/pipeline', icon: 'bi-kanban' },
       { label: 'Prospects', path: '/prospects', icon: 'bi-folder' },
       { label: 'Daily Planner', path: '/planner', icon: 'bi-check2-square' },
+      { label: 'Contacts', path: '/contacts', icon: 'bi-people' },
     ],
   },
   {

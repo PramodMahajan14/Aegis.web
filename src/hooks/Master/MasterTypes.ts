@@ -6,6 +6,10 @@ export interface JobRole {
     name: string;
     description: string
 }
+export interface BasicJobeRole {
+    id: string;
+    name: string
+}
 
 
 export type JobeRoles = ApiResponse<JobRole[]>;

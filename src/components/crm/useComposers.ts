@@ -17,9 +17,25 @@ import {
 import { RequirementForm } from './forms/RequirementForm';
 import { SiteVisitForm } from './forms/SiteVisitForm';
 import { createElement } from 'react';
+import ManageContact from '../Contact/ManageContact';
 
 /** Opens every Layer 1 capture form as a modal and wires success toasts +
     navigation. One hook so screens don't each re-implement the plumbing. */
+
+const Model_ID = {
+  ADD_PROSPECT: 'add-prospect',
+  ADD_CONTACT: 'add-contact',
+  UPDATE_CONTACT: 'update-contact',
+  ADD_ACTIVITY: 'add-activity',
+  ADD_TASK: 'add-task',
+  ADD_MEETING: 'add-meeting',
+  ADD_DOCUMENT: 'add-document',
+  ADD_REQUIREMENT: 'add-requirement',
+  ADD_SITE_VISIT: 'add-site-visit',
+  CHANGE_STATUS: 'change-status',
+  CONVERT: 'convert',
+}
+
 export function useComposers() {
   const { openWindow, closeWindow } = useWindowStore();
   const toast = useToast();
@@ -106,19 +122,18 @@ export function useComposers() {
     ),
 
     addContact: useCallback(
-      (prospectId: string) => {
-        const id = 'cmp-contact';
+      (contactId?: string, prospectId?: string) => {
+        const id = contactId ? Model_ID.UPDATE_CONTACT : Model_ID.ADD_CONTACT;
         openWindow({
           id,
-          title: 'Add contact',
+          title: contactId ? 'Edit contact' : 'Add contact',
           icon: 'new-person',
           width: 560,
-          content: createElement(ContactForm, {
-            prospectId,
+          content: createElement(ManageContact, {
+            contactId,
             onCancel: () => closeWindow(id),
             onDone: () => {
               closeWindow(id);
-              toast.success('Contact added');
             },
           }),
         });
