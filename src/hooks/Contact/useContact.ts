@@ -32,6 +32,26 @@ export const useCreateContact = (successCall?: () => void) => {
     });
 }
 
+export const useUpdateContact = (successCall?: () => void) => {
+    const toast = useToast()
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (contact: ContactSchema) => {
+            const response = await ContactRespository.updateContact(contact);
+            return response;
+        },
+        onSuccess: (response: any) => {
+            queryClient.invalidateQueries({ queryKey: Contact_QUERY_KEYS.all });
+            successCall && successCall()
+            toast.success(response.message);
+        },
+        onError: (error: any) => {
+            toast.error(error.response.data.message);
+        }
+
+    });
+}
+
 
 export const useGetContactList = (prospectId?: string | undefined, page = 1, limit = 10) => {
     return useQuery({

@@ -4,6 +4,7 @@ import type { ApiResponse, BasicEmployee } from "../authApi/authTypes";
 import type { BasicJobeRole } from "../Master/MasterTypes";
 
 export const contactSchema = z.object({
+    id: z.string().optional(),
     prospectId: z.string().optional(),
     firstName: z.string().min(3, "Required").trim(),
     lastName: z.string().optional(),

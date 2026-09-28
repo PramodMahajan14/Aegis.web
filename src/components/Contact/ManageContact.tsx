@@ -6,8 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { contactMap, contactSchema, type ContactSchema, type ManageContactProps } from "../../hooks/Contact/contacttype";
 import { Switch, TextArea } from "@blueprintjs/core";
 import { useGetJobeRoles } from "../../hooks/Master/useMaster";
-import { useCreateContact, useGetContactDeatils } from "../../hooks/Contact/useContact";
-import { Select } from "@blueprintjs/select";
+import { useCreateContact, useGetContactDeatils, useUpdateContact } from "../../hooks/Contact/useContact";
 import { useProspectDropDown } from "../../hooks/Prospect/useProspect";
 
 // 1. React.FC uses ManageContactProps for parent inputs
@@ -22,6 +21,7 @@ const ManageContact: React.FC<ManageContactProps> = ({
     const { data: contact, isLoading: contactLoading } = useGetContactDeatils(contactId!)
 
     const { mutate: createContact, isPending: createPending } = useCreateContact(() => onDone?.());
+    const { mutate: updateContact, isPending: updatePending } = useUpdateContact(() => onDone?.());
 
     // 2. useForm uses the structural <ContactSchema> type
     const {
@@ -53,7 +53,8 @@ const ManageContact: React.FC<ManageContactProps> = ({
 
     // 4. onSubmit receives validated ContactSchema data
     const onSubmit = (v: ContactSchema) => {
-        if (contactId) return
+        // console.log({ ...v, id: contactId })
+        if (contactId) updateContact({ ...v, id: contactId })
         else createContact(v)
     };
 
