@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Tooltip } from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem, Popover, Tooltip } from '@blueprintjs/core';
 import navigation from '../../data/navigation';
 import type { NavSection } from '../../types/navigation';
+import { useAuth } from '../../auth/AuthContext';
 import { cn } from '../../lib/cn';
 
 function sectionContainsPath(section: NavSection, pathname: string): boolean {
@@ -15,16 +16,32 @@ interface SidebarProps {
 }
 
 const itemBase =
-  'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-[0.8125rem] transition-colors ' +
-  'before:absolute before:left-0 before:top-1/2 before:h-4 before:w-[3px] before:-translate-y-1/2 ' +
-  'before:rounded-full before:bg-brand before:opacity-0 before:transition-opacity';
+  'flex items-center gap-2.5 rounded-lg border px-2.5 py-[0.4rem] text-[0.8125rem] transition-colors';
+const itemActive = 'border-transparent bg-accent font-medium text-foreground';
+const itemIdle = 'border-transparent text-muted-foreground hover:bg-accent/60 hover:text-foreground';
 
 export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
   const location = useLocation();
+  const { user, logout } = useAuth();
+  const [query, setQuery] = useState('');
+  const searchRef = useRef<HTMLInputElement>(null);
   const [openKeys, setOpenKeys] = useState<Set<string>>(() => {
     const active = navigation.find((s) => sectionContainsPath(s, location.pathname));
     return new Set(active ? [active.key] : navigation.map((s) => s.key));
   });
+
+  // "/" focuses the nav search, like the hint in the field says.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== '/' || collapsed) return;
+      const t = e.target as HTMLElement;
+      if (t.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName)) return;
+      e.preventDefault();
+      searchRef.current?.focus();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [collapsed]);
 
   function toggle(key: string) {
     setOpenKeys((prev) => {
@@ -36,26 +53,31 @@ export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
   }
 
   const flatItems = navigation.flatMap((s) => s.items);
+  const q = query.trim().toLowerCase();
+  const sections = q
+    ? navigation
+        .map((s) => ({ ...s, items: s.items.filter((i) => i.label.toLowerCase().includes(q)) }))
+        .filter((s) => s.items.length > 0)
+    : navigation;
+
+  const displayName = user?.name || user?.email || 'Signed in';
+  const userInitials = displayName.slice(0, 2).toUpperCase();
 
   return (
     <aside className="app-sidebar" data-collapsed={collapsed} data-mobile-open={mobileOpen}>
-      {/* User card */}
-      <div
-        className={cn(
-          'flex items-center gap-3 border-b border-border px-3.5 py-3.5',
-          collapsed && 'justify-center px-0',
-        )}
-      >
-        <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary text-[0.8125rem] font-semibold text-primary-foreground">
-          AT
-        </div>
+      {/* Workspace */}
+      <div className={cn('flex items-center gap-2.5 px-3.5 pb-2 pt-3.5', collapsed && 'justify-center px-0')}>
+        <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground">
+          <i className="bi bi-shield-fill-check text-[0.85rem]" />
+        </span>
         {!collapsed && (
-          <div className="min-w-0 leading-tight">
-            <div className="truncate text-[0.8125rem] font-semibold text-foreground">
-              Alizee Thomas
+          <>
+            <div className="min-w-0 flex-1 leading-tight">
+              <div className="truncate text-[0.875rem] font-semibold text-foreground">Aegis</div>
+              <div className="truncate text-[0.6875rem] text-muted-foreground">Sales workspace</div>
             </div>
-            <div className="truncate text-[0.6875rem] text-muted-foreground">Administrator</div>
-          </div>
+            <i className="bi bi-chevron-expand text-xs text-muted-foreground" />
+          </>
         )}
       </div>
 
@@ -68,9 +90,8 @@ export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
                 end={item.path === '/'}
                 className={({ isActive }) =>
                   cn(
-                    'relative grid size-9 place-items-center rounded-lg text-[1.05rem] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
-                    'before:absolute before:left-0 before:top-1/2 before:h-4 before:w-[3px] before:-translate-y-1/2 before:rounded-full before:bg-brand before:opacity-0',
-                    isActive && 'bg-accent text-brand before:opacity-100',
+                    'grid size-9 place-items-center rounded-lg border text-[1rem] transition-colors',
+                    isActive ? itemActive : itemIdle,
                   )
                 }
               >
@@ -80,68 +101,106 @@ export default function Sidebar({ mobileOpen, collapsed }: SidebarProps) {
           ))}
         </nav>
       ) : (
-        <nav className="no-scrollbar flex-1 space-y-4 overflow-y-auto px-2.5 py-4">
-          {navigation.map((section) => {
-            const isOpen = openKeys.has(section.key);
-            return (
-              <div key={section.key}>
-                <button
-                  type="button"
-                  onClick={() => toggle(section.key)}
-                  className="flex w-full items-center justify-between rounded-md px-3 py-1 text-[0.6875rem] font-semibold uppercase tracking-[0.09em] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  {section.label}
-                  <i
-                    className={cn(
-                      'bi bi-chevron-down text-[0.7rem] transition-transform',
-                      !isOpen && '-rotate-90',
-                    )}
-                  />
-                </button>
+        <>
+          <div className="px-3 pb-1 pt-2">
+            <label className="flex h-8 items-center gap-2 rounded-lg border border-border bg-surface px-2.5 text-[0.8125rem] text-muted-foreground focus-within:border-ring">
+              <i className="bi bi-search text-xs" />
+              <input
+                ref={searchRef}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Escape') return;
+                  setQuery('');
+                  e.currentTarget.blur();
+                }}
+                placeholder="Search"
+                className="min-w-0 flex-1 bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
+              />
+              <kbd className="rounded-sm border border-border px-1.5 font-sans text-[0.625rem] leading-4">/</kbd>
+            </label>
+          </div>
 
-                <div className={cn('mt-1 space-y-0.5', !isOpen && 'hidden')}>
-                  {section.items.map((item) => (
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      end={item.path === '/'}
-                      className={({ isActive }) =>
-                        cn(
-                          itemBase,
-                          isActive
-                            ? 'bg-accent font-medium text-foreground before:opacity-100'
-                            : 'text-muted-foreground hover:bg-accent hover:text-foreground',
-                        )
-                      }
-                    >
-                      {({ isActive }) => (
-                        <>
-                          <i
-                            className={cn(
-                              'bi w-4 text-center text-[0.9rem]',
-                              item.icon ?? 'bi-dot',
-                              isActive ? 'text-brand' : 'text-muted-foreground',
-                            )}
-                          />
-                          <span className="truncate">{item.label}</span>
-                        </>
-                      )}
-                    </NavLink>
-                  ))}
+          <nav className="no-scrollbar flex-1 space-y-3 overflow-y-auto px-3 py-2">
+            {sections.map((section) => {
+              const isOpen = q !== '' || openKeys.has(section.key);
+              return (
+                <div key={section.key}>
+                  <button
+                    type="button"
+                    onClick={() => toggle(section.key)}
+                    className="flex w-full items-center gap-1.5 px-1 py-1 text-[0.625rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground/80 transition-colors hover:text-foreground"
+                  >
+                    <i className={cn('bi bi-chevron-up text-[0.6rem] transition-transform', !isOpen && 'rotate-180')} />
+                    {section.label}
+                  </button>
+
+                  <div className={cn('mt-0.5 space-y-0.5', !isOpen && 'hidden')}>
+                    {section.items.map((item) => (
+                      <NavLink
+                        key={item.path}
+                        to={item.path}
+                        end={item.path === '/'}
+                        className={({ isActive }) => cn(itemBase, isActive ? itemActive : itemIdle)}
+                      >
+                        {({ isActive }) => (
+                          <>
+                            <i
+                              className={cn(
+                                'bi w-4 text-center text-[0.9rem]',
+                                item.icon ?? 'bi-dot',
+                                isActive ? 'text-foreground' : 'text-muted-foreground',
+                              )}
+                            />
+                            <span className="truncate">{item.label}</span>
+                          </>
+                        )}
+                      </NavLink>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </nav>
+              );
+            })}
+            {sections.length === 0 && (
+              <p className="px-1 py-2 text-xs text-muted-foreground">No pages match “{query}”.</p>
+            )}
+          </nav>
+        </>
       )}
 
-      <div
-        className={cn(
-          'border-t border-border px-3.5 py-3 text-[0.6875rem] text-muted-foreground',
-          collapsed && 'text-center',
+      {/* User */}
+      <div className={cn('flex items-center gap-2.5 border-t border-border px-3.5 py-3', collapsed && 'justify-center px-0')}>
+        <span className="relative grid size-8 shrink-0 place-items-center rounded-full bg-brand-soft text-[0.6875rem] font-semibold text-brand-stronger">
+          {userInitials}
+          <span className="absolute bottom-0 right-0 size-2 rounded-full bg-success ring-2 ring-sidebar" />
+        </span>
+        {!collapsed && (
+          <>
+            <div className="min-w-0 flex-1 leading-tight">
+              <div className="truncate text-[0.8125rem] font-medium text-foreground">{displayName}</div>
+              <div className="truncate text-[0.6875rem] text-muted-foreground">{user?.role || user?.email}</div>
+            </div>
+            <Popover
+              placement="top-end"
+              content={
+                <Menu>
+                  <MenuItem icon="user" text="Profile" />
+                  <MenuItem icon="cog" text="Settings" href="/settings" />
+                  <MenuDivider />
+                  <MenuItem icon="log-out" text="Sign out" intent="danger" onClick={() => void logout()} />
+                </Menu>
+              }
+            >
+              <button
+                type="button"
+                aria-label="Account menu"
+                className="grid size-7 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                <i className="bi bi-three-dots" />
+              </button>
+            </Popover>
+          </>
         )}
-      >
-        {collapsed ? 'v1' : `© ${new Date().getFullYear()} Aegis · v1.0`}
       </div>
     </aside>
   );

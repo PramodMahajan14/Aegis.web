@@ -1,24 +1,23 @@
-import { EntityTitle, Menu, MenuDivider, MenuItem, Popover, Spinner } from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem, Popover, Spinner } from '@blueprintjs/core';
 import { Badge } from '../ui/Badge';
 import { cn } from '../../lib/cn';
 import { STATUS_LABEL, STATUS_TRANSITIONS, STATUS_VARIANT } from '../../crm/constants';
 import type { ProspectStatus } from '../../crm/types';
-import type { basicNext, ChangeStatusPayload } from '../../hooks/Prospect/ProspectType';
+import type { basicNext } from '../../hooks/Prospect/ProspectType';
 
-const DOT_CLASS: Record<ProspectStatus, string> = {
-  NEW: 'bg-muted-foreground',
-  ACTIVE: 'bg-info',
-  FOLLOW_UP: 'bg-warning',
-  QUALIFICATION: 'bg-brand',
-  QUALIFIED: 'bg-success',
-  DORMANT: 'bg-muted-foreground',
-  DISQUALIFIED: 'bg-danger',
-  CONVERTED: 'bg-success',
+const TAG_CLASS: Record<string, string> = {
+  neutral: 'border-border-strong text-muted-foreground',
+  outline: 'border-border-strong text-muted-foreground',
+  brand: 'border-brand-border text-brand-stronger',
+  success: 'border-success/40 text-success',
+  warning: 'border-warning/40 text-warning',
+  danger: 'border-danger/40 text-danger',
+  info: 'border-info/40 text-info',
 };
 
 export function StatusBadge({ status, className }: { status: basicNext; className?: string }) {
   return (
-    <Badge variant={STATUS_VARIANT[status.code as ProspectStatus]} dot className={className}>
+    <Badge variant={STATUS_VARIANT[status.code as ProspectStatus]} className={className}>
       {status.name}
     </Badge>
   );
@@ -38,14 +37,10 @@ export function StatusMenu({ status, isChangingStatus, onChange, onConvert, clas
   const targets = STATUS_TRANSITIONS[status];
   if (isChangingStatus) {
     return (
-      <div className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface py-0.5 pl-2 pr-1.5 text-xs font-medium transition-colors hover:bg-accent disabled:cursor-default disabled:opacity-100 disabled:hover:bg-surface">
-
-        <EntityTitle
-          title={"Lodaing"}
-          loading={true}
-        />
-        <Spinner size={0} intent='success' />
-      </div>
+      <span className="inline-flex h-6 items-center gap-1.5 rounded-sm border border-border-strong px-2 text-[0.6875rem] font-medium uppercase tracking-[0.06em] text-muted-foreground">
+        <Spinner size={12} />
+        Updating
+      </span>
     );
   }
   return (
@@ -84,13 +79,13 @@ export function StatusMenu({ status, isChangingStatus, onChange, onConvert, clas
         type="button"
         disabled={targets.length === 0}
         className={cn(
-          'inline-flex items-center gap-1.5 text-white rounded-full border border-border bg-surface py-0.5 pl-2 pr-1.5 text-xs font-medium  hover:bg-accent disabled:cursor-default disabled:opacity-100 disabled:hover:bg-surface',
+          'inline-flex h-6 items-center gap-1.5 rounded-sm border px-2 text-[0.6875rem] font-medium uppercase tracking-[0.06em] transition-colors hover:bg-accent disabled:cursor-default disabled:hover:bg-transparent',
+          TAG_CLASS[STATUS_VARIANT[status]],
           className,
         )}
       >
-        <span className={cn('size-1.5 rounded-full', DOT_CLASS[status])} />
         {STATUS_LABEL[status]}
-        {targets.length > 0 && <i className="bi bi-chevron-down text-[0.6rem] text-muted-foreground" />}
+        {targets.length > 0 && <i className="bi bi-chevron-down text-[0.55rem] opacity-70" />}
       </button>
     </Popover>
   );

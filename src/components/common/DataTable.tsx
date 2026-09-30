@@ -138,7 +138,7 @@ export function DataTable<T>({
     <div className={className}>
       <div className="w-full overflow-x-auto rounded-lg border border-border bg-card">
         <table className="w-full border-collapse text-sm">
-          <thead className="border-b border-border bg-surface-2">
+          <thead className="border-b border-border">
             <tr>
               {enableRowSelection && (
                 <th className="w-12 px-4 py-3">

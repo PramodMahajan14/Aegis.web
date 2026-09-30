@@ -1,19 +1,14 @@
-import PageHeader from "../../components/Layout/PageHeader";
-import { PageContainer } from "../../components/ui/PageContainer";
+import { Page, PageBar, PageContent } from "../../components/ui/Page";
 import ContactList from "./ContactList";
 
 const ContactPage = () => {
-
-
     return (
-        <PageContainer>
-            <PageHeader
-                crumbs={['Sales', 'Prospects']}
-                description="Every project pursuit — before and after it becomes an opportunity."
-
-            />
-            <ContactList ProspectId={null} />
-        </PageContainer>
+        <Page>
+            <PageBar title="Contacts" description="Everyone you work with across your prospects." />
+            <PageContent>
+                <ContactList ProspectId={null} />
+            </PageContent>
+        </Page>
     )
 }
 export default ContactPage;

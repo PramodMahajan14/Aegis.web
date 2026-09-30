@@ -1,6 +1,5 @@
 import { useEffect, useMemo, type ReactNode } from 'react';
 import { PamGrid, type GridColumn, type GridFetaures } from 'pam-grid';
-import { Card } from '../ui';
 import { cn } from '../../lib/cn';
 import { alignBodyToHeader, type ServerGridData } from './useServerGrid';
 
@@ -73,7 +72,7 @@ export function ServerGridView<Row extends object>({
   actions,
   actionsRender,
   isDropdown,
-  className = 'p-2',
+  className,
   grouping = false,
   bulkActions,
 }: {
@@ -115,7 +114,7 @@ export function ServerGridView<Row extends object>({
   }, [data]);
 
   return (
-    <Card className={cn('pam-grid-scope shadow-none', className)} style={{ minHeight: 420 }}>
+    <div className={cn('pam-grid-scope', className)} style={{ minHeight: 420 }}>
       <PamGrid
         columns={alignedColumns}
         grid={grid}
@@ -143,6 +142,6 @@ export function ServerGridView<Row extends object>({
           } as GridFetaures<AnyRow>
         }
       />
-    </Card>
+    </div>
   );
 }

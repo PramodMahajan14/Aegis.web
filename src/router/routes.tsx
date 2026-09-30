@@ -16,6 +16,8 @@ import EmployeePage from '../pages/Employee/EmployeePage';
 import ManageEmployeePage from '../pages/Employee/ManageEmployeePage';
 import ErrorPage from '../pages/errors/ErrorPage';
 import ContactPage from '../pages/Contacts/ContactPage';
+import { Block, Page, PageBar, PageContent } from '../components/ui/Page';
+import { EmptyState } from '../components/crm/EmptyState';
 
 /**
  * Route tree implementing the 3-stage auth flow:
@@ -72,13 +74,14 @@ const routes: RouteObject[] = [
           {
             path: '/settings',
             element: (
-              <div className="w-full p-4 sm:p-6 lg:p-8">
-                <div className="grid place-items-center rounded-lg border border-dashed border-border bg-card p-16 text-center">
-                  <i className="bi bi-gear mb-3 text-3xl text-muted-foreground" />
-                  <h3>Settings</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">Coming soon.</p>
-                </div>
-              </div>
+              <Page>
+                <PageBar title="Settings" description="Workspace and account preferences." />
+                <PageContent>
+                  <Block>
+                    <EmptyState icon="bi-gear" title="Settings are coming soon" description="Preferences for your workspace will live here." />
+                  </Block>
+                </PageContent>
+              </Page>
             ),
           },
           { path: '/master', element: <MasterDashboard /> },

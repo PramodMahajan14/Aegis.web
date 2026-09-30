@@ -1,27 +1,26 @@
 import { Link } from 'react-router-dom';
-import PageHeader from '../../components/Layout/PageHeader';
 import { EmployeeList } from '../../components/Employee/EmployeeList';
-import { Card } from '../../components/ui/Card';
 import { buttonVariants } from '../../components/ui/Button';
-import { PageContainer } from '../../components/ui/PageContainer';
+import { Block, Page, PageBar, PageContent } from '../../components/ui/Page';
 
 export default function EmployeePage() {
   return (
-    <PageContainer>
-      <PageHeader
-        crumbs={['Administrator', 'Employee']}
+    <Page>
+      <PageBar
+        title="Employees"
         description="Manage your organisation's people and their roles."
         actions={
-          <Link to="/employee/manage" className={buttonVariants({ size: 'sm' })}>
+          <Link to="/employee/manage" className={buttonVariants({ variant: 'brand', size: 'sm' })}>
             <i className="bi bi-plus-lg" />
-            Add Employee
+            Add employee
           </Link>
         }
       />
-
-      <Card className="overflow-hidden">
-        <EmployeeList />
-      </Card>
-    </PageContainer>
+      <PageContent>
+        <Block className="overflow-visible">
+          <EmployeeList />
+        </Block>
+      </PageContent>
+    </Page>
   );
 }

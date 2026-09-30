@@ -27,13 +27,13 @@
    Raw tokens — light
    ------------------------------------------------------------------------- */
 :root {
-  /* Brand — teal. Used as an ACCENT (links, active nav, focus, selection),
-     not the primary action colour. */
-  --brand: #0d9488;
-  --brand-strong: #0f766e;
-  --brand-stronger: #115e59;
-  --brand-soft: #f0fdfa;
-  --brand-border: #99f6e4;
+  /* Brand — orange. Used as an ACCENT (links, active tabs, focus, selection,
+     the `subtle`/`brand` button), not the primary action colour. */
+  --brand: #f26b1d;
+  --brand-strong: #e0590b;
+  --brand-stronger: #b8470a;
+  --brand-soft: #fff4ec;
+  --brand-border: #fdd3b5;
 
   /* Neutrals (zinc) */
   --n-50: #fafafa;
@@ -49,11 +49,11 @@
   --n-950: #09090b;
 
   /* Semantic surfaces / text */
-  --background: #f9f9fb;
+  --background: #ffffff;
   --surface: #ffffff;
   --surface-2: #f4f4f5;
   --card: #ffffff;
-  --sidebar: #fcfcfd;
+  --sidebar: #ffffff;
   --foreground: #18181b;
   --muted: #f4f4f5;
   --muted-foreground: #6f6f78;
@@ -62,7 +62,7 @@
   --border: #ececed;
   --border-strong: #e0e0e2;
   --input: #e0e0e3;
-  --ring: #0d9488;
+  --ring: #f26b1d;
 
   /* Primary action — near-black, high-contrast, premium. */
   --primary: #18181b;
@@ -74,9 +74,9 @@
   --success: #16a34a;
   --success-foreground: #ffffff;
   --success-soft: #dcfce7;
-  --warning: #c2410c;
+  --warning: #b45309;
   --warning-foreground: #ffffff;
-  --warning-soft: #ffedd5;
+  --warning-soft: #fef3c7;
   --danger: #dc2626;
   --danger-foreground: #ffffff;
   --danger-soft: #fee2e2;
@@ -84,11 +84,16 @@
   --info-soft: #dbeafe;
 
   /* Radius */
-  --radius: 0.625rem;
+  /* Radius is for controls (buttons, inputs, menus, dialogs, tags).
+     Containers — cards, tables, grids, page blocks — stay square. */
+  --radius: 6px;
 
-  /* Elevation — hairline-led, barely-there */
-  --e-xs: 0 1px 2px 0 rgb(24 24 27 / 0.04);
-  --e-sm: 0 1px 2px 0 rgb(24 24 27 / 0.05), 0 1px 3px 0 rgb(24 24 27 / 0.05);
+  /* Elevation — flat UI: in-page surfaces (cards, buttons, inputs, active nav)
+     get NO shadow. Page, cards, sidebar and header share ONE colour; cards
+     are separated by a hairline border, not by a different fill. md/lg are kept
+     for things that genuinely float: menus, popovers, dialogs, the bulk bar. */
+  --e-xs: none;
+  --e-sm: none;
   --e-md: 0 2px 8px -2px rgb(24 24 27 / 0.08), 0 6px 20px -4px rgb(24 24 27 / 0.06);
   --e-lg: 0 8px 24px -6px rgb(24 24 27 / 0.14), 0 16px 48px -12px rgb(24 24 27 / 0.12);
 
@@ -104,17 +109,17 @@
    Raw tokens — dark
    ------------------------------------------------------------------------- */
 :root[data-theme='dark'] {
-  --brand: #2dd4bf;
-  --brand-strong: #5eead4;
-  --brand-stronger: #99f6e4;
-  --brand-soft: rgb(45 212 191 / 0.13);
-  --brand-border: rgb(45 212 191 / 0.28);
+  --brand: #fb8a3c;
+  --brand-strong: #fda064;
+  --brand-stronger: #fdba8c;
+  --brand-soft: rgb(251 138 60 / 0.13);
+  --brand-border: rgb(251 138 60 / 0.3);
 
-  --background: #09090b;
+  --background: #141417;
   --surface: #141417;
   --surface-2: #1d1d21;
   --card: #141417;
-  --sidebar: #0c0c0e;
+  --sidebar: #141417;
   --foreground: #fafafa;
   --muted: #1d1d21;
   --muted-foreground: #9b9ba4;
@@ -123,7 +128,7 @@
   --border: #262629;
   --border-strong: #33333a;
   --input: #2f2f35;
-  --ring: #2dd4bf;
+  --ring: #fb8a3c;
 
   --primary: #fafafa;
   --primary-hover: #e4e4e7;
@@ -140,8 +145,8 @@
   --info: #60a5fa;
   --info-soft: rgb(96 165 250 / 0.15);
 
-  --e-xs: 0 1px 2px 0 rgb(0 0 0 / 0.4);
-  --e-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5), 0 1px 3px 0 rgb(0 0 0 / 0.4);
+  --e-xs: none;
+  --e-sm: none;
   --e-md: 0 2px 10px -2px rgb(0 0 0 / 0.55), 0 8px 24px -6px rgb(0 0 0 / 0.45);
   --e-lg: 0 12px 32px -8px rgb(0 0 0 / 0.6), 0 24px 64px -16px rgb(0 0 0 / 0.5);
 
@@ -195,11 +200,11 @@
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
 
-  --radius-xs: calc(var(--radius) - 4px);
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 4px);
-  --radius-xl: calc(var(--radius) + 8px);
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
 
   --shadow-xs: var(--e-xs);
   --shadow-sm: var(--e-sm);
@@ -442,7 +447,7 @@
    Blueprint ships a global `:focus { outline: <blue> }` that fires on mouse
    click, not just keyboard. `FocusStyleManager.onlyShowFocusOnTabs()` (see
    main.tsx) adds `.bp6-focus-disabled` to <body> so outlines only show during
-   keyboard navigation; these rules keep that keyboard ring on-brand (teal)
+   keyboard navigation; these rules keep that keyboard ring on-brand
    instead of Blueprint blue. Unlayered + specific so they beat Blueprint's CSS.
    ========================================================================= */
 :focus-visible {
@@ -648,6 +653,18 @@
      "[object Object]" for the node label (components/grid/ServerGrid). */
   body:has(.pam-btn:hover > .pam-bulk-label) .pam-tooltip {
     opacity: 0 !important;
+  }
+
+  /* No card look for the grid: pam wraps itself in a padded, bordered,
+     rounded .pam-card — flatten it and keep only a square table outline. */
+  .pam-grid-scope .pms-grid.pam-card {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+  }
+  .pam-grid-scope .pms-grid .pam-grid-wrapper {
+    border-radius: 0;
   }
 
   .pam-grid-scope .pam-grid-wrapper {

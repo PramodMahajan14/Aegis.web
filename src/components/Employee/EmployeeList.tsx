@@ -6,11 +6,11 @@ import { useGetEmployees } from '../../hooks/Employee/useEmployee';
 import { UTCToLocal } from '../../Utility/DateUtility';
 import { useHandleDeleteEmployee } from './HandleDelete';
 import { Spinner } from '../ui/Spinner';
-import { SearchInput } from '../ui/SearchInput';
 import { IconButton } from '../ui/IconButton';
 import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Switch';
 import { TableWrap, Table, THead, TBody, EmptyRow } from '../ui/Table';
+import { BulkBar, BulkBarButton, PageToolbar, ToolbarSearch, denseHead } from '../ui/Page';
 
 type EmployeeRow = {
   id: string;
@@ -55,42 +55,31 @@ export function EmployeeList() {
     );
   }
 
-  return (
-    <div className="flex w-full flex-col">
-      {/* Toolbar */}
-      <div className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3">
-        {selectedIds.size > 0 ? (
-          <div className="flex items-center gap-1 rounded-lg border border-brand/40 bg-brand-soft px-2 py-1 text-brand-stronger">
-            <span className="px-2 text-sm font-medium">{selectedIds.size} selected</span>
-            <span className="mx-1 h-4 w-px bg-brand/30" />
-            <Button variant="danger-ghost" size="sm">
-              <i className="bi bi-trash" /> Delete
-            </Button>
-            <Button variant="ghost" size="sm">
-              <i className="bi bi-envelope" /> Email
-            </Button>
-            <IconButton size="sm" onClick={() => setSelectedIds(new Set())} aria-label="Clear selection">
-              <i className="bi bi-x-lg" />
-            </IconButton>
-          </div>
-        ) : (
-          <SearchInput
-            placeholder="Search employees…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            wrapClassName="w-full max-w-xs"
-          />
-        )}
+  function exportCsv(list: EmployeeRow[]) {
+    const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const lines = [
+      ['First name', 'Last name', 'Email', 'Job role', 'Joining date'].map(esc).join(','),
+      ...list.map((e) => [e.firstName, e.lastName, e.email, e.jobRole?.name, e.joiningDate].map(esc).join(',')),
+    ];
+    const url = URL.createObjectURL(new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `employees-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <i className="bi bi-download" /> Export CSV
-          </Button>
-          <IconButton aria-label="Table settings">
-            <i className="bi bi-sliders" />
-          </IconButton>
-        </div>
-      </div>
+  return (
+    <div className="flex w-full flex-1 flex-col">
+      <PageToolbar>
+        <ToolbarSearch value={search} onChange={setSearch} placeholder="Search employees" />
+        <span className="text-xs text-muted-foreground tabular-nums">
+          {filtered.length} of {rows.length}
+        </span>
+        <Button variant="ghost" size="sm" className="ml-auto" onClick={() => exportCsv(filtered)} disabled={filtered.length === 0}>
+          <i className="bi bi-cloud-arrow-down" /> Export
+        </Button>
+      </PageToolbar>
 
       {/* Table */}
       {isLoading ? (
@@ -100,10 +89,11 @@ export function EmployeeList() {
       ) : (
         <TableWrap>
           <Table>
-            <THead>
+            <THead className={denseHead}>
               <tr>
-                <th className="w-12">
+                <th className="w-10 !pl-5 !pr-0">
                   <Checkbox
+                    className="accent-brand"
                     checked={filtered.length > 0 && selectedIds.size === filtered.length}
                     onChange={toggleAll}
                     aria-label="Select all"
@@ -112,14 +102,15 @@ export function EmployeeList() {
                 <th>Employee</th>
                 <th>Email</th>
                 <th>Joining date</th>
-                <th className="text-right">Actions</th>
+                <th className="!pr-5 !text-right">Actions</th>
               </tr>
             </THead>
-            <TBody>
+            <TBody className="[&_td]:py-2 [&_tr]:border-border/70">
               {filtered.map((emp) => (
                 <tr key={emp.id}>
-                  <td onClick={(e) => e.stopPropagation()}>
+                  <td className="!pl-5 !pr-0" onClick={(e) => e.stopPropagation()}>
                     <Checkbox
+                      className="accent-brand"
                       checked={selectedIds.has(emp.id)}
                       onChange={() => toggle(emp.id)}
                       aria-label={`Select ${emp.firstName}`}
@@ -132,11 +123,11 @@ export function EmployeeList() {
                       jobRole={emp.jobRole?.name ?? null}
                     />
                   </td>
-                  <td className="font-medium text-foreground">{emp.email}</td>
+                  <td className="text-muted-foreground">{emp.email}</td>
                   <td className="text-muted-foreground">
                     {emp.joiningDate ? UTCToLocal(emp.joiningDate) : '—'}
                   </td>
-                  <td>
+                  <td className="!pr-5">
                     <div className="flex justify-end gap-1">
                       <IconButton
                         size="sm"
@@ -185,20 +176,11 @@ export function EmployeeList() {
         </TableWrap>
       )}
 
-      {/* Footer */}
-      <div className="flex items-center justify-between border-t border-border px-4 py-3">
-        <span className="text-xs font-medium text-muted-foreground">
-          Showing {filtered.length} of {rows.length} results
-        </span>
-        <div className="flex gap-1">
-          <IconButton size="sm" disabled aria-label="Previous page">
-            <i className="bi bi-chevron-left" />
-          </IconButton>
-          <IconButton size="sm" disabled aria-label="Next page">
-            <i className="bi bi-chevron-right" />
-          </IconButton>
-        </div>
-      </div>
+      <BulkBar count={selectedIds.size} onClear={() => setSelectedIds(new Set())}>
+        <BulkBarButton icon="bi-cloud-arrow-down" onClick={() => exportCsv(rows.filter((e) => selectedIds.has(e.id)))}>
+          Export
+        </BulkBarButton>
+      </BulkBar>
     </div>
   );
 }

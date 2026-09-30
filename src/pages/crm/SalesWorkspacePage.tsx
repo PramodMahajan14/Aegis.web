@@ -1,7 +1,17 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { PageContainer } from '../../components/ui/PageContainer';
+import { TableWrap, Table, THead, TBody } from '../../components/ui/Table';
+import {
+  KpiStrip,
+  Page,
+  PageContent,
+  PageBar,
+  Section,
+  SectionGrid,
+  SectionLink,
+  denseHead,
+  type Kpi,
+} from '../../components/ui/Page';
 import { EmptyState } from '../../components/crm/EmptyState';
 import { StatusBadge } from '../../components/crm/StatusBadge';
 import { TemperaturePill } from '../../components/crm/TemperatureControl';
@@ -18,6 +28,7 @@ import { CURRENT_USER } from '../../crm/env';
 import { STATUS_LABEL } from '../../crm/constants';
 import { formatMoney, isOverdue, isToday } from '../../crm/format';
 import { cn } from '../../lib/cn';
+import type { ProspectStatus, Temperature } from '../../crm/types';
 
 const STAGE_TONE = {
   NEW: 'muted',
@@ -28,27 +39,10 @@ const STAGE_TONE = {
   CONVERTED: 'success',
 } as const;
 
-function SectionCard({
-  title,
-  action,
-  children,
-  className,
-}: {
-  title: string;
-  action?: React.ReactNode;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <Card className={className}>
-      <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
-        <h3 className="text-[0.9375rem] font-semibold">{title}</h3>
-        {action}
-      </div>
-      <div className="p-5">{children}</div>
-    </Card>
-  );
-}
+// The dashboard still reads the mock store (plain status/temperature codes);
+// the shared badges take the API's { id, code, name } shape.
+const asStatus = (code: ProspectStatus) => ({ id: code, code, name: STATUS_LABEL[code] });
+const asTemp = (code?: Temperature) => (code ? { id: code, code, name: code } : undefined);
 
 export default function SalesWorkspacePage() {
   const navigate = useNavigate();
@@ -61,28 +55,20 @@ export default function SalesWorkspacePage() {
 
   const firstName = CURRENT_USER.name.split(' ')[0];
 
-  const kpis = [
+  const kpis: Kpi[] = [
     {
       label: 'Working pipeline',
       value: formatMoney(m.money.pipelineValue),
-      sub: `${formatMoney(m.money.weightedPipeline)} weighted`,
-      spark: true,
+      hint: `${formatMoney(m.money.weightedPipeline)} weighted`,
+      extra: <Sparkline data={m.spark} className="mt-2 -mb-1" />,
     },
-    {
-      label: 'Won value',
-      value: formatMoney(m.money.wonValue),
-      sub: `${m.counts.converted} converted`,
-    },
-    {
-      label: 'Active prospects',
-      value: m.counts.active,
-      sub: `${m.counts.qualified} qualified`,
-    },
+    { label: 'Won value', value: formatMoney(m.money.wonValue), hint: `${m.counts.won} converted` },
+    { label: 'Active prospects', value: m.counts.active, hint: `${m.counts.qualified} qualified` },
     {
       label: 'Pending follow-ups',
       value: m.counts.openFollowUps,
-      sub: m.counts.overdueTasks > 0 ? `${m.counts.overdueTasks} overdue` : 'on track',
-      danger: m.counts.overdueTasks > 0,
+      hint: m.counts.overdueTasks > 0 ? `${m.counts.overdueTasks} overdue` : 'on track',
+      tone: m.counts.overdueTasks > 0 ? 'danger' : undefined,
     },
   ];
 
@@ -106,253 +92,252 @@ export default function SalesWorkspacePage() {
   ];
 
   return (
-    <PageContainer>
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-[1.5rem] font-semibold tracking-tight text-foreground">
-            Good day, {firstName}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Capture the work — Aegis builds the pipeline, history and numbers.
-          </p>
-        </div>
-        <Button size="sm" onClick={composers.newProspect}>
-          <i className="bi bi-plus-lg" /> New prospect
-        </Button>
-      </div>
+    <Page>
+      <PageBar
+        title={`Good day, ${firstName}`}
+        description="Capture the work — Aegis builds the pipeline, history and numbers."
+        actions={
+          <Button variant="brand" size="sm" onClick={composers.newProspect}>
+            <i className="bi bi-plus-lg" /> New prospect
+          </Button>
+        }
+      />
 
       {/* Quick capture */}
-      <div className="mb-5 grid grid-cols-3 gap-2 sm:grid-cols-6">
-        <button
-          type="button"
-          onClick={composers.newProspect}
-          className="flex flex-col items-center gap-1.5 rounded-xl border border-brand bg-brand-soft px-3 py-3.5 text-[0.8125rem] font-medium text-brand-stronger transition hover:brightness-95"
-        >
-          <i className="bi bi-folder-plus text-lg" />
-          New prospect
-        </button>
-        <ProspectPickerButton label="Log activity" icon="bi-chat-dots" onPick={composers.logActivity} />
-        <ProspectPickerButton label="New meeting" icon="bi-calendar-event" onPick={composers.scheduleMeeting} />
-        <ProspectPickerButton label="Site visit" icon="bi-geo-alt" onPick={composers.startSiteVisit} />
-        <ProspectPickerButton label="Add contact" icon="bi-person-plus" onPick={composers.addContact} />
-        <ProspectPickerButton label="Add task" icon="bi-check2-square" onPick={composers.addTask} />
+      <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-surface px-3.5 py-1.5">
+        <span className="px-1.5 text-[0.625rem] font-medium uppercase tracking-[0.08em] text-muted-foreground/80">
+          Quick capture
+        </span>
+        <ProspectPickerButton
+          variant="ghost"
+          label="Log activity"
+          icon="bi-chat-dots"
+          onPick={composers.logActivity}
+        />
+        <ProspectPickerButton
+          variant="ghost"
+          label="Meeting"
+          icon="bi-calendar-event"
+          onPick={composers.scheduleMeeting}
+        />
+        <ProspectPickerButton
+          variant="ghost"
+          label="Site visit"
+          icon="bi-geo-alt"
+          onPick={composers.startSiteVisit}
+        />
+        <ProspectPickerButton
+          variant="ghost"
+          label="Contact"
+          icon="bi-person-plus"
+          onPick={(pid) => composers.addContact(undefined, pid)}
+        />
+        <ProspectPickerButton
+          variant="ghost"
+          label="Task"
+          icon="bi-check2-square"
+          onPick={composers.addTask}
+        />
       </div>
 
-      {/* KPI band */}
-      <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {kpis.map((k) => (
-          <Card key={k.label} className="overflow-hidden p-4">
-            <div className="text-[0.7rem] font-semibold uppercase tracking-wider text-muted-foreground">
-              {k.label}
-            </div>
-            <div className="mt-1.5 text-[1.6rem] font-semibold leading-none tracking-tight tabular-nums text-foreground">
-              {k.value}
-            </div>
-            <div
-              className={cn(
-                'mt-1.5 text-xs',
-                k.danger ? 'font-medium text-danger' : 'text-muted-foreground',
-              )}
-            >
-              {k.sub}
-            </div>
-            {k.spark && <Sparkline data={m.spark} className="mt-2 -mb-1" />}
-          </Card>
-        ))}
-      </div>
-
-      {/* Pipeline row */}
-      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <SectionCard
-          className="lg:col-span-2"
-          title="Prospect pipeline"
-          action={
-            <Link to="/pipeline" className="text-xs font-medium text-brand-strong hover:underline">
-              Open board
-            </Link>
-          }
-        >
-          <FunnelChart
-            stages={m.funnel.map((f) => ({
-              label: STATUS_LABEL[f.status],
-              value: f.count,
-              tone: STAGE_TONE[f.status as keyof typeof STAGE_TONE],
-              hint: `${f.count} prospect(s) reached ${STATUS_LABEL[f.status]}`,
-            }))}
-          />
-          <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-t border-border pt-3 text-xs text-muted-foreground">
-            <span>
-              Conversion (qualified → won){' '}
-              <b className="text-foreground tabular-nums">{m.conversionRate}%</b>
-            </span>
-            <span>
-              Dormant <b className="text-foreground tabular-nums">{m.counts.dormant}</b>
-            </span>
-            <span>
-              Disqualified <b className="text-foreground tabular-nums">{m.counts.disqualified}</b>
-              {m.money.lostValue > 0 && ` · ${formatMoney(m.money.lostValue)}`}
-            </span>
+      <PageContent>
+        <SectionGrid className="lg:grid-cols-3">
+          <div className="lg:col-span-3 [&>div]:border-b-0">
+            <KpiStrip bare items={kpis} />
           </div>
-        </SectionCard>
-
-        <SectionCard title="Pipeline value by stage">
-          <ValueBars
-            items={m.funnel
-              .filter((f) => f.status !== 'CONVERTED')
-              .map((f) => {
-                const value = prospects
-                  .filter((p) => p.status === f.status)
-                  .reduce((s, p) => s + (p.estimatedValue ?? 0), 0);
-                return {
-                  label: STATUS_LABEL[f.status],
-                  value,
-                  display: formatMoney(value),
-                  tone: STAGE_TONE[f.status as keyof typeof STAGE_TONE],
-                };
-              })}
-          />
-        </SectionCard>
-      </div>
-
-      {/* Metrics row */}
-      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <SectionCard title="Effort · last 7 days">
-          <ValueBars items={effortItems} />
-        </SectionCard>
-
-        <SectionCard title="Temperature mix">
-          <StackedBar
-            segments={[
-              { label: 'Hot', value: m.temp.HOT, className: 'bg-danger', text: 'text-danger' },
-              { label: 'Warm', value: m.temp.WARM, className: 'bg-warning', text: 'text-warning' },
-              { label: 'Cold', value: m.temp.COLD, className: 'bg-info', text: 'text-info' },
-            ]}
-          />
-          <p className="mt-3 text-xs text-muted-foreground">
-            Across {m.counts.active} active prospects. Temperature is engagement heat — a separate
-            dimension from status.
-          </p>
-        </SectionCard>
-
-        <SectionCard title="Today &amp; overdue" action={
-          <Link to="/planner" className="text-xs font-medium text-brand-strong hover:underline">
-            Planner
-          </Link>
-        }>
-          {dueSoon.length === 0 ? (
-            <EmptyState icon="bi-emoji-smile" title="All clear" compact />
-          ) : (
-            <div className="-my-2 divide-y divide-border">
-              {dueSoon.slice(0, 5).map((t) => (
-                <TaskRow
-                  key={t.id}
-                  task={t}
-                  onComplete={completeTask}
-                  showProspect
-                  onOpenProspect={(pid) => navigate(`/prospects/${pid}`)}
-                />
-              ))}
+          <Section
+            className="lg:col-span-2"
+            title="Prospect pipeline"
+            action={<SectionLink to="/pipeline">Open board</SectionLink>}
+          >
+            <FunnelChart
+              stages={m.funnel.map((f) => ({
+                label: STATUS_LABEL[f.status],
+                value: f.count,
+                tone: STAGE_TONE[f.status as keyof typeof STAGE_TONE],
+                hint: `${f.count} prospect(s) reached ${STATUS_LABEL[f.status]}`,
+              }))}
+            />
+            <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-t border-border pt-3 text-xs text-muted-foreground">
+              <span>
+                Conversion (qualified → won){' '}
+                <b className="text-foreground tabular-nums">{m.conversionRate}%</b>
+              </span>
+              <span>
+                Dormant <b className="text-foreground tabular-nums">{m.counts.dormant}</b>
+              </span>
+              <span>
+                Disqualified <b className="text-foreground tabular-nums">{m.counts.lost}</b>
+                {m.money.lostValue > 0 && ` · ${formatMoney(m.money.lostValue)}`}
+              </span>
             </div>
-          )}
-        </SectionCard>
-      </div>
+          </Section>
 
-      {/* Attention + activity */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <SectionCard className="lg:col-span-2" title="Needs attention">
-          {m.attention.length === 0 ? (
-            <EmptyState icon="bi-shield-check" title="Nothing slipping" description="Every active prospect has a next step and recent activity." compact />
-          ) : (
-            <ul className="-my-2 divide-y divide-border">
-              {m.attention.map(({ prospect: p, reason, severity }) => (
-                <li key={p.id}>
-                  <Link
-                    to={`/prospects/${p.id}`}
-                    className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-2.5 transition-colors hover:bg-accent/50"
-                  >
-                    <span
-                      className={cn(
-                        'grid size-8 shrink-0 place-items-center rounded-full text-[0.8rem]',
-                        severity === 2 ? 'bg-danger-soft text-danger' : 'bg-warning-soft text-warning',
-                      )}
+          <Section title="Pipeline value by stage">
+            <ValueBars
+              items={m.funnel
+                .filter((f) => f.status !== 'CONVERTED')
+                .map((f) => {
+                  const value = prospects
+                    .filter((p) => p.status === f.status)
+                    .reduce((s, p) => s + (p.estimatedValue ?? 0), 0);
+                  return {
+                    label: STATUS_LABEL[f.status],
+                    value,
+                    display: formatMoney(value),
+                    tone: STAGE_TONE[f.status as keyof typeof STAGE_TONE],
+                  };
+                })}
+            />
+          </Section>
+
+          <Section title="Effort · last 7 days">
+            <ValueBars items={effortItems} />
+          </Section>
+
+          <Section title="Temperature mix">
+            <StackedBar
+              segments={[
+                { label: 'Hot', value: m.temp.HOT, className: 'bg-danger', text: 'text-danger' },
+                { label: 'Warm', value: m.temp.WARM, className: 'bg-warning', text: 'text-warning' },
+                { label: 'Cold', value: m.temp.COLD, className: 'bg-info', text: 'text-info' },
+              ]}
+            />
+            <p className="mt-3 text-xs text-muted-foreground">
+              Across {m.counts.active} active prospects. Temperature is engagement heat — a separate dimension
+              from status.
+            </p>
+          </Section>
+
+          <Section title="Today & overdue" action={<SectionLink to="/planner">Planner</SectionLink>}>
+            {dueSoon.length === 0 ? (
+              <EmptyState icon="bi-emoji-smile" title="All clear" compact />
+            ) : (
+              <div className="-my-2 divide-y divide-border">
+                {dueSoon.slice(0, 5).map((t) => (
+                  <TaskRow
+                    key={t.id}
+                    task={t}
+                    onComplete={completeTask}
+                    showProspect
+                    onOpenProspect={(pid) => navigate(`/prospects/${pid}`)}
+                  />
+                ))}
+              </div>
+            )}
+          </Section>
+
+          <Section className="lg:col-span-2" title="Needs attention">
+            {m.attention.length === 0 ? (
+              <EmptyState
+                icon="bi-shield-check"
+                title="Nothing slipping"
+                description="Every active prospect has a next step and recent activity."
+                compact
+              />
+            ) : (
+              <ul className="-my-1 divide-y divide-border">
+                {m.attention.map(({ prospect: p, reason, severity }) => (
+                  <li key={p.id}>
+                    <Link
+                      to={`/prospects/${p.id}`}
+                      className="-mx-2 flex items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-accent/60"
                     >
-                      <i className={severity === 2 ? 'bi bi-exclamation-triangle' : 'bi bi-hourglass-split'} />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="truncate text-[0.8125rem] font-medium text-foreground">
-                          {p.name}
-                        </span>
-                        <TemperaturePill value={p.temperature} />
+                      <i
+                        className={cn(
+                          'bi shrink-0 text-[0.9rem]',
+                          severity === 2
+                            ? 'bi-exclamation-triangle text-danger'
+                            : 'bi-hourglass-split text-warning',
+                        )}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="truncate text-[0.8125rem] font-medium text-foreground">
+                            {p.name}
+                          </span>
+                          <TemperaturePill value={asTemp(p.temperature)} />
+                        </div>
+                        <div className="text-xs text-muted-foreground">{reason}</div>
                       </div>
-                      <div className="text-xs text-muted-foreground">{reason}</div>
-                    </div>
-                    <StatusBadge status={p.status} />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </SectionCard>
+                      <StatusBadge status={asStatus(p.status)} />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Section>
 
-        <SectionCard title="Recent activity">
-          <div className="max-h-[24rem] overflow-y-auto">
-            <TimelineFeed events={timeline.slice(0, 14)} />
+          <Section title="Recent activity">
+            <div className="max-h-[24rem] overflow-y-auto">
+              <TimelineFeed events={timeline.slice(0, 14)} />
+            </div>
+          </Section>
+
+          {/* My prospects */}
+          <div className="lg:col-span-3">
+            <div className="flex items-center justify-between px-5 pb-2 pt-4">
+              <h2 className="text-[0.8125rem] font-semibold tracking-normal">My prospects</h2>
+              <SectionLink to="/prospects">View all ({prospects.length})</SectionLink>
+            </div>
+            {myProspects.length === 0 ? (
+              <EmptyState
+                icon="bi-folder-plus"
+                title="No prospects yet"
+                action={
+                  <Button variant="brand" size="sm" onClick={composers.newProspect}>
+                    <i className="bi bi-plus-lg" /> New prospect
+                  </Button>
+                }
+              />
+            ) : (
+              <TableWrap className="pb-4">
+                <Table>
+                  <THead className={denseHead}>
+                    <tr>
+                      <th className="!pl-5">Prospect</th>
+                      <th>Next step</th>
+                      <th className="!text-right">Est. value</th>
+                      <th className="!pr-5">Status</th>
+                    </tr>
+                  </THead>
+                  <TBody className="[&_td]:py-2 [&_tr]:border-border/70">
+                    {myProspects.map((p) => (
+                      <tr
+                        key={p.id}
+                        className="cursor-pointer"
+                        onClick={() => navigate(`/prospects/${p.id}`)}
+                      >
+                        <td className="!pl-5">
+                          <div className="flex items-center gap-2.5">
+                            <PersonAvatar name={p.name} size="xs" />
+                            <span className="truncate font-medium text-foreground">{p.name}</span>
+                            <TemperaturePill value={asTemp(p.temperature)} />
+                          </div>
+                        </td>
+                        <td className="text-xs text-muted-foreground">
+                          {p.nextTask ? p.nextTask.title : 'No open task'}
+                          {p.overdueTaskCount > 0 && (
+                            <span className="ml-1.5 font-medium text-danger">
+                              · {p.overdueTaskCount} overdue
+                            </span>
+                          )}
+                        </td>
+                        <td className="text-right font-medium tabular-nums">
+                          {formatMoney(p.estimatedValue)}
+                        </td>
+                        <td className="!pr-5">
+                          <StatusBadge status={asStatus(p.status)} />
+                        </td>
+                      </tr>
+                    ))}
+                  </TBody>
+                </Table>
+              </TableWrap>
+            )}
           </div>
-        </SectionCard>
-      </div>
-
-      {/* My prospects */}
-      <Card className="mt-4">
-        <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
-          <h3 className="text-[0.9375rem] font-semibold">My prospects</h3>
-          <Link to="/prospects" className="text-xs font-medium text-brand-strong hover:underline">
-            View all ({prospects.length})
-          </Link>
-        </div>
-        {myProspects.length === 0 ? (
-          <EmptyState
-            icon="bi-folder-plus"
-            title="No prospects yet"
-            action={
-              <Button size="sm" onClick={composers.newProspect}>
-                <i className="bi bi-plus-lg" /> New prospect
-              </Button>
-            }
-          />
-        ) : (
-          <ul className="divide-y divide-border">
-            {myProspects.map((p) => (
-              <li key={p.id}>
-                <Link
-                  to={`/prospects/${p.id}`}
-                  className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-accent/50"
-                >
-                  <PersonAvatar name={p.name} size="md" />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="truncate text-[0.8125rem] font-medium text-foreground">
-                        {p.name}
-                      </span>
-                      <TemperaturePill value={p.temperature} />
-                    </div>
-                    <div className="truncate text-xs text-muted-foreground">
-                      {p.nextTask ? `Next: ${p.nextTask.title}` : 'No open task'}
-                      {p.overdueTaskCount > 0 && (
-                        <span className="ml-1.5 font-medium text-danger">· {p.overdueTaskCount} overdue</span>
-                      )}
-                    </div>
-                  </div>
-                  <span className="hidden text-[0.8125rem] font-medium tabular-nums text-muted-foreground sm:block">
-                    {formatMoney(p.estimatedValue)}
-                  </span>
-                  <StatusBadge status={p.status} />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Card>
-    </PageContainer>
+        </SectionGrid>
+      </PageContent>
+    </Page>
   );
 }

@@ -1,6 +1,6 @@
 import { cn } from '../../lib/cn';
 
-/* Lightweight, design-system-native charts. Thin marks, rounded data-ends,
+/* Lightweight, design-system-native charts. Thin marks, rounded-sm data-ends,
    recessive axes, direct labels, hover via <title>. No chart library. */
 
 type Tone = 'brand' | 'info' | 'warning' | 'success' | 'danger' | 'muted';
@@ -129,7 +129,7 @@ export function StackedBar({ segments }: { segments: Segment[] }) {
       <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1">
         {segments.map((s) => (
           <span key={s.label} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span className={cn('size-2 rounded-full', s.className)} />
+            <span className={cn('size-2 rounded-[2px]', s.className)} />
             {s.label}
             <span className={cn('font-semibold tabular-nums', s.text)}>{s.value}</span>
           </span>

@@ -17,3 +17,22 @@ export { IconButton, type IconButtonProps } from './IconButton';
 export { Switch, Checkbox } from './Switch';
 export { Table, TableWrap, THead, TBody, EmptyRow } from './Table';
 export { SearchInput } from './SearchInput';
+export {
+  Page,
+  PageBar,
+  PageTabs,
+  PageToolbar,
+  ToolbarSearch,
+  PageBody,
+  PageContent,
+  Block,
+  KpiStrip,
+  SectionGrid,
+  Section,
+  SectionLink,
+  BulkBar,
+  BulkBarButton,
+  denseHead,
+  type Kpi,
+  type PageTab,
+} from './Page';

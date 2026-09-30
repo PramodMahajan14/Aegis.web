@@ -4,6 +4,7 @@ import { Spinner } from './Spinner';
 
 export type ButtonVariant =
   | 'primary'
+  | 'brand'
   | 'secondary'
   | 'outline'
   | 'ghost'
@@ -23,6 +24,7 @@ const base =
 const variants: Record<ButtonVariant, string> = {
   primary:
     'bg-primary text-primary-foreground shadow-xs hover:bg-primary-hover',
+  brand: 'bg-brand text-white shadow-xs hover:bg-brand-strong',
   secondary:
     'border border-border bg-surface text-foreground shadow-xs hover:bg-accent',
   outline:

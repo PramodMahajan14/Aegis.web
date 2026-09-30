@@ -74,9 +74,9 @@ export function ProspectPickerButton({
       ) : (
         <button
           type="button"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-[0.8125rem] font-medium text-foreground transition-colors hover:border-brand hover:bg-accent"
+          className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[0.8125rem] font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
         >
-          <i className={cn('bi text-brand-strong', icon)} />
+          <i className={cn('bi', icon)} />
           {label}
         </button>
       )}

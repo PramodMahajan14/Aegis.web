@@ -20,7 +20,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
 
       <Link
         to="/"
-        className="flex items-center gap-2 pr-1 text-[0.95rem] font-semibold tracking-tight text-foreground hover:text-foreground"
+        className="flex items-center gap-2 pr-1 text-[0.95rem] lg:hidden font-semibold tracking-tight text-foreground hover:text-foreground"
       >
         <span className="grid size-6 place-items-center rounded-md bg-brand text-white">
           <i className="bi bi-shield-fill-check text-[0.7rem]" />
@@ -35,7 +35,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
       >
         <i className="bi bi-search text-xs" />
         <span className="truncate">Search…</span>
-        <kbd className="ml-auto hidden rounded border border-border bg-surface px-1.5 py-0.5 font-sans text-[0.6875rem] text-muted-foreground lg:block">
+        <kbd className="ml-auto hidden rounded-sm border border-border bg-surface px-1.5 py-0.5 font-sans text-[0.6875rem] text-muted-foreground lg:block">
           ⌘K
         </kbd>
       </button>
@@ -70,7 +70,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             </Menu>
           }
         >
-          <button className="ml-1 flex items-center gap-1.5 rounded-lg p-1 transition-colors hover:bg-accent">
+          <button className="ml-1 flex items-center gap-1.5 rounded-lg p-1 lg:hidden transition-colors hover:bg-accent">
             <span className="grid size-7 place-items-center rounded-full bg-brand-soft text-[0.6875rem] font-semibold text-brand-stronger">
               AT
             </span>
